@@ -1,13 +1,16 @@
 import * as React from "react";
 
 function Nav() {
+  
   return (
     <div className="flex flex-col justify-center bg-white">
+      
       <div className="flex flex-col items-center pb-5 w-full bg-stone-50 max-md:max-w-full">
         <div className="flex gap-0 justify-between self-stretch px-10 py-3 border-b border-gray-200 border-solid max-md:flex-wrap max-md:px-5">
           <div className="flex gap-4 my-auto text-lg font-bold tracking-tight whitespace-nowrap text-stone-900">
             <img
               loading="lazy"
+              // todo: replace with real image
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/672e7351807606ec2c4a77b69b2e592a7a677f7f2d17a7e56cc9d8c25c3e9898?"
               className="shrink-0 my-auto w-4 aspect-square"
             />
@@ -27,6 +30,7 @@ function Nav() {
               <div className="flex justify-center items-center p-2.5 w-10 h-10 rounded-xl bg-stone-200">
                 <img
                   loading="lazy"
+                  // todo add search icon
                   src="https://cdn.builder.io/api/v1/image/assets/TEMP/ba7086a20dc031113dc674662b791834c936558beb86e9a5ea0037bb89d13166?"
                   className="w-5 aspect-square"
                 />
@@ -35,9 +39,10 @@ function Nav() {
           </div>
         </div>
         <div className="flex flex-col px-4 mt-9 w-full max-w-[960px] max-md:max-w-full">
-          <div className="flex overflow-hidden relative flex-col justify-end items-center px-16 pt-4 text-base rounded-xl min-h-[480px] max-md:px-5 max-md:max-w-full">
+          <div className="flex overflow-hidden relative flex-col justify-end items-center px-0 pt-0 text-base rounded-xl min-h-[10px] max-md:px-5 max-md:max-w-full">
             <img
               loading="lazy"
+              alt="Banner"
               srcSet="src\assets\Images\Banner.png"
               className="object-cover absolute inset-0 size-full"
             />
@@ -55,7 +60,7 @@ function Nav() {
                     src="https://cdn.builder.io/api/v1/image/assets/TEMP/e984c6f062b2adac0b24620995056f58eb8356896f17cdb62e542bfbfcdddab4?"
                     className="shrink-0 my-auto w-5 aspect-square"
                   />
-                  <div>Find recipes, ingredients, or dishes</div>
+                  <p className="text-base font-small  pr-2 text-stone-400 ">Find recipes, ingredients,or dishes</p>
                 </div>
                 <div className="flex flex-col justify-center px-5 py-3 font-bold tracking-wide whitespace-nowrap bg-orange-500 rounded-xl text-stone-900">
                   <div className="justify-center bg-orange-500">Search</div>
