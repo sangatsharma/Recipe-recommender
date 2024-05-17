@@ -1,0 +1,42 @@
+.ItemsCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 180px;
+  width: 200px;
+  padding: 0px 5px;
+  cursor: pointer;
+}
+.ImageContainer {
+  width: 200px;
+  height: 200px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.ImageContainer > img {
+  border-radius: 12px;
+  object-fit: cove;
+  width: 100%;
+  height: 100%;
+  transition: ease-in-out 250ms;
+  object-fit: cover;
+  scale: 1.1;
+}
+.ImageContainer > img:hover {
+  transform: scale(1.2);
+}
+.RecipeInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: start;
+  height: 100px;
+  width: 200px;
+  padding: 5px;
+}
+
+#RecipeRating {
+  font-size: 14px;
+  color: #996e4d;
+  font-weight: 400;
+}

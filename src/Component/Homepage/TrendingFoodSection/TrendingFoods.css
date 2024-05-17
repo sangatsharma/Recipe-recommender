@@ -1,0 +1,20 @@
+.TrendingFood {
+  width: 80%;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.TrendingFood > h2 {
+  font-size: 18px;
+  color: #1c120d;
+  font-weight: 600;
+  margin: 20px 0px  -5px 5px;
+
+}
+.ItemsWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  flex-wrap: wrap;
+}
