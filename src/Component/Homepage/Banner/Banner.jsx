@@ -1,6 +1,6 @@
 
 import './Banner.css'
-const Banner = () => {
+const Banner = (props) => {
   return (
     <main>
     <div className="Banner">
@@ -20,6 +20,7 @@ const Banner = () => {
         <button type="button">Search</button>
       </div>
     </div>
+    {props.content}
     </main>
   );
 };
