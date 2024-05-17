@@ -44,7 +44,29 @@ nav > button {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  outline: none;
 }
+
+nav > button::after {
+  content: '';
+  width: 0;
+  height: 3px;
+  background: #ed802b;
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  transition: width 0.5s ease-out;
+}
+
+nav > button:hover::after {
+  width: 100%;
+}
+
 .Profile {
   display: flex;
   gap: 8px;
@@ -60,6 +82,12 @@ nav > button {
   border: none;
   border-radius: 12px;
 }
+
+.Profile > button:hover{
+  background-color: #d85e02;
+}
+
 .Profile>img{
-    width: 40px;
+ width: 40px;
+ cursor: pointer;
 }
