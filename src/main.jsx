@@ -101,6 +101,12 @@ ReactDOM.createRoot(document.getElementById("root")).render(
                 name: "Tom Yum Goong",
                 rating: "3.6",
               },
+              {
+                id: 8,
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhdzKcJM_bFHrfJa6eEK5gWcsPJYFR3fSFb3YCRlBMvnqN5bmvxVrKcnrTXP9t88NZnDM&usqp=CAU",
+                name: "Tom Yum Goong",
+                rating: "3.6",
+              },
             ]}
           />
         }

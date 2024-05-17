@@ -3,18 +3,21 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .TrendingFood > h2 {
-  font-size: 18px;
-  color: #1c120d;
+  font-size: 20px;
+  color: #000000;
   font-weight: 600;
-  margin: 20px 0px  -5px 5px;
+  margin: 20px 0px  2px 5px;
 
 }
 .ItemsWrapper {
   display: flex;
   flex-direction: row;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+  justify-content: center;
 }
