@@ -8,7 +8,7 @@ const Navbar = (props) => {
         <img loading="lazy" src="https://static.vecteezy.com/system/resources/previews/000/274/987/original/vector-restaurant-label-food-service-logo.jpg" alt="Logo" />
         <span className="BrandName">Delish</span>
       </div>
-      <nav>
+      <nav className="circle">
         <button>Home</button>
         <button>Recipes</button>
         <button>Search</button>
