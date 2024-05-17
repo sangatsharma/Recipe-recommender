@@ -1,0 +1,90 @@
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px 60px;
+  @media (max-width: 991px) {
+    padding: 0 20px;
+  }
+}
+.Banner {
+  width: 80%;
+  min-height: 400px;
+  background: url("./src/assets/Images/Banner.png");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 16px 60px 0;
+  @media (max-width: 991px) {
+    padding: 0 20px;
+  }
+}
+.BannerTitleWrapper {
+  color: #fff;
+  text-align: center;
+  justify-content: center;
+  @media (max-width: 991px) {
+    margin-top: 40px;
+  }
+}
+#Title {
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -1.58px;
+  @media (max-width: 991px) {
+    font-size: 40px;
+  }
+}
+#SubTitle {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 150%;
+  margin-top: 8px;
+  padding: 0 71px;
+  @media (max-width: 991px) {
+    padding: 0 30px 0 20px;
+  }
+}
+
+.SearchBar {
+  display: flex;
+  align-items: center;
+  margin: 30px 0px 24px;
+  background-color: white;
+  border-radius: 12px;
+  gap: 4px;
+  padding: 5px;
+  @media (max-width: 991px) {
+    padding: 0 20px;
+  }
+}
+
+.SearchBar > input {
+  flex: 1;
+  width: 230px;
+  padding: 12px 8px;
+  font-size: 16px;
+  color: black;
+  background: white;
+  outline: none;
+  border-radius: 12px;
+}
+.SearchBar > input::-webkit-input-placeholder {
+  font-size: 12px;
+}
+.SearchBar > button {
+  padding: 12px 18px;
+  font-size: 16px;
+  color: #1c120d;
+  font-weight: 500;
+  background-color: #ed802b;
+  border: none;
+  border-radius: 12px;
+}
+
