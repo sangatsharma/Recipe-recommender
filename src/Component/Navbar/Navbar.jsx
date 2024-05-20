@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+
 import "./Navbar.css";
 
 const Navbar = (props) => {
-  const [selectedPage, setSelectedPage] = useState("Home");
-  console.log(selectedPage);
+
   return (
     <header>
       <div className="LogoWrapper">
@@ -16,41 +15,41 @@ const Navbar = (props) => {
       </div>
       <nav>
         <button
-          className={selectedPage == "Home" ? "activePage" : ""}
+          className={props.selectedPage == "Home" ? "activePage" : ""}
           onClick={() => {
-            setSelectedPage("Home");
+            props.setSelectedPage("Home");
           }}
         >
           Home
         </button>
         <button
-          className={selectedPage == "Recipes" ? "activePage" : ""}
+          className={props.selectedPage == "Recipes" ? "activePage" : ""}
           onClick={() => {
-            setSelectedPage("Recipes");
+            props.setSelectedPage("Recipes");
           }}
         >
           Recipes
         </button>
         <button
-          className={selectedPage == "Explore" ? "activePage" : ""}
+          className={props.selectedPage == "Explore" ? "activePage" : ""}
           onClick={() => {
-            setSelectedPage("Explore");
+            props.setSelectedPage("Explore");
           }}
         >
           Explore
         </button>
         <button
-          className={selectedPage == "Search" ? "activePage" : ""}
+          className={props.selectedPage == "Search" ? "activePage" : ""}
           onClick={() => {
-            setSelectedPage("Search");
+            props.setSelectedPage("Search");
           }}
         >
           Search
         </button>
         <button
-          className={selectedPage == "Contact" ? "activePage" : ""}
+          className={props.selectedPage == "Contact" ? "activePage" : ""}
           onClick={() => {
-            setSelectedPage("Contact");
+            props.setSelectedPage("Contact");
           }}
         >
           Contact

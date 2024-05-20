@@ -2,7 +2,7 @@
 import './Banner.css'
 const Banner = (props) => {
   return (
-    <main>
+    <>
     <div className="Banner">
       <div className="BannerTitleWrapper">
         <h1 id="Title">Welcome to Cooking Club</h1>
@@ -21,7 +21,7 @@ const Banner = (props) => {
       </div>
     </div>
     {props.content}
-    </main>
+   </>
   );
 };
 export default Banner;
