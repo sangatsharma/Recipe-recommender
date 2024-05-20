@@ -7,7 +7,7 @@ const TrendingFoods = (props) => {
       <div className="ItemsWrapper">
         {props.items.map((item) => {
           return (
-            <ItemsCard id={item.id} src={item.src} name={item.name} rating={item.rating} ></ItemsCard>
+            <ItemsCard key={item.id} src={item.src} name={item.name} rating={item.rating} ></ItemsCard>
           );
         })}
       </div>

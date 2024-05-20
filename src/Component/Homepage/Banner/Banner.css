@@ -87,5 +87,10 @@ main {
   background-color: #ed802b;
   border: none;
   border-radius: 12px;
+  transition: ease-in 0.1s;
 }
 
+.SearchBar > button:hover {
+  background-color: rgb(249, 0, 41);
+  color: white;
+}

@@ -1,7 +1,7 @@
 import "./ItemsCard.css";
 const ItemsCard = (props) => {
   return (
-    <div key={props.id} className="ItemsCard">
+    <div className="ItemsCard">
       <div className="ImageContainer">
         <img loading="lazy" src={props.src} alt={props.name} />
       </div>
