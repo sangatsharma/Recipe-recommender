@@ -5,7 +5,6 @@ import "./index.css";
 import Navbar from "./Component/Navbar/Navbar.jsx";
 import Banner from "./Component/Homepage/Banner/Banner.jsx";
 import TrendingFoods from "./Component/Homepage/TrendingFoodSection/TrendingFoods.jsx";
-import Forum from "./Component/ForumPage/ForumPost.jsx"
 {
   const sampleObject = [
     {
@@ -55,8 +54,7 @@ import Forum from "./Component/ForumPage/ForumPost.jsx"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <>
-    <Forum />
-      {/* <Navbar />
+      <Navbar />
       <Banner
         content={
           <TrendingFoods
@@ -112,7 +110,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             ]}
           />
         }
-      /> */}
+      />
     </>
   </React.StrictMode>
 );
