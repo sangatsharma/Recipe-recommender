@@ -1,14 +1,4 @@
-main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 20px 60px;
-  @media (max-width: 991px) {
-    padding: 0 20px;
-  }
-}
+
 .Banner {
   width: 80%;
   min-height: 400px;
