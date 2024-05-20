@@ -5,6 +5,7 @@ import "./index.css";
 import Navbar from "./Component/Navbar/Navbar.jsx";
 import Banner from "./Component/Homepage/Banner/Banner.jsx";
 import TrendingFoods from "./Component/Homepage/TrendingFoodSection/TrendingFoods.jsx";
+import Explore from "./Component/Explore/Explore.jsx"
 {
   const sampleObject = [
     {
@@ -55,7 +56,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <>
       <Navbar />
-      <Banner
+      <Explore/>
+      {/* <Banner
         content={
           <TrendingFoods
             items={[
@@ -110,7 +112,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             ]}
           />
         }
-      />
+      /> */}
     </>
   </React.StrictMode>
 );
