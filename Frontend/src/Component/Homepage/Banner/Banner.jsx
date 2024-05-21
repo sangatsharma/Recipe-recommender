@@ -1,8 +1,8 @@
 
 import './Banner.css'
-const Banner = () => {
+const Banner = (props) => {
   return (
-    <main>
+    <>
     <div className="Banner">
       <div className="BannerTitleWrapper">
         <h1 id="Title">Welcome to Cooking Club</h1>
@@ -20,7 +20,8 @@ const Banner = () => {
         <button type="button">Search</button>
       </div>
     </div>
-    </main>
+    {props.content}
+   </>
   );
 };
 export default Banner;
