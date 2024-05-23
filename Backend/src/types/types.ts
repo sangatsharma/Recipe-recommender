@@ -4,5 +4,4 @@ export type RecipeType ={
   prepTime:string;
   images?:string;
   instruction:string;
-
 };

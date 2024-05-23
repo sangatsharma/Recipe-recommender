@@ -39,6 +39,8 @@ recipeRouter.get("/", (_:Request,res:Response, next:NextFunction) => {
 recipeRouter.post("/", (req:Request,res:Response, next:NextFunction) => {
   const data = req.body;
 
+  // TODO: get author id from token
+  data["authorId"] = 1;
   // TODO: Validate data
   const helper = async () => {
     await db.insert(recipeSchema).values(data);
