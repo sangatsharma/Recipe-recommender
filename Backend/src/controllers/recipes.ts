@@ -32,7 +32,6 @@ recipeRouter.get("/", (_:Request,res:Response, next:NextFunction) => {
 
 });
 
-
 /*
   ADD A NEW RECIPE
 */
@@ -82,7 +81,12 @@ recipeRouter.post("/filter", (req:Request, res:Response, next:NextFunction) => {
   };
 
   helper().then((data) => {
-    return res.json({ "success": "true", "data": data });
+
+    return res.json({
+      "success": "true",
+      "length": data.length,
+      "data": data,
+    });
   }).catch((err) => {
     next(err);
   });

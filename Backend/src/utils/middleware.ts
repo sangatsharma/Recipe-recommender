@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 
-export const errorHandler = (err:Error, _:Request, res:Response, next:NextFunction) => {
+export const errorHandler = (err: Error, _: Request, res: Response, next: NextFunction) => {
   console.log(err);
 
+  // TODO: Error message based on DB ERROR
   if (err.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
   } else if (err.name === "ValidationError") {
@@ -17,7 +18,7 @@ export const errorHandler = (err:Error, _:Request, res:Response, next:NextFuncti
   next(err);
 };
 
-export const unknownEndPoint = (_:Request,res:Response) => {
+export const unknownEndPoint = (_: Request, res: Response) => {
   res.status(404).send({
     error: "Unknown Endpoint"
   });

@@ -27,6 +27,14 @@ export const userSchema = pgTable("users" , {
   joinedOn: timestamp("joinedOn", {
     withTimezone: true
   }).defaultNow(),
+  followers: serial("followers"),
+  following: serial("following"),
+});
+
+export const followerSchema = pgTable("followers" , {
+  id: serial("id").primaryKey(),
+  follower: integer("follower").references(() => userSchema.id, { onDelete: "cascade" }),
+  followedUser: integer("followedUser").references(() => userSchema.id, { onDelete: "cascade" }),
 });
 
 // One to Many Relation: A user can post multiple recipies
