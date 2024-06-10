@@ -11,13 +11,13 @@ function App() {
   const [selectedPage, setSelectedPage] = useState("Home");
   const Pages = {
     Home: <Banner content={<TrendingFoods items={popularItems} />} />,
-    Explore:<Explore/>,
-    Contact:<Contact/>
+    Explore: <Explore />,
+    Contact: <Contact />,
   };
   return (
     <>
       <Navbar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
-      <Wrapper>{Pages[selectedPage]}</Wrapper>
+      <Wrapper selectedPage={selectedPage}>{Pages[selectedPage]}</Wrapper>
     </>
   );
 }
