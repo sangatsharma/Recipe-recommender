@@ -2,7 +2,7 @@
 .Banner {
   width: 80%;
   min-height: 400px;
-  background: url("../src/assets/Images/Banner.png");
+  background: url("../../../assets/Images/Banner.png");
   background-size: cover;
   display: flex;
   flex-direction: column;
