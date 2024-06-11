@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.PORT = void 0;
+exports.DB_URL = exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.PORT = void 0;
 require("dotenv/config");
 const PORT = process.env.PORT;
 exports.PORT = PORT;
@@ -18,3 +18,5 @@ const SECRET = process.env.SECRET;
 exports.SECRET = SECRET;
 const ENDPOINT_ID = process.env.ENDPOINT_ID;
 exports.ENDPOINT_ID = ENDPOINT_ID;
+const DB_URL = process.env.DB_URL;
+exports.DB_URL = DB_URL;
