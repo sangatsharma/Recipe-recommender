@@ -1,37 +1,38 @@
-import jsonwebtoken from "jsonwebtoken";
+/****************
+* IMPORT
+****************/
+import { Request, Response, NextFunction } from "express";
+
+// JWT
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { JwtPayload } from "./users.types";
 
-import express, { Request, Response, NextFunction } from "express";
-import { followerSchema, recipeSchema, userSchema } from "../schema";
+import { SECRET } from "@/utils/config";
 
-import { db } from "../utils/db";
+// DB
 import { eq } from "drizzle-orm";
 
-import { SECRET } from "../utils/config";
+import { db } from "@/utils/db";
+import { recipeSchema } from "@/api/recipes/recipes.models";
+import { followerSchema, userSchema } from "@/api/users/users.models";
+import { handleToken } from "./users.helpers";
 
-// Types
-import { UserData, JwtPayload } from "../types/types";
 
-const userRouter = express.Router();
 
 
 /****************
-  REGISTER
-*****************/
+* ROUTES
+****************/
 
-// DEMO
-userRouter.get("/", (req: Request, res: Response) => {
-  return res.send("Hello World");
-});
 
-userRouter.post("/register", (req: Request, res: Response, next: NextFunction) => {
+/*
+  REGISTER USER
+*/
+export const userRegisterHandler = (req: Request, res: Response, next: NextFunction) => {
 
   // Get credentails
   const body = req.body;
-  const cookie = req.cookies;
-
-  // If logged-in, redirect to root route
-  if (cookie.token) return res.redirect("/user");
 
   // Initialize followers and following to 0
   body.followers = 0;
@@ -39,8 +40,8 @@ userRouter.post("/register", (req: Request, res: Response, next: NextFunction) =
 
   // Email and Password are required
   //TODO: Check for all required fields
-  if (!body.email || !body.password) {
-    return ({
+  if (!body.email || !body.password || !body.name) {
+    return res.json({
       "success": false,
       "body": {
         "message": "Empty fields",
@@ -75,22 +76,18 @@ userRouter.post("/register", (req: Request, res: Response, next: NextFunction) =
     next(err);
   });
 
-});
+};
 
 
-/****************
-  LOGIN
-*****************/
-userRouter.post("/login", (req: Request, res: Response, next: NextFunction) => {
+/*
+  LOGIN USER
+*/
+export const userLoginHandler = (req: Request, res: Response, next: NextFunction) => {
   const body = req.body;
-  const cookie = req.cookies;
-
-  // TODO: Redirect / JSON
-  if(cookie.json) return res.redirect("/user");
 
   // Email and Password are required
   if (!body.email || !body.password) {
-    return ({
+    return res.json({
       "success": false,
       "body": {
         "message": "Empty fields",
@@ -142,41 +139,25 @@ userRouter.post("/login", (req: Request, res: Response, next: NextFunction) => {
   }).catch((err) => {
     next(err);
   });
-});
+};
 
 
-userRouter.get("/recipies", (req: Request, res: Response, next: NextFunction) => {
-  const helper = async () => {
-    // TODO: Get users ID from token
-    const data = await db.select().from(recipeSchema).where(eq(recipeSchema.authorId, 1));
-    return data;
-  };
-
-  helper().then((data) => {
-    return res.json({ "data": data });
-  }).catch((err) => {
-    next(err);
-  });
-});
-
-
-userRouter.post("/follow", (req: Request, res: Response, next: NextFunction) => {
+/*
+  FOLLOW USER
+*/
+export const followUser = (req: Request, res: Response, next: NextFunction) => {
 
   //TODO: CHECK IF ALREADY FOLLOWING
   const data = req.body;
   const cookie = req.cookies;
 
-  if (!cookie.token) {
-    return res.redirect("/user/login");
-  }
-
-  const userToken = jsonwebtoken.verify(cookie.token, SECRET || "123" ) as JwtPayload;
+  const userToken = jwt.verify(cookie.token, SECRET) as JwtPayload;
 
   const helper = async () => {
 
     // Make sure user with email exists
     const followedUser = await db.select().from(userSchema).where(eq(userSchema.email, data.email));
-    const currentUser = await db.select().from(userSchema).where(eq(userSchema.id,userToken.id));
+    const currentUser = await db.select().from(userSchema).where(eq(userSchema.id, userToken.id));
     if (followedUser.length === 0) return false;
 
     // Add follower & following
@@ -208,38 +189,20 @@ userRouter.post("/follow", (req: Request, res: Response, next: NextFunction) => 
   }).catch((err) => {
     next(err);
   });
-
-
-});
-
-
-/****************
-  HELPERS
-*****************/
-const handleToken = (userData: UserData, res: Response) => {
-  const jwtToken = {
-    id: userData.id,
-    email: userData.email,
-  };
-
-  // Sign token
-  const token = jsonwebtoken.sign(jwtToken, SECRET || "123");
-
-  // Set cookie
-  res.cookie("token", token, {
-    maxAge: (1000 * 60 * 60 * 24 * 7),
-  });
-
-  // Return user details
-  return ({
-    "success": true,
-    "body": {
-      "name": userData.name,
-      "email": userData.email,
-      "followers": userData.followers,
-      "following": userData.following,
-    }
-  });
 };
 
-export default userRouter;
+
+
+export const tmpDemo = (_: Request, res: Response, next: NextFunction) => {
+  const helper = async () => {
+    // TODO: Get users ID from token
+    const data = await db.select().from(recipeSchema).where(eq(recipeSchema.AuthorId, 1));
+    return data;
+  };
+
+  helper().then((data) => {
+    return res.json({ "length": data.length, "data": data });
+  }).catch((err) => {
+    next(err);
+  });
+};

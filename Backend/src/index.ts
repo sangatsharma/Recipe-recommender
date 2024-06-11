@@ -1,20 +1,24 @@
 import express from "express";
-import  { PORT } from "./utils/config";
-import recipeRouter from "./controllers/recipes";
-import userRouter from "./controllers/users";
+import recipeRouter from "@/api/recipes/recipes.routes";
+import userRouter from "@/api/users/users.routes";
 
 import cookieParser from "cookie-parser";
 
-import { unknownEndPoint, errorHandler } from "./utils/middleware";
+import { unknownEndPoint } from "@/utils/middleware";
+import { errorHandler } from "@/utils/errorHandler";
 
 const app = express();
 
 app.use(cookieParser());
 app.use(express.json());
 
+/*
+ROUTES
+*/
+
 // Recipe route
-app.use("/recipe", recipeRouter);
-app.use("/user", userRouter);
+app.use("/recipe", recipeRouter); //recipes
+app.use("/user", userRouter); //users
 
 // Handle unknown endpoint
 app.use(unknownEndPoint);
@@ -22,6 +26,4 @@ app.use(unknownEndPoint);
 // Handle errors
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log("Done");
-});
+export default app;

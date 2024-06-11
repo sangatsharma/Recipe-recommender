@@ -1,22 +1,13 @@
-/*
-  ROUTES REGARDING RECIPES.
-  ENDPOINTS:
-    -> "/" with GET         = fetch all
-    -> "/" with POST        = add data
-    -> "/filter" with POST  = search specific
-*/
+import { NextFunction, Request, Response } from "express";
+import { db } from "@/utils/db";
+import { recipeSchema } from "./recipes.models";
+import { SQL, eq, lte, and } from "drizzle-orm";
 
-import express, { Request, Response, NextFunction } from "express";
-import { db } from "../utils/db";
-import { recipeSchema } from "../schema";
-import { eq, and, SQL, lte } from "drizzle-orm";
-
-const recipeRouter = express.Router();
 
 /*
   FETCH ALL RECIPIES
 */
-recipeRouter.get("/", (_:Request,res:Response, next:NextFunction) => {
+export const returnAllRecipies = (_: Request, res: Response, next: NextFunction) => {
   const helper = async () => {
 
     // Fetch all data from database
@@ -29,17 +20,17 @@ recipeRouter.get("/", (_:Request,res:Response, next:NextFunction) => {
   }).catch((err) => {
     next(err);
   });
+};
 
-});
 
 /*
   ADD A NEW RECIPE
 */
-recipeRouter.post("/", (req:Request,res:Response, next:NextFunction) => {
+export const addNewRecipe = (req: Request, res: Response, next: NextFunction) => {
   const data = req.body;
 
   // TODO: get author id from token
-  data["authorId"] = 1;
+  data["AuthorId"] = 1;
   // TODO: Validate data
   const helper = async () => {
     await db.insert(recipeSchema).values(data);
@@ -50,7 +41,7 @@ recipeRouter.post("/", (req:Request,res:Response, next:NextFunction) => {
   }).catch((err) => {
     next(err);
   });
-});
+};
 
 
 /*
@@ -64,15 +55,15 @@ recipeRouter.post("/", (req:Request,res:Response, next:NextFunction) => {
 
     returns all recipies with name "Biriyani" and cookTime <= 60 minutes.
 */
-recipeRouter.post("/filter", (req:Request, res:Response, next:NextFunction) => {
+export const filterRecipe = (req: Request, res: Response, next: NextFunction) => {
 
   const data = req.body;
-  const q:SQL[] = [];
+  const q: SQL[] = [];
 
-  for (const k of Object.keys(data)){
-    if (k === "name") q.push(eq(recipeSchema.name, data["name"]));
-    else if (k === "cookTime") q.push(lte(recipeSchema.cookTime, data["cookTime"]));
-    else if (k === "prepTime") q.push(lte(recipeSchema.prepTime, data["prepTime"]));
+  for (const k of Object.keys(data)) {
+    if (k === "name") q.push(eq(recipeSchema.Name, data["name"]));
+    else if (k === "cookTime") q.push(lte(recipeSchema.CookTime, data["cookTime"]));
+    else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"]));
   }
 
   const helper = async () => {
@@ -90,6 +81,4 @@ recipeRouter.post("/filter", (req:Request, res:Response, next:NextFunction) => {
   }).catch((err) => {
     next(err);
   });
-});
-
-export default recipeRouter;
+};

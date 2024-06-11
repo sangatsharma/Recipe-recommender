@@ -1,14 +1,14 @@
 export type UserData = {
-  password: string;
-  id: number;
+  id: number | null;
   name: string;
   email: string;
+  password: string;
   joinedOn: Date | null;
   followers: number;
   following: number;
 };
 
-export interface JwtPayload {
+export type JwtPayload = {
   id: number
   email: string,
-}
+};

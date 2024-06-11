@@ -26,9 +26,10 @@ dist-ssr
 *.sw?
 
 # Backend
-Backend/dist
 Backend/.env
-Backend/.vscode
-Backend/drizzle.config.json
 Backend/drizzle
-Backend/tsconfig.json.bk
+Backend/drizzle.config.json
+Backend/src/test
+Backend/scripts
+Backend/.vscode
+Backend/dist
