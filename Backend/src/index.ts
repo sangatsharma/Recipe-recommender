@@ -21,9 +21,11 @@ app.use("/recipe", recipeRouter); //recipes
 app.use("/user", userRouter); //users
 
 // Handle unknown endpoint
-app.use(unknownEndPoint);
+//todo uncomment below line
+// app.use(unknownEndPoint);
 
-// Handle errors
-app.use(errorHandler);
+// Handle errors 
+//todo uncomment below line
+// app.use(errorHandler);
 
 export default app;
