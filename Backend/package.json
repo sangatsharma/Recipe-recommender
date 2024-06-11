@@ -22,7 +22,8 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "package.json": "^0.0.0",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "vercel": "^34.2.6"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

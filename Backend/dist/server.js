@@ -8,3 +8,6 @@ const config_1 = require("./src/utils/config");
 index_1.default.listen(config_1.PORT, () => {
     console.log("Done");
 });
+index_1.default.use("/", (req, res) => {
+    res.json({ message: "Hello World" });
+});
