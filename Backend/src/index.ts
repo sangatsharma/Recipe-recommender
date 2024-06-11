@@ -15,17 +15,14 @@ app.use(express.json());
 /*
 ROUTES
 */
-
 // Recipe route
 app.use("/recipe", recipeRouter); //recipes
 app.use("/user", userRouter); //users
 
 // Handle unknown endpoint
-//todo uncomment below line
-// app.use(unknownEndPoint);
+app.use(unknownEndPoint);
 
-// Handle errors 
-//todo uncomment below line
-// app.use(errorHandler);
+// Handle errors
+app.use(errorHandler);
 
 export default app;

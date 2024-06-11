@@ -10,7 +10,6 @@ lerna-debug.log*
 # Dependency directories
 Frontend/node_modules
 Backend/node_modules
-dist
 dist-ssr
 *.local
 
@@ -32,4 +31,3 @@ Backend/drizzle.config.json
 Backend/src/test
 Backend/scripts
 Backend/.vscode
-Backend/dist
