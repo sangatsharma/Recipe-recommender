@@ -7,7 +7,8 @@ const DB_DATABASE: string = process.env.DB_DATABASE as string;
 const DB_USERNAME: string = process.env.DB_USERNAME as string;
 const DB_PASSWORD: string = process.env.DB_PASSWORD as string;
 const SECRET: string = process.env.SECRET as string;
+const ENDPOINT_ID: string = process.env.ENDPOINT_ID as string;
 
 export {
-  PORT, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD, SECRET
+  PORT, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD, SECRET, ENDPOINT_ID
 };

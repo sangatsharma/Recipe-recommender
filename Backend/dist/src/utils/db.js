@@ -16,5 +16,9 @@ const pg = (0, postgres_1.default)({
     database: config_1.DB_DATABASE,
     username: config_1.DB_USERNAME,
     password: config_1.DB_PASSWORD,
+    ssl: "require",
+    connection: {
+        options: `project=${config_1.ENDPOINT_ID}`,
+    },
 });
 exports.db = (0, postgres_js_1.drizzle)(pg);
