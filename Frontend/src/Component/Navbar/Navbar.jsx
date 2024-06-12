@@ -63,6 +63,14 @@ const Navbar = (props) => {
         >
           Sign Up
         </button>
+        <button
+          onClick={() => {
+            props.setSelectedPage("Login");
+          }}
+          className={props.selectedPage == "Login" ? "activePage" : ""}
+        >
+          Login
+        </button>
         {/* <img 
         onClick={() => {
           props.setSelectedPage("Login");
