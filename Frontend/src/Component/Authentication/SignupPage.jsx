@@ -168,7 +168,8 @@ const SignupPage = () => {
         <ul className=" text-teal-100 list-disc list-inside space-y-1 text-[20px]">
           <li className="flex items-center">
             <img
-              src="../../../src/assets/Images/list.png"
+              src="../assets/Images/list.png
+"
               alt="Recipe Bullet"
               className="inline-block mr-2 align-middle w-5 h-5"
             />
@@ -176,7 +177,8 @@ const SignupPage = () => {
           </li>
           <li className="flex items-center">
             <img
-              src="./../../src/assets/Images/list.png"
+              src="../assets/Images/list.png
+"
               alt="Recipe Bullet"
               className="inline-block mr-2 align-middle w-5 h-5"
             />
@@ -184,7 +186,8 @@ const SignupPage = () => {
           </li>
           <li className="flex items-center">
             <img
-              src="./../../src/assets/Images/list.png"
+              src="../assets/Images/list.png
+"
               alt="Recipe Bullet"
               className="inline-block mr-2 align-middle w-5 h-5"
             />
@@ -192,7 +195,8 @@ const SignupPage = () => {
           </li>
           <li className="flex items-center">
             <img
-              src="./../../src/assets/Images/list.png"
+              src="../assets/Images/list.png
+"
               alt="Recipe Bullet"
               className="inline-block mr-2 align-middle w-5 h-5"
             />
@@ -200,7 +204,8 @@ const SignupPage = () => {
           </li>
           <li className="flex items-center">
             <img
-              src="./../../src/assets/Images/list.png"
+              src="../assets/Images/list.png
+"
               alt="Recipe Bullet"
               className="inline-block mr-2 align-middle w-5 h-5"
             />
