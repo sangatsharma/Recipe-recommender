@@ -46,8 +46,8 @@ export default {
     backgroundColor: ({ theme }) => theme("colors"),
     backgroundImage: {
       none: "none",
-      'signup-bg': "url('./src/assets/Images/background.png')",      
-      'login-bg': "url('./src/assets/Images/background1.png')",      
+      'signup-bg': "url('./assets/Images/background.png')",      
+      'login-bg': "url('./assets/Images/background1.png')",      
       "gradient-to-t": "linear-gradient(to top, var(--tw-gradient-stops))",
       "gradient-to-tr":
         "linear-gradient(to top right, var(--tw-gradient-stops))",
