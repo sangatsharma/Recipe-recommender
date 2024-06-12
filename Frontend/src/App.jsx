@@ -8,6 +8,7 @@ import TrendingFoods from "./Component/Homepage/TrendingFoodSection/TrendingFood
 import Explore from "./Component/Explore/Explore.jsx";
 import Contact from "./Component/Contact/Contact.jsx";
 import SignupPage from "./Component/Authentication/SignupPage.jsx";
+import LoginPage from "./Component/Authentication/LoginPage.jsx";
 function App() {
   const [selectedPage, setSelectedPage] = useState("Home");
   const Pages = {
@@ -15,19 +16,14 @@ function App() {
     Explore: <Explore />,
     Contact: <Contact />,
     Signup: <SignupPage />,
+    Login:<LoginPage/>,
   };
   const [isLogin, setIsLogin] = useState(true);
   return (
     <>
-      <Navbar selectedPage={selectedPage} setSelectedPage={setSelectedPage} />
+      <Navbar selectedPage={selectedPage}  setSelectedPage={setSelectedPage} />
       <Wrapper selectedPage={selectedPage}>{Pages[selectedPage]}</Wrapper>
     </>
-
-    // <div>
-    //   <button onClick={() => setIsLogin(true)}>Login</button>
-    //   <button onClick={() => setIsLogin(false)}>Sign Up</button>
-    //   {isLogin ? <LoginForm /> : <SignupForm />}
-    // </div>
   );
 }
 

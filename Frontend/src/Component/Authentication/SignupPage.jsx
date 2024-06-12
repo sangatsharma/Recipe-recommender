@@ -35,10 +35,10 @@ const SignupPage = () => {
     <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4">
       {/* Left Side with Form */}
       <div className="w-1/2 p-10 bg-slate-200">
-        <div className="flex flex-row mb-4">
+        <div className="flex flex-row justify-center mb-4">
           {/* <img src="path/to/logo.png" alt="ads" className="h-12" /> */}
-          <span className="text-3xl md:text-3xl lg:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
-            Cook it Yourself
+          <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
+            Cook It Yourself
           </span>
         </div>
         <form onSubmit={formik.handleSubmit}>
@@ -160,9 +160,10 @@ const SignupPage = () => {
 
       {/* Right Side with Information */}
       <div className="w-2/3 p-10 flex flex-col justify-center bg-signup-bg bg-cover">
-        <h2 className="text-4xl text-orange-50 font-bold mb-2">
+        <h2 className="text-5xl text-orange-50 font-bold mb-2">
           Sign Up Today
         </h2>
+        <br/>
         <p className="text-2xl text-teal-50 mb-4">Here's What You'll Get:</p>
         <ul className="text-teal-100 list-disc list-inside space-y-1 text-[20px]">
           <li>Organize recipes.</li>
