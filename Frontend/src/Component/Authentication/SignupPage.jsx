@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const SignupPage = () => {
-
   // setup schema and formik
   const formik = useFormik({
     initialValues: {
@@ -25,7 +24,9 @@ const SignupPage = () => {
         .required("* Please enter a password."),
     }),
     onSubmit: (values) => {
-      {/* //todo handle submit*/ }
+      {
+        /* //todo handle submit*/
+      }
       alert(JSON.stringify(values, null, 2));
     },
   });
@@ -60,7 +61,7 @@ const SignupPage = () => {
           {/* //todo check if username exist */}
 
           {/* / Display error message/*/}
-          
+
           {formik.touched.userName && formik.errors.userName ? (
             <span className="text-red-500 text-sm">
               {formik.errors.userName}
@@ -158,20 +159,53 @@ const SignupPage = () => {
       </div>
 
       {/* Right Side with Information */}
-      <div className="w-2/3 p-10 flex flex-col justify-center bg-signup-bg bg-cover">
+      <div className="perks w-2/3 p-10 flex flex-col justify-center bg-signup-bg bg-cover">
         <h2 className="text-5xl text-orange-50 font-bold mb-2">
           Sign Up Today
         </h2>
-        <br/>
+        <br />
         <p className="text-2xl text-teal-50 mb-4">Here's What You'll Get:</p>
-        <ul className="text-teal-100 list-disc list-inside space-y-1 text-[20px]">
-          <li>Organize recipes.</li>
-          <li>Share with friends.</li>
-          <li>Discover personalized recipes.</li>
-          <li>Tag and share.</li>
-          <li>Invite friends.</li>
-          <li>Rate others' recipes.</li>
-          <li>Many more features.</li>
+        <ul className=" text-teal-100 list-disc list-inside space-y-1 text-[20px]">
+          <li className="flex items-center">
+            <img
+              src="../../../src/assets/Images/list.png"
+              alt="Recipe Bullet"
+              className="inline-block mr-2 align-middle w-5 h-5"
+            />
+            Organize recipes.
+          </li>
+          <li className="flex items-center">
+            <img
+              src="./../../src/assets/Images/list.png"
+              alt="Recipe Bullet"
+              className="inline-block mr-2 align-middle w-5 h-5"
+            />
+            Discover personalized recipes.
+          </li>
+          <li className="flex items-center">
+            <img
+              src="./../../src/assets/Images/list.png"
+              alt="Recipe Bullet"
+              className="inline-block mr-2 align-middle w-5 h-5"
+            />
+            Tag and share with friends.
+          </li>
+          <li className="flex items-center">
+            <img
+              src="./../../src/assets/Images/list.png"
+              alt="Recipe Bullet"
+              className="inline-block mr-2 align-middle w-5 h-5"
+            />
+            Rate others' recipes.
+          </li>
+          <li className="flex items-center">
+            <img
+              src="./../../src/assets/Images/list.png"
+              alt="Recipe Bullet"
+              className="inline-block mr-2 align-middle w-5 h-5"
+            />
+            Many more features.
+          </li>
         </ul>
       </div>
     </div>
