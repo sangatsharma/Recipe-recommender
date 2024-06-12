@@ -104,14 +104,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-// Dive back into your culinary adventure—explore, share, and discover even more delicious recipes today!
-
-// Welcome Back!
-
-// Access your favorite recipes.
-// Connect with friends over delicious discoveries.
-// Continue exploring personalized recipe recommendations.
-// Keep tagging and sharing your culinary creations.
-// Engage with and rate recipes from the community.
-// Discover new and exciting features.
