@@ -22,14 +22,11 @@ const LoginPage = () => {
   return (
     <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4 mt-[20px]">
       {/* Right Side with Information */}
-      <div className="w-2/3 p-10 flex flex-col justify-end text-right bg-login-bg bg-cover">
-        <h2 className="text-5xl text-sky-500  font-bold mb-2">
-          Welcome Back!
-        </h2>
+      <div className="w-2/3 p-10 flex flex-col justify-end text-center bg-login-bg bg-cover">
+        <h2 className="text-5xl text-sky-500  font-bold mb-2">Welcome Back!</h2>
         <br />
-        <p className="text-2xl text-black mb-4">
-          Dive back into your culinary adventure. Explore, share, and discover
-          even more delicious recipes today!
+        <p className="text-2xl text-black mb-4 pl-4">
+          Explore and share more delicious recipes today!
         </p>
       </div>
 
@@ -97,7 +94,7 @@ const LoginPage = () => {
         </form>
         <hr className="border-t-1 border-orange-500 my-1" />
         <p className="text-gray-600 text-xm">
-        Don't have an account? 
+          Don't have an account?
           <span className="text-blue-600 cursor-pointer"> Sign up</span>
         </p>
         {/* { //todo navigate to signup page } */}
