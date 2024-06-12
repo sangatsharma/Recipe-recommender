@@ -30,11 +30,10 @@ const SignupPage = () => {
     },
   });
 
-
   return (
     <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4">
       {/* Left Side with Form */}
-      <div className="w-1/2 p-10 bg-slate-200">
+      <div className="w-1/2 px-10 py-5 bg-slate-200">
         <div className="flex flex-row justify-center mb-4">
           {/* <img src="path/to/logo.png" alt="ads" className="h-12" /> */}
           <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
