@@ -14,8 +14,8 @@ header {
   display: flex;
   align-items: center;
 }
-.LogoWrapper>img{
-    width: 40px;
+.LogoWrapper > img {
+  width: 40px;
 }
 .BrandName {
   font-size: 18px;
@@ -60,8 +60,8 @@ nav > button {
   border: none;
   border-radius: 12px;
 }
-.Profile>img{
-    width: 40px;
+.Profile > img {
+  width: 40px;
 }
 header {
   background-color: #fcfaf7;
@@ -79,8 +79,8 @@ header {
   display: flex;
   align-items: center;
 }
-.LogoWrapper>img{
-    width: 40px;
+.LogoWrapper > img {
+  width: 40px;
 }
 .BrandName {
   font-size: 18px;
@@ -115,27 +115,25 @@ nav > button {
   font-size: 16px;
   cursor: pointer;
   outline: none;
-  transition: ease-in-out .2s ;
+  transition: ease-in-out 0.2s;
 }
 
 nav > button::after {
-  content: '';
+  content: "";
   width: 0;
   height: 3px;
   background: #ed802b;
   position: absolute;
   left: 0;
   bottom: -4px;
-  transition:  0.2s ease-in-out;
+  transition: 0.2s ease-in-out;
 }
 
 nav > button:hover::after {
   width: 100%;
-  
 }
 nav > button:hover {
   color: #ed802b;
-  
 }
 
 .Profile {
@@ -149,22 +147,24 @@ nav > button:hover {
   font-size: 14px;
   color: #1c120d;
   font-weight: 500;
-  background-color: #ed802b;
+  background-color: #fcfaf7;
   border: none;
   border-radius: 12px;
-  transition:  0.1s ease-in;
+  transition: 0.1s ease-in;
 }
 
-.Profile > button:hover{
-  background-color: rgb(249, 0, 41);
+.Profile > button:hover {
+  background-color: #fb923c;
   color: white;
 }
 
-.Profile>img{
- width: 40px;
- cursor: pointer;
+.Profile > img {
+  width: 40px;
+  cursor: pointer;
 }
-.activePage{
+.activePage {
   color: #ed802b;
 }
-
+.Profile > .activePage {
+  color: #ed802b;
+}

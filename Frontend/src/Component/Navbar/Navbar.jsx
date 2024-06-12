@@ -1,8 +1,6 @@
-
 import "./Navbar.css";
 
 const Navbar = (props) => {
-
   return (
     <header>
       <div className="LogoWrapper">
@@ -56,7 +54,14 @@ const Navbar = (props) => {
         </button>
       </nav>
       <div className="Profile">
-        <button>Sign up</button>
+        <button
+          onClick={() => {
+            props.setSelectedPage("Signup");
+          }}
+          className={props.selectedPage == "Signup" ? "activePage" : ""}
+        >
+          Sign Up
+        </button>
         <img
           loading="lazy"
           src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
