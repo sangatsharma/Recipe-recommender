@@ -36,9 +36,9 @@ const ProfileDropdown = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
           {/* Arrow */}
-          <div className="absolute top-0 right-2 w-5 h-5  transform rotate-45 bg-white border-t border-l border-white"></div>
+          <div className="absolute top-0 right-2 w-5 h-5 z-0  transform rotate-45 bg-white border-t border-l border-white"></div>
           {/*//todo change anchor tag to link when routes are setup */}
-          <ul className="py-1">
+          <ul className="py-1 relative z-10">
             <li>
               <a
                 href="https://www.google.com"
