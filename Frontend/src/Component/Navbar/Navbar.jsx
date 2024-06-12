@@ -1,8 +1,7 @@
-
 import "./Navbar.css";
+import ProfileDropdown from "./ProfileDropdown";
 
 const Navbar = (props) => {
-
   return (
     <header>
       <div className="LogoWrapper">
@@ -56,12 +55,25 @@ const Navbar = (props) => {
         </button>
       </nav>
       <div className="Profile">
-        <button>Sign up</button>
-        <img
+        <button
+          onClick={() => {
+            props.setSelectedPage("Signup");
+          }}
+          className={props.selectedPage == "Signup" ? "activePage" : ""}
+        >
+          Sign Up
+        </button>
+        {/* <img 
+        onClick={() => {
+          props.setSelectedPage("Login");
+        }}
+        className={props.selectedPage == "Login" ? "activePage" : ""}
           loading="lazy"
           src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
           alt="Profile"
-        />
+          
+        /> */}
+        <ProfileDropdown/>
       </div>
     </header>
   );

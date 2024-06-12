@@ -74,13 +74,13 @@
   font-size: 16px;
   color: #1c120d;
   font-weight: 500;
-  background-color: #ed802b;
+  background-color: #fb923c;
   border: none;
   border-radius: 12px;
   transition: ease-in 0.1s;
 }
 
 .SearchBar > button:hover {
-  background-color: rgb(249, 0, 41);
+  background-color: #ed802b;
   color: white;
 }

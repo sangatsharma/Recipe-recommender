@@ -4,7 +4,7 @@ main{
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 20px 60px;
+    padding: 18px 60px;
     @media (max-width: 991px) {
       padding: 0 20px;
     }
