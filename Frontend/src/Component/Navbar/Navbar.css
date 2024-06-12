@@ -44,71 +44,6 @@ nav > button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.Profile {
-  display: flex;
-  gap: 8px;
-}
-.Profile > button {
-  display: flex;
-  align-items: center;
-  padding: 10px 16px;
-  font-size: 14px;
-  color: #1c120d;
-  font-weight: 500;
-  background-color: #ed802b;
-  border: none;
-  border-radius: 12px;
-}
-.Profile > img {
-  width: 40px;
-}
-header {
-  background-color: #fcfaf7;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  padding: 12px 40px;
-  border-bottom: 1px solid rgba(229, 232, 235, 1);
-  @media (max-width: 991px) {
-    flex-wrap: wrap;
-    padding: 0 20px;
-  }
-}
-.LogoWrapper {
-  display: flex;
-  align-items: center;
-}
-.LogoWrapper > img {
-  width: 40px;
-}
-.BrandName {
-  font-size: 18px;
-  color: #1c120d;
-  font-weight: 700;
-  white-space: nowrap;
-  letter-spacing: -0.27px;
-  @media (max-width: 991px) {
-    white-space: normal;
-  }
-}
-nav {
-  display: flex;
-  gap: 20px;
-  font-size: 14px;
-  color: #1c120d;
-  font-weight: 500;
-  white-space: nowrap;
-  line-height: 150%;
-  padding: 10px 0;
-  @media (max-width: 991px) {
-    white-space: normal;
-  }
-}
-nav > button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
   background: none;
   border: none;
@@ -117,7 +52,6 @@ nav > button {
   outline: none;
   transition: ease-in-out 0.2s;
 }
-
 nav > button::after {
   content: "";
   width: 0;
@@ -128,7 +62,6 @@ nav > button::after {
   bottom: -4px;
   transition: 0.2s ease-in-out;
 }
-
 nav > button:hover::after {
   width: 100%;
 }
@@ -152,12 +85,10 @@ nav > button:hover {
   border-radius: 12px;
   transition: 0.1s ease-in;
 }
-
 .Profile > button:hover {
   background-color: #fb923c;
   color: white;
 }
-
 .Profile > img {
   width: 40px;
   cursor: pointer;
@@ -168,3 +99,4 @@ nav > button:hover {
 .Profile > .activePage {
   color: #ed802b;
 }
+
