@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 const ProfileDropdown = () => {
   //todo check if user is logged in
-  let isLogin = false;
+  let isLogin = true;
 
   //get current location path
   const location = useLocation().pathname;
