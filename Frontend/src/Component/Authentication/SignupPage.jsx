@@ -13,16 +13,24 @@ const SignupPage = () => {
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("* Please enter your name."),
+      userName: Yup.string()
+        .matches(
+          /^[a-zA-Z](?!.*\s{2})[a-zA-Z0-9]*(?: [a-zA-Z0-9]*)*$/,
+          "Only letters,numbers and space are allowed."
+        ).min(3, "Name must be at least 3 characters long").max(40, "Name must be at most 40 characters long")
+        .required("* Please enter your name."),
       email: Yup.string()
         .email("Invalid email address")
         .required("* Please provide your email."),
       password: Yup.string()
-        .min(6, "Password must be at least 6 characters long")
+        .min(6, "Password must be at least 6 characters long").matches(
+          /^(?=.*[A-Z])(?=.*[\W_])(?=.*[0-9])[a-zA-Z0-9\W_ ]+$/,
+          "Password must contain at least an uppercase,a symbol & a number,"
+        )
         .required("* Please enter a password."),
       confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "Passwords must match")
-        .required("* Please enter a password."),
+        .required("* Please confirm your password."),
     }),
     onSubmit: (values) => {
       {
@@ -51,6 +59,7 @@ const SignupPage = () => {
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            pattern="^[ /^[a-zA-Z](?!.*\s{2})[a-zA-Z0-9]*(?: [a-zA-Z0-9]*)*$]"
             id="userName"
             type="text"
             placeholder="User name"
@@ -75,7 +84,7 @@ const SignupPage = () => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="email"
           >
-            Enter Email Address
+            Email Address
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
