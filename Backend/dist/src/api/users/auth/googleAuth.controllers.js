@@ -6,7 +6,9 @@ const auth_helpers_1 = require("./auth.helpers");
 const oAuthHandler = (_, res) => {
     // Where to redirect to when user picks a account to login with
     // Has to be same as choosen in google cloud console
-    const REDIRECT_URI = "http://localhost:4000/user/auth/osuccess";
+    const REDIRECT_URI = config_1.ENV === "PROD"
+        ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+        : "http://localhost:4000/user/auth/osuccess";
     // Specifies resources our application can access in behalf of resource owner from resource server
     const GOOGLE_OAUTH_SCOPES = [
         "https://www.googleapis.com/auth/userinfo.email",
@@ -30,12 +32,15 @@ const oAuth2Server = async (req, res, next) => {
     // Get code out of query (Authorization Code)
     // TODO: Maybe, validate state
     const { code } = req.query;
+    const REDIRECT_URI = config_1.ENV === "PROD"
+        ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+        : "http://localhost:4000/user/auth/osuccess";
     // Ask for Access Token
     const data = {
         code,
         client_id: config_1.GOOGLE_CLIENT_ID,
         client_secret: config_1.GOOGLE_CLIENT_SECRET,
-        redirect_uri: "http://localhost:4000/user/auth/osuccess",
+        redirect_uri: REDIRECT_URI,
         grant_type: "authorization_code",
     };
     // Exchange authorization code for access token & id_token
