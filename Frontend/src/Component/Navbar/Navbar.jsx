@@ -3,6 +3,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useLocation, Link } from "react-router-dom";
 const Navbar = () => {
   const location = useLocation().pathname;
+  const isActive = location === "/" || location === "/home";
   console.log(location);
   return (
     <header>
@@ -15,24 +16,24 @@ const Navbar = () => {
         <span className="BrandName">Delish</span>
       </div>
       <nav>
-        <button className={location == "/home" ? "activePage" : ""}>
+        <button className={isActive ? "activePage" : ""}>
           <Link to="/home">Home</Link>
         </button>
-        <button className={location == "/recipes" ? "activePage" : ""}>
+        <button className={location === "/recipes" ? "activePage" : ""}>
           <Link to="/recipes">Recipes</Link>
         </button>
-        <button className={location == "/explore" ? "activePage" : ""}>
+        <button className={location === "/explore" ? "activePage" : ""}>
           <Link to="/explore">Explore</Link>
         </button>
-        <button className={location == "/search" ? "activePage" : ""}>
+        <button className={location === "/search" ? "activePage" : ""}>
           <Link to="/search">Search</Link>
         </button>
-        <button className={location == "/contact" ? "activePage" : ""}>
+        <button className={location === "/contact" ? "activePage" : ""}>
           <Link to="/contact">Contact</Link>
         </button>
       </nav>
       <div className="Profile">
-        <button className={location == "/signup" ? "activePage" : ""}>
+        <button className={location === "/signup" ? "activePage" : ""}>
           <Link to="/signup">Sign Up</Link>
         </button>
         <ProfileDropdown />
