@@ -8,13 +8,15 @@ import RootPageLayout from "./Pages/RootPageLayout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Search from "./Pages/Search.jsx";
 import Profile from "./Pages/Profile/Profile.jsx";
-import Settings  from "./Pages/Profile/Settings.jsx";
+import Settings from "./Pages/Profile/Settings.jsx";
+import PageNotFound from "./Pages/PageNotFound.jsx";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <RootPageLayout />,
+      errorElement: <PageNotFound />,
       children: [
         { path: "/", element: <Homepage /> },
         { path: "/home", element: <Homepage /> },
