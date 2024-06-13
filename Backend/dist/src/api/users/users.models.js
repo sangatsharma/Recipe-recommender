@@ -6,15 +6,15 @@ const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
 // Schema for user
 exports.userSchema = (0, pg_core_1.pgTable)("users", {
-    id: (0, pg_core_1.serial)("id").primaryKey(),
+    id: (0, pg_core_1.serial)("id").primaryKey().notNull(),
     name: (0, pg_core_1.text)("name").notNull(),
     email: (0, pg_core_1.text)("email").notNull().unique(),
-    password: (0, pg_core_1.text)("password").notNull(),
+    password: (0, pg_core_1.text)("password"),
     joinedOn: (0, pg_core_1.timestamp)("joinedOn", {
         withTimezone: true
-    }).defaultNow(),
-    followers: (0, pg_core_1.serial)("followers"),
-    following: (0, pg_core_1.serial)("following"),
+    }).defaultNow().notNull(),
+    followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
+    following: (0, pg_core_1.integer)("following").default(0).notNull(),
 });
 exports.followerSchema = (0, pg_core_1.pgTable)("followers", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
