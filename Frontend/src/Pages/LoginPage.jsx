@@ -1,6 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const formik = useFormik({
@@ -43,7 +44,7 @@ const LoginPage = () => {
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="email"
           >
-             Email Address
+            Email Address
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -95,7 +96,10 @@ const LoginPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <p className="text-gray-600 text-xm">
           Don't have an account?
-          <span className="text-blue-600 cursor-pointer"> Sign up</span>
+          <span className="text-blue-600 cursor-pointer">
+            {" "}
+            <Link to="/signup">Sign up</Link>
+          </span>
         </p>
         {/* { //todo navigate to signup page } */}
       </div>

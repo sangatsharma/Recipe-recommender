@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Dependency directories
 Frontend/node_modules
+Frontend/src/tempCodeRunnerFile.js
 Backend/node_modules
 dist-ssr
 *.local

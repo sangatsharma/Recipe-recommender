@@ -1,6 +1,6 @@
 import "./Banner.css";
 import React, { useState } from "react";
-const Banner = (props) => {
+const Banner = () => {
   const [search, setSearch] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -52,7 +52,7 @@ const Banner = (props) => {
           </button>
         </div>
       </div>
-      {props.content}
+      {/* {props.content} */}
     </>
   );
 };

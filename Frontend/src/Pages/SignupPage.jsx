@@ -1,7 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import bullet from "../../assets/Images/list.png";
+import bullet from "../assets/Images/list.png";
+import { Link } from "react-router-dom";
 
 const SignupPage = () => {
   // setup schema and formik
@@ -17,13 +18,16 @@ const SignupPage = () => {
         .matches(
           /^[a-zA-Z](?!.*\s{2})[a-zA-Z0-9]*(?: [a-zA-Z0-9]*)*$/,
           "Only letters,numbers and space are allowed."
-        ).min(3, "Name must be at least 3 characters long").max(40, "Name must be at most 40 characters long")
+        )
+        .min(3, "Name must be at least 3 characters long")
+        .max(40, "Name must be at most 40 characters long")
         .required("* Please enter your name."),
       email: Yup.string()
         .email("Invalid email address")
         .required("* Please provide your email."),
       password: Yup.string()
-        .min(6, "Password must be at least 6 characters long").matches(
+        .min(6, "Password must be at least 6 characters long")
+        .matches(
           /^(?=.*[A-Z])(?=.*[\W_])(?=.*[0-9])[a-zA-Z0-9\W_ ]+$/,
           "Password must contain at least an uppercase,a symbol & a number,"
         )
@@ -163,7 +167,9 @@ const SignupPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <p className="text-gray-600 text-xm">
           Already have an account?{" "}
-          <span className="text-blue-600 cursor-pointer">Log in</span>
+          <span className="text-blue-600 cursor-pointer">
+            <Link to="/login">Log in</Link>
+          </span>
         </p>
         {/* { //todo navigate to login page } */}
       </div>

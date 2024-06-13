@@ -1,7 +1,9 @@
 import "./Navbar.css";
 import ProfileDropdown from "./ProfileDropdown";
-
-const Navbar = (props) => {
+import { useLocation, Link } from "react-router-dom";
+const Navbar = () => {
+  const location = useLocation().pathname;
+  console.log(location);
   return (
     <header>
       <div className="LogoWrapper">
@@ -13,75 +15,27 @@ const Navbar = (props) => {
         <span className="BrandName">Delish</span>
       </div>
       <nav>
-        <button
-          className={props.selectedPage == "Home" ? "activePage" : ""}
-          onClick={() => {
-            props.setSelectedPage("Home");
-          }}
-        >
-          Home
+        <button className={location == "/home" ? "activePage" : ""}>
+          <Link to="/home">Home</Link>
         </button>
-        <button
-          className={props.selectedPage == "Recipes" ? "activePage" : ""}
-          onClick={() => {
-            props.setSelectedPage("Recipes");
-          }}
-        >
-          Recipes
+        <button className={location == "/recipes" ? "activePage" : ""}>
+          <Link to="/recipes">Recipes</Link>
         </button>
-        <button
-          className={props.selectedPage == "Explore" ? "activePage" : ""}
-          onClick={() => {
-            props.setSelectedPage("Explore");
-          }}
-        >
-          Explore
+        <button className={location == "/explore" ? "activePage" : ""}>
+          <Link to="/explore">Explore</Link>
         </button>
-        <button
-          className={props.selectedPage == "Search" ? "activePage" : ""}
-          onClick={() => {
-            props.setSelectedPage("Search");
-          }}
-        >
-          Search
+        <button className={location == "/search" ? "activePage" : ""}>
+          <Link to="/search">Search</Link>
         </button>
-        <button
-          className={props.selectedPage == "Contact" ? "activePage" : ""}
-          onClick={() => {
-            props.setSelectedPage("Contact");
-          }}
-        >
-          Contact
+        <button className={location == "/contact" ? "activePage" : ""}>
+          <Link to="/contact">Contact</Link>
         </button>
       </nav>
       <div className="Profile">
-        <button
-          onClick={() => {
-            props.setSelectedPage("Signup");
-          }}
-          className={props.selectedPage == "Signup" ? "activePage" : ""}
-        >
-          Sign Up
+        <button className={location == "/signup" ? "activePage" : ""}>
+          <Link to="/signup">Sign Up</Link>
         </button>
-        <button
-          onClick={() => {
-            props.setSelectedPage("Login");
-          }}
-          className={props.selectedPage == "Login" ? "activePage" : ""}
-        >
-          Login
-        </button>
-        {/* <img 
-        onClick={() => {
-          props.setSelectedPage("Login");
-        }}
-        className={props.selectedPage == "Login" ? "activePage" : ""}
-          loading="lazy"
-          src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
-          alt="Profile"
-          
-        /> */}
-        <ProfileDropdown/>
+        <ProfileDropdown />
       </div>
     </header>
   );
