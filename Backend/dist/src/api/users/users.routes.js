@@ -12,10 +12,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 */
 const express_1 = __importDefault(require("express"));
 // Types
+const passwordAuth_controllers_1 = require("./auth/passwordAuth.controllers");
+const googleAuth_controllers_1 = require("./auth/googleAuth.controllers");
 const users_controllers_1 = require("./users.controllers");
 const userRouter = express_1.default.Router();
-userRouter.post("/register", users_controllers_1.userRegisterHandler);
-userRouter.post("/login", users_controllers_1.userLoginHandler);
+// AUTH
+userRouter.post("/auth/register", passwordAuth_controllers_1.userRegisterHandler);
+userRouter.post("/auth/login", passwordAuth_controllers_1.userLoginHandler);
+userRouter.get("/auth/oauth", googleAuth_controllers_1.oAuthHandler);
+userRouter.get("/auth/osuccess", googleAuth_controllers_1.oAuth2Server);
 userRouter.post("/follow", users_controllers_1.followUser);
 userRouter.get("/recipes", users_controllers_1.tmpDemo);
 exports.default = userRouter;

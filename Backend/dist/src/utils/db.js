@@ -10,7 +10,7 @@ exports.db = void 0;
 const postgres_js_1 = require("drizzle-orm/postgres-js");
 const postgres_1 = __importDefault(require("postgres"));
 const config_1 = require("../utils/config");
-const pg = (0, postgres_1.default)({
+const pg = config_1.ENV === "PROD" ? (0, postgres_1.default)({
     host: config_1.DB_HOST,
     port: Number(config_1.DB_PORT),
     database: config_1.DB_DATABASE,
@@ -20,5 +20,12 @@ const pg = (0, postgres_1.default)({
     connection: {
         options: `project=${config_1.ENDPOINT_ID}`,
     },
-});
+})
+    : (0, postgres_1.default)({
+        host: config_1.DB_HOST,
+        port: Number(config_1.DB_PORT),
+        database: config_1.DB_DATABASE,
+        username: config_1.DB_USERNAME,
+        password: config_1.DB_PASSWORD,
+    });
 exports.db = (0, postgres_js_1.drizzle)(pg);

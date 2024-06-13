@@ -28,7 +28,7 @@ dist-ssr
 # Backend
 Backend/.env
 Backend/drizzle
-Backend/drizzle.config.json
+Backend/drizzle.config.ts
 Backend/src/test
 Backend/scripts
 Backend/.vscode
