@@ -13,7 +13,7 @@ const LoginPage = () => {
       email: Yup.string()
         .email("Invalid email address")
         .required("* Enter your email."),
-      password: Yup.string().required('* Enter your password."'),
+      password: Yup.string().required("* Enter your password."),
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
@@ -77,16 +77,27 @@ const LoginPage = () => {
             value={formik.values.password}
           />
           {formik.touched.password && formik.errors.password ? (
-            <span className="text-red-500 text-sm">
-              {formik.errors.password}
-            </span>
+            <div className="flex flex-row justify-between">
+              <span className="text-red-500 text-sm">
+                {formik.errors.password}
+              </span>
+              <p className="text-right text-sm cursor-pointer text-blue-600 pt-1 hover:underline">
+                {/* //todo handle forget password */}
+                <Link to="/"> Forgot password?</Link>
+              </p>
+            </div>
           ) : (
-            <span className="text-slate-200 text-[2px]">*</span>
+            <div className="flex flex-row justify-between">
+              <span className="text-slate-200 text-[2px]">*</span>
+              <p className="text-right text-sm cursor-pointer text-blue-600 pt-1 hover:underline ">
+                {/* //todo handle forget password */}
+                <Link to="/"> Forgot password?</Link>
+              </p>
+            </div>
           )}
-
-          <div className="mb-1">
+          <div className="mb-1 ">
             <button
-              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-[8px]"
+              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-[8px] "
               type="submit"
             >
               Login
@@ -94,13 +105,25 @@ const LoginPage = () => {
           </div>
         </form>
         <hr className="border-t-1 border-orange-500 my-1" />
-        <p className="text-gray-600 text-xm">
-          Don't have an account?
-          <span className="text-blue-600 cursor-pointer">
-            {" "}
-            <Link to="/signup">Sign up</Link>
-          </span>
-        </p>
+        <div className="flex flex-col gap-1 justify-center text-center pt-2">
+          <Link to="/">
+            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              Continue with
+              <img
+                className="w-7 h-7 rounded-full"
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                loading="lazy"
+                alt="google logo"
+              />
+            </button>
+          </Link>
+          <p className="text-gray-600 text-xm">
+            Don't have an account?
+            <span className="text-blue-600 cursor-pointer hover:underline">
+              <Link to="/signup"> Sign up</Link>
+            </span>
+          </p>
+        </div>
         {/* { //todo navigate to signup page } */}
       </div>
     </div>

@@ -159,19 +159,33 @@ const SignupPage = () => {
               Sign Up
             </button>
           </div>
+
           <p className="text-gray-600 text-xs">
             By clicking on 'Sign Up' you are agreeing to the Terms of Service
             and the Privacy Policy.
           </p>
         </form>
+
         <hr className="border-t-1 border-orange-500 my-1" />
-        <p className="text-gray-600 text-xm">
-          Already have an account?{" "}
-          <span className="text-blue-600 cursor-pointer">
-            <Link to="/login">Log in</Link>
-          </span>
-        </p>
-        {/* { //todo navigate to login page } */}
+        <div className="flex flex-col gap-1 justify-center text-center pt-2">
+          <Link to="/">
+            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              Continue with
+              <img
+                className="w-7 h-7 rounded-full"
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                loading="lazy"
+                alt="google logo"
+              />
+            </button>
+          </Link>
+          <p className="text-gray-600 text-xm">
+            Already have an account?
+            <span className="text-blue-600 cursor-pointer hover:underline">
+              <Link to="/login"> Log in</Link>
+            </span>
+          </p>
+        </div>
       </div>
 
       {/* Right Side with Information */}
