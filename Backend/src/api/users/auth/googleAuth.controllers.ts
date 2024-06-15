@@ -1,7 +1,7 @@
 import { GOOGLE_ACCESS_TOKEN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_URL, ENV } from "@/utils/config";
 import { NextFunction, Request, Response } from "express";
 import { handleToken, userExists, userRegisterHelper } from "./auth.helpers";
-import { JsonResponse, RegisterForm, UserDataDB } from "../users.types";
+import { AccessTokenData, JsonResponse, RegisterForm, TokenInfoResponse, UserDataDB } from "../users.types";
 
 export const oAuthHandler = (_: Request, res: Response) => {
 
@@ -58,7 +58,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
     body: JSON.stringify(data),
   });
 
-  const access_token_data = await response.json();
+  const access_token_data: AccessTokenData = await response.json() as AccessTokenData;
 
   const { id_token } = access_token_data;
 
@@ -66,7 +66,9 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
   const token_info_response = await fetch(
     `${process.env.GOOGLE_TOKEN_INFO_URL}?id_token=${id_token}`
   );
-  const token_info_response_json = await token_info_response.json();
+
+  // TODO: TYPE
+  const token_info_response_json: TokenInfoResponse = await token_info_response.json() as TokenInfoResponse;
 
   const { name, email } = token_info_response_json;
 

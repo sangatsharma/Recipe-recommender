@@ -30,10 +30,10 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
 
   // TODO: TRY-CATCH
   //TODO: CHECK IF ALREADY FOLLOWING
-  const data = req.body;
+  const data: { email: string } = req.body as { email: string };
   const cookie = req.cookies;
 
-  const userToken = jwt.verify(cookie.token, SECRET) as JwtPayload;
+  const userToken = jwt.verify(cookie.token as string, SECRET) as JwtPayload;
 
 
   // Make sure user with email exists
