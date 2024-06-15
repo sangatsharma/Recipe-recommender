@@ -68,7 +68,7 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
   }
 
   const helper = async () => {
-    const filteredRes = await db.select().from(recipeSchema).where(and(...q));
+    const filteredRes = await db.select().from(recipeSchema).where(and(...q)).execute();
     return filteredRes;
   };
 
