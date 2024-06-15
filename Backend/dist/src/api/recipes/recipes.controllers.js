@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -50,28 +50,80 @@ exports.addNewRecipe = addNewRecipe;
     returns all recipies with name "Biriyani" and cookTime <= 60 minutes.
 */
 const filterRecipe = (req, res, next) => {
+    // Get filter data from frontend
     const data = req.body;
     const q = [];
+    // If name search is present
+    let nameSearch = false;
+    let nameQuery = "";
+    // Loop through search filters
     for (const k of Object.keys(data)) {
-        if (k === "name")
-            q.push((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.Name, data["name"]));
+        if (k === "id") {
+            q.push((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data["id"]));
+        }
+        else if (k === "name") {
+            nameSearch = true;
+            nameQuery = data["name"];
+        }
         else if (k === "cookTime")
             q.push((0, drizzle_orm_1.lte)(recipes_models_1.recipeSchema.CookTime, data["cookTime"]));
         else if (k === "prepTime")
             q.push((0, drizzle_orm_1.lte)(recipes_models_1.recipeSchema.PrepTime, data["prepTime"]));
     }
     const helper = async () => {
-        const filteredRes = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.and)(...q));
+        // Apply filter and search DB
+        const filteredRes = await db_1.db.select().from(recipes_models_1.recipeSchema).where(nameSearch
+            ? (0, drizzle_orm_1.and)((0, drizzle_orm_1.ilike)(recipes_models_1.recipeSchema.Name, "%" + nameQuery + "%"), (0, drizzle_orm_1.and)(...q))
+            : (0, drizzle_orm_1.and)(...q));
+        // Return responses
         return filteredRes;
     };
     helper().then((data) => {
+        // If no match found
+        if (data.length === 0)
+            return res.json({
+                success: false,
+                body: {
+                    message: "No recipe found with provided search filters"
+                }
+            });
+        // Else
         return res.json({
-            "success": "true",
-            "length": data.length,
-            "data": data,
+            success: true,
+            length: data.length,
+            body: data
         });
     }).catch((err) => {
         next(err);
     });
 };
 exports.filterRecipe = filterRecipe;
+/*
+  SEARCH FOR A SPECIFIC RECIPE
+*/
+const recipeDetails = async (req, res, next) => {
+    // Get recipe id from parameter
+    const recipeId = Number(req.params.id);
+    try {
+        // Get the recipe
+        const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, recipeId));
+        // If not found
+        if (recipeDB.length === 0) {
+            return res.send({
+                success: false,
+                body: {
+                    message: "Recipe with provided id not found",
+                },
+            });
+        }
+        // If found
+        return res.send({
+            success: true,
+            body: recipeDB[0],
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.recipeDetails = recipeDetails;
