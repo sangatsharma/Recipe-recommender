@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export const errorHandler = (err: Error, _: Request, res: Response, next: NextFunction) => {
+export const errorHandler = (err: Error, _: Request, res: Response, __: NextFunction) => {
 
   // TODO: Error message based on DB ERROR
   if (err.name === "CastError") {

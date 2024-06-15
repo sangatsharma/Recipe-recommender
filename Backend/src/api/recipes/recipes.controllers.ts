@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeSchema } from "./recipes.models";
-import { SQL, eq, lte, and } from "drizzle-orm";
+import { SQL, eq, lte, and, ilike } from "drizzle-orm";
 
 
 /*
@@ -57,28 +57,64 @@ export const addNewRecipe = (req: Request, res: Response, next: NextFunction) =>
 */
 export const filterRecipe = (req: Request, res: Response, next: NextFunction) => {
 
-  const data = req.body;
+  // Get filter data from frontend
+  const data: Record<string, string | number> = req.body as Record<string, string | number>;
   const q: SQL[] = [];
 
+<<<<<<< HEAD
   for (const k of Object.keys(data)) {
     if (k === "name") q.push(eq(recipeSchema.Name, data["name"]));
     else if (k === "cookTime") q.push(lte(recipeSchema.CookTime, data["cookTime"]));
     // else if (k === "RecipeId") q.push(eq(recipeSchema.RecipeId, data["RecipeId"]));
     else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"]));
   }
+=======
+  // If name search is present
+  let nameSearch = false;
+  let nameQuery = "";
+>>>>>>> saurav
 
+  // Loop through search filters
+  for (const k of Object.keys(data)) {
+    if (k === "id") { q.push(eq(recipeSchema.RecipeId, data["id"] as number)); }
+    else if (k === "name") { nameSearch = true; nameQuery = data["name"] as string; }
+    else if (k === "cookTime") q.push(lte(recipeSchema.CookTime, data["cookTime"] as number));
+    else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"] as number));
+  }
   const helper = async () => {
+<<<<<<< HEAD
     const filteredRes = await db.select().from(recipeSchema).where(and(...q));
     // const filteredRes = await db.select().from(recipeSchema).where(and(...q)).execute();
+=======
+
+    // Apply filter and search DB
+    const filteredRes = await db.select().from(recipeSchema).where(
+      nameSearch
+        ? and(ilike(recipeSchema.Name, "%" + nameQuery + "%"), and(...q))
+        : and(...q)
+    );
+
+    // Return responses
+>>>>>>> saurav
     return filteredRes;
   };
 
   helper().then((data) => {
 
+    // If no match found
+    if (data.length === 0)
+      return res.json({
+        success: false,
+        body: {
+          message: "No recipe found with provided search filters"
+        }
+      });
+
+    // Else
     return res.json({
-      "success": "true",
-      "length": data.length,
-      "data": data,
+      success: true,
+      length: data.length,
+      body: data
     });
   }).catch((err) => {
     next(err);

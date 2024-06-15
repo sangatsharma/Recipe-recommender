@@ -22,11 +22,26 @@ export type UserDataDB = {
 export type JsonResponse = {
   success: boolean;
   body: {
-    [message: string]: any
+    [message: string]: string | number | Date
   };
 };
 
 export type JwtPayload = {
   id: number
   email: string,
+};
+
+
+// GOOGLE OAUTH
+export type AccessTokenData = {
+  access_token: string,
+  expires_in: number,
+  scope: string,
+  token_type: string,
+  id_token: string
+};
+
+export type TokenInfoResponse = {
+  name: string;
+  email: string;
 };

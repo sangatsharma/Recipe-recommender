@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 export const userRegisterHandler = async (req: Request, res: Response, next: NextFunction) => {
 
   // Get credentails
-  const body: RegisterForm = req.body;
+  const body: RegisterForm = req.body as RegisterForm;
 
   // Email and Password are required
   //TODO: Check for all required fields
@@ -37,7 +37,7 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
   LOGIN USER
 */
 export const userLoginHandler = async (req: Request, res: Response, next: NextFunction) => {
-  const body: LoginForm = req.body;
+  const body: LoginForm = req.body as LoginForm;
 
   // Email and Password are required
   if (!body.email || !body.password) {
