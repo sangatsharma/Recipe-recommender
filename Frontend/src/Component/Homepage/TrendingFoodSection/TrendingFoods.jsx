@@ -1,5 +1,5 @@
 import "./TrendingFoods.css";
-import ItemsCard from "./ItemsCard.jsx"
+import ItemsCard from "./ItemsCard.jsx";
 const TrendingFoods = (props) => {
   return (
     <div className="TrendingFood">
@@ -7,7 +7,13 @@ const TrendingFoods = (props) => {
       <div className="ItemsWrapper">
         {props.items.map((item) => {
           return (
-            <ItemsCard key={item.id} src={item.src} name={item.name} rating={item.rating} ></ItemsCard>
+            <ItemsCard
+              key={item.id}
+              id={item.id}
+              src={item.src}
+              name={item.name}
+              rating={item.rating}
+            ></ItemsCard>
           );
         })}
       </div>
@@ -15,5 +21,3 @@ const TrendingFoods = (props) => {
   );
 };
 export default TrendingFoods;
-
-

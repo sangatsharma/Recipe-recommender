@@ -4,7 +4,6 @@ import { useLocation, Link } from "react-router-dom";
 const Navbar = () => {
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
-  console.log(location);
   return (
     <header>
       <div className="LogoWrapper">

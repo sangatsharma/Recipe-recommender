@@ -3,6 +3,7 @@ import LoginPage from "./Pages/LoginPage.jsx";
 import Explore from "./Pages/Explore.jsx";
 import Contact from "./Pages/Contact.jsx";
 import Recipes from "./Pages/Recipes.jsx";
+import RecipeDetails from "./Pages/RecipeDetails.jsx";
 import Homepage from "./Pages/HomePage.jsx";
 import RootPageLayout from "./Pages/RootPageLayout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -21,6 +22,7 @@ function App() {
         { path: "/", element: <Homepage /> },
         { path: "/home", element: <Homepage /> },
         { path: "/recipes", element: <Recipes /> },
+        { path: "/recipes/:recipeName", element: <RecipeDetails /> },
         { path: "/search", element: <Search /> },
         { path: "/contact", element: <Contact /> },
         { path: "/explore", element: <Explore /> },
