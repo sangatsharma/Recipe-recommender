@@ -61,18 +61,9 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
   const data: Record<string, string | number> = req.body as Record<string, string | number>;
   const q: SQL[] = [];
 
-<<<<<<< HEAD
-  for (const k of Object.keys(data)) {
-    if (k === "name") q.push(eq(recipeSchema.Name, data["name"]));
-    else if (k === "cookTime") q.push(lte(recipeSchema.CookTime, data["cookTime"]));
-    // else if (k === "RecipeId") q.push(eq(recipeSchema.RecipeId, data["RecipeId"]));
-    else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"]));
-  }
-=======
   // If name search is present
   let nameSearch = false;
   let nameQuery = "";
->>>>>>> saurav
 
   // Loop through search filters
   for (const k of Object.keys(data)) {
@@ -82,10 +73,6 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
     else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"] as number));
   }
   const helper = async () => {
-<<<<<<< HEAD
-    const filteredRes = await db.select().from(recipeSchema).where(and(...q));
-    // const filteredRes = await db.select().from(recipeSchema).where(and(...q)).execute();
-=======
 
     // Apply filter and search DB
     const filteredRes = await db.select().from(recipeSchema).where(
@@ -95,7 +82,6 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
     );
 
     // Return responses
->>>>>>> saurav
     return filteredRes;
   };
 
@@ -119,4 +105,39 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
   }).catch((err) => {
     next(err);
   });
+};
+
+
+/*
+  SEARCH FOR A SPECIFIC RECIPE
+*/
+export const recipeDetails = async (req: Request, res: Response, next: NextFunction) => {
+
+  // Get recipe id from parameter
+  const recipeId: number = Number(req.params.id);
+
+  try {
+    // Get the recipe
+    const recipeDB = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, recipeId));
+
+    // If not found
+    if (recipeDB.length === 0) {
+      return res.send({
+        success: false,
+        body: {
+          message: "Recipe with provided id not found",
+        },
+      });
+    }
+
+    // If found
+    return res.send({
+      success: true,
+      body: recipeDB[0],
+    });
+  }
+
+  catch (err) {
+    next(err);
+  }
 };
