@@ -63,12 +63,13 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
   for (const k of Object.keys(data)) {
     if (k === "name") q.push(eq(recipeSchema.Name, data["name"]));
     else if (k === "cookTime") q.push(lte(recipeSchema.CookTime, data["cookTime"]));
-    else if (k === "RecipeId") q.push(eq(recipeSchema.RecipeId, data["RecipeId"]));
+    // else if (k === "RecipeId") q.push(eq(recipeSchema.RecipeId, data["RecipeId"]));
     else if (k === "prepTime") q.push(lte(recipeSchema.PrepTime, data["prepTime"]));
   }
 
   const helper = async () => {
-    const filteredRes = await db.select().from(recipeSchema).where(and(...q)).execute();
+    const filteredRes = await db.select().from(recipeSchema).where(and(...q));
+    // const filteredRes = await db.select().from(recipeSchema).where(and(...q)).execute();
     return filteredRes;
   };
 
