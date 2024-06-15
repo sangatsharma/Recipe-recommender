@@ -29,7 +29,7 @@ const RecipeDetails = () => {
   const fetchItemById = async (id) => {
     try {
       //todo change the url to the correct one
-      const response = await fetch(`/api/items/${id}`);
+      const response = await fetch(`https://recipe-recommender-backend.vercel.app/recipe/${id}`);
 
       if (!response.ok) {
         // Handle HTTP errors
