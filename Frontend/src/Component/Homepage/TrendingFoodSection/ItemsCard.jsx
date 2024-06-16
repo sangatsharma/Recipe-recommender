@@ -6,7 +6,9 @@ const ItemsCard = ({ id, src, name, rating }) => {
   const navigate = useNavigate();
 
   // Create a URL-friendly name
-  const itemName = `${slugify(name)}-${id}`; 
+  const itemName = `${slugify(name, {
+    replacement: "_",
+  })}_${id}`;
   const handleClick = () => {
     navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
   };

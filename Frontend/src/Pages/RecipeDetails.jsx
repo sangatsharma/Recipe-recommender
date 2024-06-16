@@ -8,7 +8,7 @@ const RecipeDetails = () => {
   const { recipeName } = useParams();
 
   // Extract name and ID from the param
-  const paramParts = recipeName.split("-");
+  const paramParts = recipeName.split("_");
   const id = paramParts.pop();
 
   //Combine the rest as the name
@@ -24,6 +24,7 @@ const RecipeDetails = () => {
         setItem(fetchedItem);
       } catch (err) {
         setError(err.message);
+        console.error(err);
       }
     };
 

@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import bullet from "../assets/Images/list.png";
 import { Link } from "react-router-dom";
 
-
 const SignupPage = () => {
   // setup schema and formik
   const formik = useFormik({
@@ -44,15 +43,19 @@ const SignupPage = () => {
         values["name"] = values["userName"];
 
         // Send creds to backend
-        const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/register", values, {
-          headers: {"Content-Type": "application/json"},
-          withCredentials: true
-        });
+        const res = await axios.post(
+          "https://recipe-recommender-backend.vercel.app/user/auth/register",
+          values,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
         const data = res.data;
 
         // If not successful
-        if(!data.success) {
-          alert(data.body.message)
+        if (!data.success) {
+          alert(data.body.message);
         }
 
         // Else, signed in successfully
@@ -82,7 +85,6 @@ const SignupPage = () => {
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            pattern="^[ /^[a-zA-Z](?!.*\s{2})[a-zA-Z0-9]*(?: [a-zA-Z0-9]*)*$]"
             id="userName"
             type="text"
             placeholder="User name"
@@ -188,7 +190,7 @@ const SignupPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           <Link to="/">
-            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" >
+            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
               Continue with
               <img
                 className="w-7 h-7 rounded-full"
