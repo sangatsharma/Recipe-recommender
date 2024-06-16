@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Wrapper from "../Component/Wrapper";
 import axios from "axios";
@@ -6,53 +6,47 @@ import InvalidPage from "../Component/InvalidPage";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
+
   // Extract name and ID from the param
   const paramParts = recipeName.split("-");
   const id = paramParts.pop();
-  const itemName = paramParts.join(" "); // Combine the rest as the name
-  console.log(`name:${itemName},id:${id}`);
-  const location = useLocation();
+
+  //Combine the rest as the name
+  const itemName = paramParts.join(" ");
+
   const [item, setItem] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch item by ID from database or API
-    fetchItemById(id).then((fetchedItem) => setItem(fetchedItem));
-  }, [recipeName, location.state]);
-
-  // Simulated function to fetch item by ID from a database
-
-  const fetchItemById = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://recipe-recommender-backend.vercel.app/recipe/${id}`,
-        {}
-      );
-
-      // const response = await axios.get(`http://localhost:4000/recipe/${id}`, {
-      // });
-      // const response = await axios.post(
-      //   "https://recipe-recommender-backend.vercel.app/recipe/filter",
-      //   {
-      //     name: "Nepali Momo (Nepalese Meat Dumplings)",
-      //     id: 42
-      //   }
-      // );
-
-      if (response.status !== 200) {
-        // Handle HTTP errors
-        throw new Error(`HTTP error! status: ${response.status}`);
+    const fetchData = async () => {
+      try {
+        const fetchedItem = await fetchItemById(id, itemName);
+        setItem(fetchedItem);
+      } catch (err) {
+        setError(err.message);
       }
+    };
 
-      return response.data.body;
+    fetchData();
+  }, [id, itemName, recipeName]);
+
+  //  function to fetch item by ID from a database
+  const fetchItemById = async (RecipeId, RecipeName) => {
+    try {
+      const response = await axios.post("http://localhost:4000/recipe/filter", {
+        name: RecipeName,
+        id: RecipeId,
+      });
+      if (response.data.success == false) return response.data;
+      return response.data.body[0];
     } catch (error) {
       console.error("Error fetching item:", error);
       throw error;
     }
   };
-
+  if (error) return <p>Error: {error}</p>;
   if (!item) return <p>Loading...</p>;
-  if (itemName.toLowerCase() != item.Name.toLowerCase()) return <InvalidPage />;
-
+  if (item.success == false) return <InvalidPage />;
   return (
     <Wrapper>
       <div>
@@ -78,7 +72,7 @@ const RecipeDetails = () => {
             <strong>Total Time:</strong> {item.TotalTime} minutes
           </p>
           <p>
-            <strong>Date Published:</strong>{" "}
+            <strong>Date Published:</strong>
             {new Date(item.DatePublished).toLocaleString()}
           </p>
           <p>
@@ -124,5 +118,4 @@ const RecipeDetails = () => {
     </Wrapper>
   );
 };
-
 export default RecipeDetails;
