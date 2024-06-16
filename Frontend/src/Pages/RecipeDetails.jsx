@@ -1,6 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
@@ -30,7 +30,10 @@ const RecipeDetails = () => {
   const fetchItemById = async (id) => {
     try {
       const response = await axios.get(
-        `https://recipe-recommender-backend.vercel.app/recipe/${id}`
+        `https://recipe-recommender-backend.vercel.app/recipe/${id}`,
+        {
+          withCredentials: true,
+        }
       );
 
       if (!response.ok) {
