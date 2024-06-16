@@ -1,12 +1,13 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from 'axios';
+import Wrapper from "../Component/Wrapper";
+import axios from "axios";
+import InvalidPage from "../Component/InvalidPage";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
   // Extract name and ID from the param
   const paramParts = recipeName.split("-");
-  console.log(paramParts);
   const id = paramParts.pop();
   const itemName = paramParts.join(" "); // Combine the rest as the name
   console.log(`name:${itemName},id:${id}`);
@@ -14,51 +15,113 @@ const RecipeDetails = () => {
   const [item, setItem] = useState(null);
 
   useEffect(() => {
-    // Parse the ID from the reicpeName
-    const id = recipeName.split("-").pop(); // Extract ID assuming the slug format is "slug-id"
-
-    // If state is available, use it, otherwise fetch item by ID
-    if (location.state) {
-      setItem(location.state);
-    } else {
-      // Fetch item by ID from database or API
-      fetchItemById(id).then((fetchedItem) => setItem(fetchedItem));
-    }
+    // Fetch item by ID from database or API
+    fetchItemById(id).then((fetchedItem) => setItem(fetchedItem));
   }, [recipeName, location.state]);
 
   // Simulated function to fetch item by ID from a database
+
   const fetchItemById = async (id) => {
     try {
       const response = await axios.get(
-        `https://recipe-recommender-backend.vercel.app/recipe/${id}`
+        `https://recipe-recommender-backend.vercel.app/recipe/${id}`,
+        {}
       );
 
-      if (!response.ok) {
+      // const response = await axios.get(`http://localhost:4000/recipe/${id}`, {
+      // });
+      // const response = await axios.post(
+      //   "https://recipe-recommender-backend.vercel.app/recipe/filter",
+      //   {
+      //     name: "Nepali Momo (Nepalese Meat Dumplings)",
+      //     id: 42
+      //   }
+      // );
+
+      if (response.status !== 200) {
         // Handle HTTP errors
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
-      return data;
+      return response.data.body;
     } catch (error) {
       console.error("Error fetching item:", error);
-      throw error; // Re-throw or handle error appropriately
+      throw error;
     }
   };
 
   if (!item) return <p>Loading...</p>;
+  if (itemName.toLowerCase() != item.Name.toLowerCase()) return <InvalidPage />;
 
   return (
-    <div>
-      <h1>Recipe Details for: {item.name}</h1>
-      {/* <img src={item.src} alt={item.name} /> */}
-      <h3>Description :</h3>
-      <p>{item.Description}</p>
-      <p>Rating: {item.rating}</p>
-      <p>ID: {item.id}</p>
-      <h4>Instructions:</h4>
-      <p>{item.RecipeInstructions}</p>
-    </div>
+    <Wrapper>
+      <div>
+        <h1>Recipe Details for: {item.Name}</h1>
+        {item.Images && (
+          <img
+            src={item.Images.replace(/"/g, "")} // Remove quotes from the URL
+            alt="Recipe"
+            style={{ maxWidth: "100%", marginBottom: "20px" }} // Optional styling
+          />
+        )}
+        <div>
+          <p>
+            <strong>Recipe ID:</strong> {item.RecipeId}
+          </p>
+          <p>
+            <strong>Cook Time:</strong> {item.CookTime} minutes
+          </p>
+          <p>
+            <strong>Prep Time:</strong> {item.PrepTime} minutes
+          </p>
+          <p>
+            <strong>Total Time:</strong> {item.TotalTime} minutes
+          </p>
+          <p>
+            <strong>Date Published:</strong>{" "}
+            {new Date(item.DatePublished).toLocaleString()}
+          </p>
+          <p>
+            <strong>Description:</strong> {item.Description}
+          </p>
+          <p>
+            <strong>Recipe Category:</strong> {item.RecipeCategory}
+          </p>
+          <p>
+            <strong>Keywords:</strong> {item.Keywords}
+          </p>
+          <p>
+            <strong>Calories:</strong> {item.Calories}
+          </p>
+          <p>
+            <strong>Fat Content:</strong> {item.FatContent} g
+          </p>
+          <p>
+            <strong>Saturated Fat Content:</strong> {item.SaturatedFatContent} g
+          </p>
+          <p>
+            <strong>Cholesterol Content:</strong> {item.CholesterolContent} mg
+          </p>
+          <p>
+            <strong>Sodium Content:</strong> {item.SodiumContent} mg
+          </p>
+          <p>
+            <strong>Carbohydrate Content:</strong> {item.CarbohydrateContent} g
+          </p>
+          <p>
+            <strong>Fiber Content:</strong> {item.FiberContent} g
+          </p>
+          <p>
+            <strong>Sugar Content:</strong> {item.SugarContent} g
+          </p>
+          <p>
+            <strong>Protein Content:</strong> {item.ProteinContent} g
+          </p>
+          <h4>Instructions:</h4>
+          <ol>{item.RecipeInstructions}</ol>
+        </div>
+      </div>
+    </Wrapper>
   );
 };
 
