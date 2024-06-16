@@ -43,8 +43,18 @@ const userRegisterHelper = async (body) => {
         body["password"] = passwordHash;
     }
     // Save user
-    const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
-    return userData;
+    const checkUserExists = await (0, exports.userExists)(body.email);
+    if (!checkUserExists.success) {
+        const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
+        return { success: true, body: userData };
+    }
+    else {
+        return {
+            success: false, body: {
+                message: "User with provided email already exists",
+            }
+        };
+    }
 };
 exports.userRegisterHelper = userRegisterHelper;
 const userExists = async (email) => {
