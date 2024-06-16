@@ -23,11 +23,11 @@ const RecipeDetails = () => {
 
   const fetchItemById = async (id) => {
     try {
+      const response = await axios.get(
+        `https://recipe-recommender-backend.vercel.app/recipe/${id}`,
+        {}
+      );
 
-
-      const response = await axios.get(`https://recipe-recommender-backend.vercel.app/recipe/${id}`, {
-      });
-      
       // const response = await axios.get(`http://localhost:4000/recipe/${id}`, {
       // });
       // const response = await axios.post(
@@ -46,13 +46,12 @@ const RecipeDetails = () => {
       return response.data.body;
     } catch (error) {
       console.error("Error fetching item:", error);
-      throw error; 
+      throw error;
     }
   };
 
   if (!item) return <p>Loading...</p>;
-  if (itemName.toLowerCase() != item.Name.toLowerCase())
-    return <InvalidPage />;
+  if (itemName.toLowerCase() != item.Name.toLowerCase()) return <InvalidPage />;
 
   return (
     <Wrapper>
@@ -127,5 +126,3 @@ const RecipeDetails = () => {
 };
 
 export default RecipeDetails;
-
-
