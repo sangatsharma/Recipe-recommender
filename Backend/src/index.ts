@@ -15,7 +15,8 @@ app.use(
     origin: "https://recipe-recommender-five.vercel.app",
     // origin: "http://localhost:5173",
     credentials: true,
-    maxAge: 86400,
+    optionsSuccessStatus: 200,
+  maxAge: 86400,
   })
 );
 
