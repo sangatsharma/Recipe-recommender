@@ -1,5 +1,6 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
@@ -28,8 +29,9 @@ const RecipeDetails = () => {
   // Simulated function to fetch item by ID from a database
   const fetchItemById = async (id) => {
     try {
-      //todo change the url to the correct one
-      const response = await fetch(`https://recipe-recommender-backend.vercel.app/recipe/${id}`);
+      const response = await axios.get(
+        `https://recipe-recommender-backend.vercel.app/recipe/${id}`
+      );
 
       if (!response.ok) {
         // Handle HTTP errors
@@ -49,10 +51,13 @@ const RecipeDetails = () => {
   return (
     <div>
       <h1>Recipe Details for: {item.name}</h1>
-      <img src={item.src} alt={item.name} />
-      <h2>{item.name}</h2>
+      {/* <img src={item.src} alt={item.name} /> */}
+      <h3>Description :</h3>
+      <p>{item.Description}</p>
       <p>Rating: {item.rating}</p>
       <p>ID: {item.id}</p>
+      <h4>Instructions:</h4>
+      <p>{item.RecipeInstructions}</p>
     </div>
   );
 };

@@ -5,8 +5,9 @@
       "src": "dist/server.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["dist/**"],
-        "buildCommand": "npm run build"
+        "includeFiles": [
+          "dist/**"
+        ]
       }
     }
   ],
@@ -14,7 +15,14 @@
     {
       "src": "/(.*)",
       "dest": "dist/server.js",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH",
+        "OPTIONS"
+      ]
     }
   ]
 }

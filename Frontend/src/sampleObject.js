@@ -37,9 +37,9 @@
       rating: "4.2",
     },
     {
-      id: 7,
+      id: 17,
       src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhdzKcJM_bFHrfJa6eEK5gWcsPJYFR3fSFb3YCRlBMvnqN5bmvxVrKcnrTXP9t88NZnDM&usqp=CAU",
-      name: "Tom Yum Goong",
+      name: "Chicken Sekuwa (Classic Nepali Chicken Skewers)",
       rating: "3.6",
     },
   ];
