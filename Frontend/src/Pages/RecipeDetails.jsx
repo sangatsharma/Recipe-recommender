@@ -33,10 +33,13 @@ const RecipeDetails = () => {
   //  function to fetch item by ID from a database
   const fetchItemById = async (RecipeId, RecipeName) => {
     try {
-      const response = await axios.post("http://localhost:4000/recipe/filter", {
-        name: RecipeName,
-        id: RecipeId,
-      });
+      const response = await axios.post(
+        "https://recipe-recommender-backend.vercel.app/recipe/filter",
+        {
+          name: RecipeName,
+          id: RecipeId,
+        }
+      );
       if (response.data.success == false) return response.data;
       return response.data.body[0];
     } catch (error) {
