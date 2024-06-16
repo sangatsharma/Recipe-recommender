@@ -10,7 +10,11 @@ import { errorHandler } from "@/utils/errorHandler";
 
 const app = express();
 
-app.use(cors({ origin: "https://recipe-recommender-backend.vercel.app" }));
+app.use(cors({
+  origin: "https://recipe-recommender-five.vercel.app",
+  credentials: true,
+  maxAge: 86400,
+}));
 
 app.use(cookieParser());
 app.use(express.json());
