@@ -91,10 +91,17 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
 
     try {
       // Register user
-      const registeredUser: UserDataDB = await userRegisterHelper(userData as RegisterForm);
+      const registeredUser = await userRegisterHelper(userData as RegisterForm);
+
+      // If user with email already exists
+      if (!registeredUser.success) {
+        return res.json(registeredUser);
+      }
+
+      const registeredUserData: UserDataDB = registeredUser.body as UserDataDB;
 
       // Generate Token
-      const userToken: JsonResponse = handleToken(registeredUser, res);
+      const userToken: JsonResponse = handleToken(registeredUserData, res);
 
       return res.json(userToken);
     }

@@ -21,10 +21,13 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
   }
   try {
     // Register user
-    const userData: UserDataDB = await userRegisterHelper(body);
+    const userData = await userRegisterHelper(body);
 
+    if (!userData.success) {
+      return res.json(userData);
+    }
     // Generate token
-    const userRes: JsonResponse = handleToken(userData, res);
+    const userRes: JsonResponse = handleToken(userData.body as UserDataDB, res);
     return res.json(userRes);
   }
   catch (err) {
