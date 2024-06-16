@@ -13,6 +13,7 @@ const app = express();
 app.use(cors({
   origin: "https://recipe-recommender-five.vercel.app",
   credentials: true,
+  optionsSuccessStatus: 200,
   maxAge: 86400,
 }));
 
