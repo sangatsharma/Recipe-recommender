@@ -17,4 +17,5 @@ const recipeRouter = express_1.default.Router();
 recipeRouter.get("/", recipes_controllers_1.returnAllRecipies);
 recipeRouter.post("/", recipes_controllers_1.addNewRecipe);
 recipeRouter.post("/filter", recipes_controllers_1.filterRecipe);
+recipeRouter.get("/:id", recipes_controllers_1.recipeDetails);
 exports.default = recipeRouter;

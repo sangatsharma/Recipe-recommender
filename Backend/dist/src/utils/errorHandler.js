@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.errorHandler = void 0;
-const errorHandler = (err, _, res, next) => {
+const errorHandler = (err, _, res, __) => {
     // TODO: Error message based on DB ERROR
     if (err.name === "CastError") {
         return res.status(400).send({ error: "malformatted id" });

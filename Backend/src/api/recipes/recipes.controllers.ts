@@ -75,7 +75,6 @@ export const filterRecipe = (
     if (k === "name") q.push(eq(recipeSchema.Name, data["name"]));
     else if (k === "cookTime")
       q.push(lte(recipeSchema.CookTime, data["cookTime"]));
-    else if (k === "RecipeId") q.push(eq(recipeSchema.RecipeId, data["RecipeId"]));
     else if (k === "prepTime")
       q.push(lte(recipeSchema.PrepTime, data["prepTime"]));
   }

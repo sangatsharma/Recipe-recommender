@@ -52,6 +52,7 @@ const oAuth2Server = async (req, res, next) => {
     const { id_token } = access_token_data;
     // verify and extract the information in the id token
     const token_info_response = await fetch(`${process.env.GOOGLE_TOKEN_INFO_URL}?id_token=${id_token}`);
+    // TODO: TYPE
     const token_info_response_json = await token_info_response.json();
     const { name, email } = token_info_response_json;
     // Check if user exists or not
