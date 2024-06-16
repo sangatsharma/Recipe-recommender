@@ -48,8 +48,19 @@ export const userRegisterHelper = async (body: RegisterForm) => {
 	}
 
 	// Save user
-	const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
-	return userData;
+	const checkUserExists = await userExists(body.email);
+	if (!checkUserExists.success) {
+		const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
+		return { success: true, body: userData };
+	}
+	else {
+		return {
+			success: false, body: {
+				message: "User with provided email already exists",
+			}
+		};
+	}
+
 };
 
 

@@ -72,8 +72,13 @@ const oAuth2Server = async (req, res, next) => {
         try {
             // Register user
             const registeredUser = await (0, auth_helpers_1.userRegisterHelper)(userData);
+            // If user with email already exists
+            if (!registeredUser.success) {
+                return res.json(registeredUser);
+            }
+            const registeredUserData = registeredUser.body;
             // Generate Token
-            const userToken = (0, auth_helpers_1.handleToken)(registeredUser, res);
+            const userToken = (0, auth_helpers_1.handleToken)(registeredUserData, res);
             return res.json(userToken);
         }
         catch (err) {

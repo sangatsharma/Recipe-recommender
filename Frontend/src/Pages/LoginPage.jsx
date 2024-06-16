@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -15,8 +16,22 @@ const LoginPage = () => {
         .required("* Enter your email."),
       password: Yup.string().required("* Enter your password."),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+
+      // Req to backend
+      const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/login", values, {
+        headers: {"Content-Type": "application/json"},
+        withCredentials: true
+      });
+      
+      // If error
+      if(!res.data.success) alert(res.data.body.message);
+
+      // Successfully signed in then
+      else {
+        // Redirect
+      }
+      
     },
   });
 

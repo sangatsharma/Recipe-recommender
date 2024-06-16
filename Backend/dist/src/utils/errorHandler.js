@@ -10,7 +10,7 @@ const errorHandler = (err, _, res, __) => {
         return res.status(400).json({ error: err.message });
     }
     else if (err.name === "PostgresError") {
-        return res.status(400).json({ error: "DB Error" });
+        return res.status(200).json({ error: "DB Error" });
     }
     else if (err.name === "Error") {
         if (err.message === "UNDEFINED_VALUE: Undefined values are not allowed") {

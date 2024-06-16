@@ -23,8 +23,11 @@ const userRegisterHandler = async (req, res, next) => {
     try {
         // Register user
         const userData = await (0, auth_helpers_1.userRegisterHelper)(body);
+        if (!userData.success) {
+            return res.json(userData);
+        }
         // Generate token
-        const userRes = (0, auth_helpers_1.handleToken)(userData, res);
+        const userRes = (0, auth_helpers_1.handleToken)(userData.body, res);
         return res.json(userRes);
     }
     catch (err) {
