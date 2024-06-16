@@ -10,26 +10,14 @@ import { errorHandler } from "@/utils/errorHandler";
 
 const app = express();
 
-<<<<<<< HEAD
 app.use(cors({
   //Todo: remove localhost later
   origin: ["https://recipe-recommender-five.vercel.app", "http://localhost:5173"],
   credentials: true,
   optionsSuccessStatus: 200,
   maxAge: 86400,
-  // methods: "GET, POST"
+  methods: "GET, POST, PUT, DELETE"
 }));
-=======
-app.use(
-  cors({
-    origin: "https://recipe-recommender-five.vercel.app",
-    // origin: "http://localhost:5173",
-    credentials: true,
-    optionsSuccessStatus: 200,
-  maxAge: 86400,
-  })
-);
->>>>>>> refs/remotes/origin/main
 
 app.use(cookieParser());
 app.use(express.json());
