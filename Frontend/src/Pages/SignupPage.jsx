@@ -1,8 +1,11 @@
 import React from "react";
+import axios from "axios";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import bullet from "../assets/Images/list.png";
 import { Link } from "react-router-dom";
+
 
 const SignupPage = () => {
   // setup schema and formik
@@ -36,11 +39,27 @@ const SignupPage = () => {
         .oneOf([Yup.ref("password"), null], "Passwords must match")
         .required("* Please confirm your password."),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       {
-        /* //todo handle submit*/
+        values["name"] = values["userName"];
+
+        // Send creds to backend
+        const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/signup", values, {
+          headers: {"Content-Type": "application/json"},
+          withCredentials: true
+        });
+        const data = res.data;
+
+        // If not successful
+        if(!data.success) {
+          alert(data.body.message)
+        }
+
+        // Else, signed in successfully
+        else {
+          // Redirect
+        }
       }
-      alert(JSON.stringify(values, null, 2));
     },
   });
 
@@ -169,7 +188,7 @@ const SignupPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           <Link to="/">
-            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" >
               Continue with
               <img
                 className="w-7 h-7 rounded-full"
