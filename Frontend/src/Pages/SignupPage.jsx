@@ -44,7 +44,7 @@ const SignupPage = () => {
         values["name"] = values["userName"];
 
         // Send creds to backend
-        const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/signup", values, {
+        const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/register", values, {
           headers: {"Content-Type": "application/json"},
           withCredentials: true
         });
