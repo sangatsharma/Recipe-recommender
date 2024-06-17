@@ -27,7 +27,6 @@ const RecipeDetails = () => {
       try {
         // console.log("Fetching item by ID:", id);
         const fetchedItem = await fetchItemById(id, itemName);
-        console.log(fetchedItem);
         setItem(fetchedItem);
       } catch (err) {
         setError(err.message);
@@ -67,7 +66,7 @@ const RecipeDetails = () => {
   while ((matches = regex.exec(item.Images)) !== null) {
     urls.push(matches[1]);
   }
-  if (urls.length === 0) console.log("image not found for: ", item.Name);
+
 
   return (
     <Wrapper>
@@ -84,7 +83,10 @@ const RecipeDetails = () => {
               />
             ))}
         </div>
-        <div>
+        <div className="min-w-10">
+          <p>
+            <strong>Recipe Image:</strong> {urls[0]}
+          </p>
           <p>
             <strong>Recipe ID:</strong> {item.RecipeId}
           </p>

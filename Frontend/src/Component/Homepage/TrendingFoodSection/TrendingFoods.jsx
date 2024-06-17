@@ -10,7 +10,9 @@ const TrendingFoods = () => {
       try {
         const items = await fetchItems();
 
-        setPopularItems(items.slice(2, 10));
+        // select the no of items by trending or popular
+        //just an example for now
+        setPopularItems(items.slice(0, 59));
       } catch (err) {
         console.error(err);
       }
@@ -42,8 +44,6 @@ const TrendingFoods = () => {
           while ((matches = regex.exec(item.Images)) !== null) {
             urls.push(matches[1]);
           }
-          if (urls.length === 0)
-            console.log("image not found for: ", item.RecipeId, " :",item.Name);
           return (
             <ItemsCard
               key={item.RecipeId}
@@ -59,14 +59,3 @@ const TrendingFoods = () => {
   );
 };
 export default TrendingFoods;
-// // Extract URLs from the string
-
-// // Remove 'c(' at the start and ')' at the end
-// const cleanedString = item.Images.slice(2, -1);
-
-// // Split the string by comma and space to separate URLs
-// const urls = cleanedString
-//   .split(/",\s*"/)
-//   .map((url) => url.replace(/(^"|"$)/g, ""));
-
-// console.log(urls);
