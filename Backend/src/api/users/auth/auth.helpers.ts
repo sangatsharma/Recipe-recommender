@@ -13,6 +13,7 @@ import bcrypt from "bcrypt";
 export const handleToken = (userData: UserDataDB, res: Response) => {
 	const jwtToken = {
 		id: userData.id,
+		name: userData.name,
 		email: userData.email,
 	};
 
@@ -37,7 +38,7 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 };
 
 export const userRegisterHelper = async (body: RegisterForm) => {
-	if (body.password) {
+	if (body?.password) {
 		const saltRound = 10;
 
 		// Hash password
@@ -48,18 +49,18 @@ export const userRegisterHelper = async (body: RegisterForm) => {
 	}
 
 	// Save user
-	const checkUserExists = await userExists(body.email);
-	if (!checkUserExists.success) {
-		const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
-		return { success: true, body: userData };
-	}
-	else {
-		return {
-			success: false, body: {
-				message: "User with provided email already exists",
-			}
-		};
-	}
+	// const checkUserExists = await userExists(body.email);
+	// if (!checkUserExists.success) {
+	const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
+	return { success: true, body: userData };
+	// }
+	// else {
+	// 	return {
+	// 		success: false, body: {
+	// 			message: "User with provided email already exists",
+	// 		}
+	// 	};
+	// }
 
 };
 

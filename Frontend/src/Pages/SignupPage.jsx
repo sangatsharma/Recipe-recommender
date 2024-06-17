@@ -7,6 +7,10 @@ import bullet from "../assets/Images/list.png";
 import { Link } from "react-router-dom";
 
 const SignupPage = () => {
+  const googleOauth = () => {
+    window.location.href = "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
+  }
+
   // setup schema and formik
   const formik = useFormik({
     initialValues: {
@@ -189,8 +193,7 @@ const SignupPage = () => {
 
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
-          <Link to="/">
-            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={googleOauth}>
               Continue with
               <img
                 className="w-7 h-7 rounded-full"
@@ -199,7 +202,6 @@ const SignupPage = () => {
                 alt="google logo"
               />
             </button>
-          </Link>
           <p className="text-gray-600 text-xm">
             Already have an account?
             <span className="text-blue-600 cursor-pointer hover:underline">

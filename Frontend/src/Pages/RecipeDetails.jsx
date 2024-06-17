@@ -8,18 +8,24 @@ const RecipeDetails = () => {
   const { recipeName } = useParams();
 
   // Extract name and ID from the param
-  const paramParts = recipeName.split("_");
-  const id = paramParts.pop();
+  const paramParts = recipeName.split("_") ?? null;
+  const id = paramParts.pop() ?? null;
 
   //Combine the rest as the name
-  const itemName = paramParts.join(" ");
+  const itemName = paramParts.join(" ") ?? null;
 
   const [item, setItem] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    //Check if id and name is available in the URL
+    if (recipeName.includes("_") === false) return;
+    if (isNaN(id) || !id || !itemName) return;
+
+    //if everything is right dfetch the data
     const fetchData = async () => {
       try {
+        // console.log("Fetching item by ID:", id);
         const fetchedItem = await fetchItemById(id, itemName);
         setItem(fetchedItem);
       } catch (err) {
@@ -48,7 +54,9 @@ const RecipeDetails = () => {
       throw error;
     }
   };
-  if (error) return <p>Error: {error}</p>;
+  if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
+    return <InvalidPage />;
+  // if (error) return <p>Error: {error}</p>;
   if (!item) return <p>Loading...</p>;
   if (item.success === false) return <InvalidPage />;
   const regex = /"([^"]+)"/g;

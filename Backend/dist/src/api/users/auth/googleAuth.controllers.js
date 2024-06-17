@@ -60,7 +60,8 @@ const oAuth2Server = async (req, res, next) => {
     // If yes, create token and return
     if (userTmp.success) {
         const tokenRes = (0, auth_helpers_1.handleToken)(userTmp.body, res);
-        return res.json(tokenRes);
+        // return res.json(tokenRes);
+        return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
     }
     // Else register user
     // TODO: ask for username
@@ -79,7 +80,8 @@ const oAuth2Server = async (req, res, next) => {
             const registeredUserData = registeredUser.body;
             // Generate Token
             const userToken = (0, auth_helpers_1.handleToken)(registeredUserData, res);
-            return res.json(userToken);
+            // return res.json(userToken);
+            return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
         }
         catch (err) {
             next(err);

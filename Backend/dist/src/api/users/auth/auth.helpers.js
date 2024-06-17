@@ -14,6 +14,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const handleToken = (userData, res) => {
     const jwtToken = {
         id: userData.id,
+        name: userData.name,
         email: userData.email,
     };
     // Sign token
@@ -35,7 +36,7 @@ const handleToken = (userData, res) => {
 };
 exports.handleToken = handleToken;
 const userRegisterHelper = async (body) => {
-    if (body.password) {
+    if (body?.password) {
         const saltRound = 10;
         // Hash password
         const passwordHash = await bcrypt_1.default.hash(body.password, saltRound);
@@ -43,18 +44,18 @@ const userRegisterHelper = async (body) => {
         body["password"] = passwordHash;
     }
     // Save user
-    const checkUserExists = await (0, exports.userExists)(body.email);
-    if (!checkUserExists.success) {
-        const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
-        return { success: true, body: userData };
-    }
-    else {
-        return {
-            success: false, body: {
-                message: "User with provided email already exists",
-            }
-        };
-    }
+    // const checkUserExists = await userExists(body.email);
+    // if (!checkUserExists.success) {
+    const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
+    return { success: true, body: userData };
+    // }
+    // else {
+    // 	return {
+    // 		success: false, body: {
+    // 			message: "User with provided email already exists",
+    // 		}
+    // 	};
+    // }
 };
 exports.userRegisterHelper = userRegisterHelper;
 const userExists = async (email) => {
