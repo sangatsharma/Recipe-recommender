@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 const TrendingFoods = () => {
   const [popularItems, setPopularItems] = useState([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,32 +35,38 @@ const TrendingFoods = () => {
       <h2>Popular this week</h2>
       <div className="ItemsWrapper">
         {popularItems.map((item) => {
-          
+          const regex = /"([^"]+)"/g;
+          let matches;
+          let urls = [];
+          // Loop through all matches
+          while ((matches = regex.exec(item.Images)) !== null) {
+            urls.push(matches[1]);
+          }
+          if (urls.length === 0)
+            console.log("image not found for: ", item.Name);
           return (
             <ItemsCard
               key={item.RecipeId}
               id={item.RecipeId}
-              src={item.Images.replace(/"/g, "")}
+              src={urls[0]}
               name={item.Name}
               rating={item.AggregatedRating}
             ></ItemsCard>
           );
         })}
       </div>
-
-      
     </div>
   );
 };
 export default TrendingFoods;
-          // // Extract URLs from the string
+// // Extract URLs from the string
 
-          // // Remove 'c(' at the start and ')' at the end
-          // const cleanedString = item.Images.slice(2, -1);
+// // Remove 'c(' at the start and ')' at the end
+// const cleanedString = item.Images.slice(2, -1);
 
-          // // Split the string by comma and space to separate URLs
-          // const urls = cleanedString
-          //   .split(/",\s*"/)
-          //   .map((url) => url.replace(/(^"|"$)/g, ""));
+// // Split the string by comma and space to separate URLs
+// const urls = cleanedString
+//   .split(/",\s*"/)
+//   .map((url) => url.replace(/(^"|"$)/g, ""));
 
-          // console.log(urls);
+// console.log(urls);

@@ -50,18 +50,31 @@ const RecipeDetails = () => {
   };
   if (error) return <p>Error: {error}</p>;
   if (!item) return <p>Loading...</p>;
-  if (item.success == false) return <InvalidPage />;
+  if (item.success === false) return <InvalidPage />;
+  const regex = /"([^"]+)"/g;
+  let matches;
+  let urls = [];
+  // Loop through all matches
+  while ((matches = regex.exec(item.Images)) !== null) {
+    urls.push(matches[1]);
+  }
+  if (urls.length === 0) console.log("image not found for: ", item.Name);
+
   return (
     <Wrapper>
       <div>
         <h1>Recipe Details for: {item.Name}</h1>
-        {item.Images && (
-          <img
-            src={item.Images.replace(/"/g, "")} // Remove quotes from the URL
-            alt="Recipe"
-            style={{ maxWidth: "100%", marginBottom: "20px" }} // Optional styling
-          />
-        )}
+        <div className="flex flex-row gap-2 flex-wrap w-[100%] h-[20%]">
+          {item.Images &&
+            urls.map((url, index) => (
+              <img
+                key={index} // Use index as key (unique for each URL)
+                src={url} // Use extracted URL
+                alt={`Recipe ${index + 1}`}
+                style={{ width: "20%", height: "10%", marginBottom: "20px", aspectRatio:"1" }} // Optional styling
+              />
+            ))}
+        </div>
         <div>
           <p>
             <strong>Recipe ID:</strong> {item.RecipeId}
