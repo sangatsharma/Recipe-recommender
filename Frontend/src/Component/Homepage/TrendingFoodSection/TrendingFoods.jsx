@@ -10,7 +10,7 @@ const TrendingFoods = () => {
       try {
         const items = await fetchItems();
 
-        setPopularItems(items.slice(20, 30));
+        setPopularItems(items.slice(2, 10));
       } catch (err) {
         console.error(err);
       }
@@ -43,7 +43,7 @@ const TrendingFoods = () => {
             urls.push(matches[1]);
           }
           if (urls.length === 0)
-            console.log("image not found for: ", item.Name);
+            console.log("image not found for: ", item.RecipeId, " :",item.Name);
           return (
             <ItemsCard
               key={item.RecipeId}

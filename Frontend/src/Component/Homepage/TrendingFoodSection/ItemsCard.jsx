@@ -1,14 +1,12 @@
 import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
-import slugify from "slugify";
 
 const ItemsCard = ({ id, src, name, rating }) => {
   const navigate = useNavigate();
 
   // Create a URL-friendly name
-  const itemName = `${slugify(name, {
-    replacement: "_",
-  })}_${id}`;
+  //todo check with double space after building the post page.
+  const itemName = name.replace(/\s+/g, "_") + `_${id}`;
   const handleClick = () => {
     navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
   };

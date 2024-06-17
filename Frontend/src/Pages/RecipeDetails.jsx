@@ -27,6 +27,7 @@ const RecipeDetails = () => {
       try {
         // console.log("Fetching item by ID:", id);
         const fetchedItem = await fetchItemById(id, itemName);
+        console.log(fetchedItem);
         setItem(fetchedItem);
       } catch (err) {
         setError(err.message);
