@@ -64,7 +64,7 @@ const Navbar = () => {
         </button>
       </nav>
       <div className="Profile">
-        <button className={location === "/signup" ? "activePage" : ""}>
+        <button className={location === "/signup" ? "activeButton" : ""}>
           <Link to="/signup">Sign Up</Link>
         </button>
         <ProfileDropdown />

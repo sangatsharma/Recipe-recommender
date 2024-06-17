@@ -126,3 +126,6 @@ nav > button:hover {
 .Profile > .activePage {
   color: #ed802b;
 }
+.Profile > .activeButton {
+  color: #ffffff;
+}
