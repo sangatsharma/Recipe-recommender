@@ -23,7 +23,10 @@ const TrendingFoods = () => {
   const fetchItems = async () => {
     try {
       const response = await axios.get(
-        "https://recipe-recommender-backend.vercel.app/recipe"
+        "https://recipe-recommender-backend.vercel.app/recipe",
+        {
+          withCredentials: true
+        }
       );
       return response.data;
     } catch (error) {
