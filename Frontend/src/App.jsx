@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     fetchValue(setIsLoggedIn);
-    console.log("isloggedin", isLoggedIn);
+    console.log("loggedin=> ", isLoggedIn);
   }, []);
 
   const handleLogout = () => {

@@ -4,7 +4,7 @@ import { useLocation, Link } from "react-router-dom";
 import logo from "../../assets/Images/Logo_SVG.svg";
 import { useEffect, useState } from "react";
 
-const Navbar = ({isLogin}) => {
+const Navbar = ({ isLogin }) => {
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
 
@@ -42,10 +42,11 @@ const Navbar = ({isLogin}) => {
   return (
     <header className={`${isIdle ? "hide" : "show"}`}>
       <Link to="/home">
-     <div className="LogoWrapper">
-        <img loading="lazy" src={logo} alt="Logo" />
-        <p className="BrandName">Cook It Yourself  {`${isLogin}`}</p>
-      </div></Link>
+        <div className="LogoWrapper">
+          <img loading="lazy" src={logo} alt="Logo" />
+          <p className="BrandName">Cook It Yourself {`${isLogin}`}</p>
+        </div>
+      </Link>
       <nav>
         <button className={isActive ? "activePage" : ""}>
           <Link to="/home">Home</Link>
@@ -64,10 +65,12 @@ const Navbar = ({isLogin}) => {
         </button>
       </nav>
       <div className="Profile">
-        <button className={location === "/signup" ? "activeButton" : ""}>
-          <Link to="/signup">Sign Up</Link>
-        </button>
-        <ProfileDropdown />
+        {!isLogin && (
+          <button className={location === "/signup" ? "activeButton" : ""}>
+            <Link to="/signup">Sign Up</Link>
+          </button>
+        )}
+        <ProfileDropdown isLogin={isLogin} />
       </div>
     </header>
   );
