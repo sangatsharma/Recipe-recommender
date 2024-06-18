@@ -44,7 +44,7 @@ const Navbar = ({isLogin}) => {
       <Link to="/home">
      <div className="LogoWrapper">
         <img loading="lazy" src={logo} alt="Logo" />
-        <p className="BrandName">Cook It Yourself</p>
+        <p className="BrandName">Cook It Yourself  {`${isLogin}`}</p>
       </div></Link>
       <nav>
         <button className={isActive ? "activePage" : ""}>

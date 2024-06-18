@@ -11,14 +11,14 @@ import Search from "./Pages/Search.jsx";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Settings from "./Pages/Profile/Settings.jsx";
 import PageNotFound from "./Pages/PageNotFound.jsx";
-import { isAuthenticated } from "./utils/auth.js";
 import { useEffect, useState } from "react";
+import { fetchValue } from "./utils/auth.js";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(isAuthenticated());
-    // console.log("isloggedin",isLoggedIn);
+    fetchValue(setIsLoggedIn);
+    console.log("isloggedin", isLoggedIn);
   }, []);
 
   const handleLogout = () => {
@@ -41,10 +41,12 @@ function App() {
         { path: "/search", element: <Search /> },
         { path: "/contact", element: <Contact /> },
         { path: "/explore", element: <Explore /> },
-        { path: "/login", element: <LoginPage /> },
+        {
+          path: "/login",
+          element: <LoginPage setIsLoggedIn={setIsLoggedIn} />,
+        },
         { path: "/signup", element: <SignupPage /> },
         { path: "/profile", element: <Profile /> },
-        { path: "/profile", element: <SignupPage /> },
         { path: "/settings", element: <Settings /> },
       ],
     },

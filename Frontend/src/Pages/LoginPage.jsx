@@ -3,12 +3,13 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
+import { fetchValue } from "../utils/auth";
 
-const LoginPage = () => {
-
+const LoginPage = ({setIsLoggedIn}) => {
   const googleOauth = () => {
-    window.location.href = "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
-  }
+    window.location.href =
+      "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -22,21 +23,22 @@ const LoginPage = () => {
       password: Yup.string().required("* Enter your password."),
     }),
     onSubmit: async (values) => {
-
       // Req to backend
-      const res = await axios.post("https://recipe-recommender-backend.vercel.app/user/auth/login", values, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true
-      });
+      const res = await axios.post(
+        "https://recipe-recommender-backend.vercel.app/user/auth/login",
+        values,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
 
       // If error
       if (!res.data.success) alert(res.data.body.message);
-
       // Successfully signed in then
       else {
-        // Redirect
+        fetchValue(setIsLoggedIn);
       }
-
     },
   });
 
@@ -127,7 +129,10 @@ const LoginPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           {/* <Link to="/"> */}
-          <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={googleOauth}>
+          <button
+            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={googleOauth}
+          >
             Continue with
             <img
               className="w-7 h-7 rounded-full"
