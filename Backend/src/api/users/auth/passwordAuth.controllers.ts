@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { changePassowrd, emailVerifyer, handleToken, userRegisterHelper, verifyAccount, verifyMailSender } from "./auth.helpers";
+import { emailVerifyer, handleToken, userRegisterHelper, verifyMailSender } from "./auth.helpers";
 import { JsonResponse, LoginForm, RegisterForm, UserDataDB } from "../users.types";
 import { userExists } from "./auth.helpers";
 import bcrypt from "bcrypt";
-import { PostgresError } from "postgres";
 
 export const userRegisterHandler = async (req: Request, res: Response, next: NextFunction) => {
 
