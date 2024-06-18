@@ -24,7 +24,7 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 	const token = jwt.sign(jwtToken, SECRET);
 
 	// Set cookie
-	res.cookie("token", token, {
+	res.cookie("auth_token", token, {
 		maxAge: (1000 * 60 * 60 * 24 * 7),
 	});
 

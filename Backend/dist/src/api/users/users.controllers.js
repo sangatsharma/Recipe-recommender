@@ -24,7 +24,7 @@ const followUser = async (req, res, _) => {
     //TODO: CHECK IF ALREADY FOLLOWING
     const data = req.body;
     const cookie = req.cookies;
-    const userToken = jsonwebtoken_1.default.verify(cookie.token, config_1.SECRET);
+    const userToken = jsonwebtoken_1.default.verify(cookie.auth_token, config_1.SECRET);
     // Make sure user with email exists
     const followedUserTmp = await (0, auth_helpers_1.userExists)(data.email);
     const currentUser = await (0, auth_helpers_1.userExists)(userToken.email);
@@ -75,7 +75,7 @@ exports.followUser = followUser;
 // CHECK IF PROVIDED TOKEN IS VALID OR NOT
 const validateToken = (req, res, _) => {
     const token = req.cookies;
-    if (!token.token) {
+    if (!token.auth_token) {
         return res.json({
             success: false,
             body: {

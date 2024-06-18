@@ -22,7 +22,7 @@ const handleToken = (userData, res) => {
     // Sign token
     const token = jsonwebtoken_1.default.sign(jwtToken, config_1.SECRET);
     // Set cookie
-    res.cookie("token", token, {
+    res.cookie("auth_token", token, {
         maxAge: (1000 * 60 * 60 * 24 * 7),
     });
     // Return user details
