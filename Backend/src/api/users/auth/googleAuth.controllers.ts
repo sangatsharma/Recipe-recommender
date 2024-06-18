@@ -88,6 +88,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
     const userData = {
       email: email,
       name: name,
+      verified: 1,
     };
 
     try {

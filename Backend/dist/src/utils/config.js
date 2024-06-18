@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GOOGLE_TOKEN_INFO_URL = exports.GOOGLE_ACCESS_TOKEN_URL = exports.GOOGLE_OAUTH_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.DB_URL = exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.ENV = exports.PORT = void 0;
+exports.EMAIL_ACCOUNT = exports.EMAIL_APP_PASS = exports.GOOGLE_TOKEN_INFO_URL = exports.GOOGLE_ACCESS_TOKEN_URL = exports.GOOGLE_OAUTH_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.DB_URL = exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.ENV = exports.PORT = void 0;
 require("dotenv/config");
 const PORT = process.env.PORT;
 exports.PORT = PORT;
@@ -46,3 +46,7 @@ const GOOGLE_ACCESS_TOKEN_URL = process.env.GOOGLE_ACCESS_TOKEN_URL;
 exports.GOOGLE_ACCESS_TOKEN_URL = GOOGLE_ACCESS_TOKEN_URL;
 const GOOGLE_TOKEN_INFO_URL = process.env.GOOGLE_TOKEN_INFO_UR;
 exports.GOOGLE_TOKEN_INFO_URL = GOOGLE_TOKEN_INFO_URL;
+const EMAIL_APP_PASS = process.env.EMAIL_APP_PASS;
+exports.EMAIL_APP_PASS = EMAIL_APP_PASS;
+const EMAIL_ACCOUNT = process.env.EMAIL_ACCOUNT;
+exports.EMAIL_ACCOUNT = EMAIL_ACCOUNT;

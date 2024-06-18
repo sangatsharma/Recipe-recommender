@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { handleToken, userRegisterHelper } from "./auth.helpers";
+import { changePassowrd, emailVerifyer, handleToken, userRegisterHelper, verifyAccount, verifyMailSender } from "./auth.helpers";
 import { JsonResponse, LoginForm, RegisterForm, UserDataDB } from "../users.types";
 import { userExists } from "./auth.helpers";
 import bcrypt from "bcrypt";
+import { PostgresError } from "postgres";
 
 export const userRegisterHandler = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -11,7 +12,7 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
 
   // Email and Password are required
   //TODO: Check for all required fields
-  if (!body.email || !body.password || !body.name) {
+  if (!body?.email || !body?.password || !body?.name) {
     return res.json({
       "success": false,
       "body": {
@@ -19,15 +20,20 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
       },
     });
   }
+
+  const cleanedBody = {
+    email: body.email,
+    password: body.password,
+    name: body.name
+  };
+
   try {
     // Register user
-    const userData = await userRegisterHelper(body);
+    const userData = await userRegisterHelper(cleanedBody);
 
-    if (!userData.success) {
-      return res.json(userData);
-    }
     // Generate token
-    const userRes: JsonResponse = handleToken(userData.body as UserDataDB, res);
+    const userRes: JsonResponse = handleToken(userData.body, res);
+    await verifyMailSender(userRes.body.email as string, "verifyAccount");
     return res.json(userRes);
   }
   catch (err) {
@@ -43,7 +49,7 @@ export const userLoginHandler = async (req: Request, res: Response, next: NextFu
   const body: LoginForm = req.body as LoginForm;
 
   // Email and Password are required
-  if (!body.email || !body.password) {
+  if (!body?.email || !body?.password) {
     return res.json({
       "success": false,
       "body": {
@@ -53,16 +59,25 @@ export const userLoginHandler = async (req: Request, res: Response, next: NextFu
   }
 
   try {
-
     // Check if user exists or not
-    // const userTmp = (await db.select().from(userSchema).where(eq(userSchema.email, body.email)));
     const userTmp = await userExists(body.email);
+
     if (!userTmp.success) {
       return res.json({
         "success": false,
         "body": {
           "message": "User with this email dosen't exist",
         },
+      });
+    }
+
+    // TODO:Error codes insted of generic messages
+    else if (userTmp.body.password === null) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Use OAuth",
+        }
       });
     }
 
@@ -88,4 +103,78 @@ export const userLoginHandler = async (req: Request, res: Response, next: NextFu
   catch (e) {
     next(e);
   }
+};
+
+
+// VERIFICATION EMAILS
+export const verifyEmailHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+  // Get token from url param
+  const jwtParam = req.params.jwt;
+
+  // Verify email
+  const jwtVerify = await emailVerifyer(jwtParam);
+  if (!jwtVerify.success) return res.json(jwtVerify);
+
+  return res.render("index", { prop: jwtVerify });
+};
+
+
+/*
+  RESET PASSWORD
+  USAGE: POST REQ TO /user/auth/password-reset WITH :
+    {
+      email, newPassword,confirmNewPassword
+    }
+  Email will be send to provided mail with confirm link.
+
+*/
+export const changePasswordHandler = async (req: Request, res: Response, next: NextFunction) => {
+  type ResetPassword = {
+    email: string,
+    newPassword: string,
+    confirmNewPassword: string,
+  };
+
+  const body: ResetPassword = req.body as ResetPassword;
+
+  if (!body?.email || !body?.newPassword || !body?.confirmNewPassword) {
+    return res.send({
+      success: false,
+      body: {
+        message: "Incomplete fields",
+      }
+    });
+  }
+  else if (body.newPassword !== body.confirmNewPassword) {
+    return res.send({
+      success: false,
+      body: {
+        message: "Password and confirm password donot match",
+      }
+    });
+  }
+
+  const userTmp = await userExists(body.email);
+  const userData: UserDataDB = userTmp.body;
+  if (!userTmp.success) {
+    userData.email = "";
+  }
+  else if (userTmp.body.password === null) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Use OAuth",
+      }
+    });
+  }
+
+  try {
+    const verifyResponse = await verifyMailSender(userData.email, "resetPassword", body.newPassword);
+    return res.json(verifyResponse);
+  }
+  catch (err) {
+    next(err);
+  }
+
 };

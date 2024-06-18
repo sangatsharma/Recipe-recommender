@@ -5,8 +5,11 @@ import userRouter from "@/api/users/users.routes";
 
 import cookieParser from "cookie-parser";
 
+import path from "path";
 import { unknownEndPoint } from "@/utils/middleware";
 import { errorHandler } from "@/utils/errorHandler";
+
+import ejs from "ejs";
 
 const app = express();
 
@@ -19,8 +22,15 @@ app.use(cors({
   methods: "GET, POST, PUT, DELETE"
 }));
 
+app.set("view engine", "ejs");
+
+console.log(__dirname);
+app.set("views", path.join(__dirname, "views"));
+
+
 app.use(cookieParser());
 app.use(express.json());
+
 
 /*
 ROUTES

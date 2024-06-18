@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tmpDemo = exports.followUser = void 0;
+exports.tmpDemo = exports.validateToken = exports.followUser = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -72,6 +72,36 @@ const followUser = async (req, res, _) => {
     return res.json(jsonResponse);
 };
 exports.followUser = followUser;
+// CHECK IF PROVIDED TOKEN IS VALID OR NOT
+const validateToken = (req, res, _) => {
+    const token = req.cookies;
+    if (!token.token) {
+        return res.json({
+            success: false,
+            body: {
+                message: "Token not available",
+            }
+        });
+    }
+    try {
+        jsonwebtoken_1.default.verify(token.token, config_1.SECRET);
+        return res.json({
+            success: true,
+            body: {
+                message: "Valid Token",
+            }
+        });
+    }
+    catch (err) {
+        return res.json({
+            success: false,
+            body: {
+                message: "Invalid Token",
+            }
+        });
+    }
+};
+exports.validateToken = validateToken;
 const tmpDemo = (_, res, next) => {
     const helper = async () => {
         // TODO: Get users ID from token

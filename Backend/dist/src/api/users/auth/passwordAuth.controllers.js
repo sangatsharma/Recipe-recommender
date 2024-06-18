@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userLoginHandler = exports.userRegisterHandler = void 0;
+exports.changePasswordHandler = exports.verifyEmailHandler = exports.userLoginHandler = exports.userRegisterHandler = void 0;
 const auth_helpers_1 = require("./auth.helpers");
 const auth_helpers_2 = require("./auth.helpers");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -12,7 +12,7 @@ const userRegisterHandler = async (req, res, next) => {
     const body = req.body;
     // Email and Password are required
     //TODO: Check for all required fields
-    if (!body.email || !body.password || !body.name) {
+    if (!body?.email || !body?.password || !body?.name) {
         return res.json({
             "success": false,
             "body": {
@@ -20,14 +20,17 @@ const userRegisterHandler = async (req, res, next) => {
             },
         });
     }
+    const cleanedBody = {
+        email: body.email,
+        password: body.password,
+        name: body.name
+    };
     try {
         // Register user
-        const userData = await (0, auth_helpers_1.userRegisterHelper)(body);
-        if (!userData.success) {
-            return res.json(userData);
-        }
+        const userData = await (0, auth_helpers_1.userRegisterHelper)(cleanedBody);
         // Generate token
         const userRes = (0, auth_helpers_1.handleToken)(userData.body, res);
+        await (0, auth_helpers_1.verifyMailSender)(userRes.body.email, "verifyAccount");
         return res.json(userRes);
     }
     catch (err) {
@@ -41,7 +44,7 @@ exports.userRegisterHandler = userRegisterHandler;
 const userLoginHandler = async (req, res, next) => {
     const body = req.body;
     // Email and Password are required
-    if (!body.email || !body.password) {
+    if (!body?.email || !body?.password) {
         return res.json({
             "success": false,
             "body": {
@@ -51,7 +54,6 @@ const userLoginHandler = async (req, res, next) => {
     }
     try {
         // Check if user exists or not
-        // const userTmp = (await db.select().from(userSchema).where(eq(userSchema.email, body.email)));
         const userTmp = await (0, auth_helpers_2.userExists)(body.email);
         if (!userTmp.success) {
             return res.json({
@@ -59,6 +61,15 @@ const userLoginHandler = async (req, res, next) => {
                 "body": {
                     "message": "User with this email dosen't exist",
                 },
+            });
+        }
+        // TODO:Error codes insted of generic messages
+        else if (userTmp.body.password === null) {
+            return res.json({
+                success: false,
+                body: {
+                    message: "Use OAuth",
+                }
             });
         }
         const userData = userTmp.body;
@@ -81,3 +92,63 @@ const userLoginHandler = async (req, res, next) => {
     }
 };
 exports.userLoginHandler = userLoginHandler;
+// VERIFICATION EMAILS
+const verifyEmailHandler = async (req, res, next) => {
+    // Get token from url param
+    const jwtParam = req.params.jwt;
+    // Verify email
+    const jwtVerify = await (0, auth_helpers_1.emailVerifyer)(jwtParam);
+    if (!jwtVerify.success)
+        return res.json(jwtVerify);
+    return res.render("index", { prop: jwtVerify });
+};
+exports.verifyEmailHandler = verifyEmailHandler;
+/*
+  RESET PASSWORD
+  USAGE: POST REQ TO /user/auth/password-reset WITH :
+    {
+      email, newPassword,confirmNewPassword
+    }
+  Email will be send to provided mail with confirm link.
+
+*/
+const changePasswordHandler = async (req, res, next) => {
+    const body = req.body;
+    if (!body?.email || !body?.newPassword || !body?.confirmNewPassword) {
+        return res.send({
+            success: false,
+            body: {
+                message: "Incomplete fields",
+            }
+        });
+    }
+    else if (body.newPassword !== body.confirmNewPassword) {
+        return res.send({
+            success: false,
+            body: {
+                message: "Password and confirm password donot match",
+            }
+        });
+    }
+    const userTmp = await (0, auth_helpers_2.userExists)(body.email);
+    const userData = userTmp.body;
+    if (!userTmp.success) {
+        userData.email = "";
+    }
+    else if (userTmp.body.password === null) {
+        return res.json({
+            success: false,
+            body: {
+                message: "Use OAuth",
+            }
+        });
+    }
+    try {
+        const verifyResponse = await (0, auth_helpers_1.verifyMailSender)(userData.email, "resetPassword", body.newPassword);
+        return res.json(verifyResponse);
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.changePasswordHandler = changePasswordHandler;

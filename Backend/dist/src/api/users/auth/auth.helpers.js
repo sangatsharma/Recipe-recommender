@@ -3,8 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userExists = exports.userRegisterHelper = exports.handleToken = void 0;
+exports.verifyAccount = exports.changePassowrd = exports.verifyMailSender = exports.emailVerifyer = exports.userExists = exports.userRegisterHelper = exports.handleToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const nodemailer_1 = __importDefault(require("nodemailer"));
 const config_1 = require("../../../utils/config");
 const db_1 = require("../../../utils/db");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -16,6 +17,7 @@ const handleToken = (userData, res) => {
         id: userData.id,
         name: userData.name,
         email: userData.email,
+        ouath: userData.password === null,
     };
     // Sign token
     const token = jsonwebtoken_1.default.sign(jwtToken, config_1.SECRET);
@@ -43,19 +45,8 @@ const userRegisterHelper = async (body) => {
         // Store hashed password
         body["password"] = passwordHash;
     }
-    // Save user
-    // const checkUserExists = await userExists(body.email);
-    // if (!checkUserExists.success) {
     const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
     return { success: true, body: userData };
-    // }
-    // else {
-    // 	return {
-    // 		success: false, body: {
-    // 			message: "User with provided email already exists",
-    // 		}
-    // 	};
-    // }
 };
 exports.userRegisterHelper = userRegisterHelper;
 const userExists = async (email) => {
@@ -69,3 +60,109 @@ const userExists = async (email) => {
     return res;
 };
 exports.userExists = userExists;
+// CHECK IF VERIFY EMAIL WAS CORRECT
+const emailVerifyer = async (jwtQuery) => {
+    try {
+        // Verify the query
+        const data = jsonwebtoken_1.default.verify(jwtQuery, config_1.SECRET);
+        let dbData;
+        if (data.operation === "resetPassword") {
+            // Fetch user info from PasswordReset Table
+            const dbRes = (await db_1.db.delete(users_models_1.passwordResetSchema).where((0, drizzle_orm_1.eq)(users_models_1.passwordResetSchema.resetToken, jwtQuery)).returning())[0];
+            dbData = await (0, exports.changePassowrd)(data.email, dbRes.newPassword);
+        }
+        else if (data.operation === "verifyAccount") {
+            dbData = await (0, exports.verifyAccount)(data.email);
+        }
+        // Return both contents combined
+        return ({
+            success: true,
+            body: { ...dbData?.body, ...data },
+        });
+    }
+    // Invalid or exipred key
+    catch (e) {
+        return ({
+            success: false,
+            body: {
+                message: "Error. Invalid or expired link",
+            },
+        });
+    }
+};
+exports.emailVerifyer = emailVerifyer;
+// SEND VERIFICATION EMAIL
+const verifyMailSender = async (email, operation, newPassword) => {
+    // If email is valid
+    if (email !== "") {
+        // Create payload with type of operation
+        const jwtPayload = {
+            "email": email,
+            "operation": operation,
+        };
+        // Create token valid for 10 minutes
+        const jwtToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.SECRET, {
+            expiresIn: 600
+        });
+        let message = "";
+        if (operation === "resetPassword") {
+            // Insert it into a new database
+            await db_1.db.insert(users_models_1.passwordResetSchema).values({ resetToken: jwtToken, newPassword: newPassword });
+            message = "Reset your Password";
+        }
+        else
+            message = "Verify your Account";
+        // Get mail ready
+        const transporter = nodemailer_1.default.createTransport({
+            service: "gmail",
+            auth: {
+                user: config_1.EMAIL_ACCOUNT,
+                pass: config_1.EMAIL_APP_PASS,
+            }
+        });
+        // What and who to send
+        const mailOptions = {
+            from: config_1.EMAIL_ACCOUNT,
+            to: email,
+            subject: "Confirm email for Recipe Recommender App",
+            html: `
+			Click on the link below to <b>${message}</b> <br>
+			https://recipe-recommender-backend.vercel.app/user/auth/verify/${jwtToken}
+			`
+        };
+        // Send mail
+        transporter.sendMail(mailOptions)
+            .then((resData) => console.log("done" + resData.response))
+            .catch((err) => new Error(err.message));
+    }
+    // Return send even if email is invalid
+    return ({
+        "success": true,
+        "body": {
+            "message": `Verification code send to ${email}. Valid for 10 minutes`
+        }
+    });
+};
+exports.verifyMailSender = verifyMailSender;
+// Reset Password
+const changePassowrd = async (email, newPassword) => {
+    const hashPassword = await bcrypt_1.default.hash(newPassword, 10);
+    const userData = (await db_1.db.update(users_models_1.userSchema).set({ password: hashPassword }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email)))[0];
+    return ({
+        success: true,
+        body: {
+            message: `Password successfully changed for ${email}`
+        }
+    });
+};
+exports.changePassowrd = changePassowrd;
+const verifyAccount = async (email) => {
+    await db_1.db.update(users_models_1.userSchema).set({ verified: 1 }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email));
+    return ({
+        success: true,
+        body: {
+            message: `Account verified for ${email}`
+        }
+    });
+};
+exports.verifyAccount = verifyAccount;

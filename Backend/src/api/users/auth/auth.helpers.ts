@@ -1,11 +1,13 @@
 import { Response } from "express";
 import jwt from "jsonwebtoken";
 
-import { SECRET } from "@/utils/config";
+import nodemailer, { Transporter } from "nodemailer";
+
+import { EMAIL_ACCOUNT, EMAIL_APP_PASS, SECRET } from "@/utils/config";
 import { RegisterForm, UserDataDB } from "../users.types";
 import { db } from "@/utils/db";
 import { eq } from "drizzle-orm";
-import { userSchema } from "../users.models";
+import { passwordResetSchema, userSchema } from "../users.models";
 
 import bcrypt from "bcrypt";
 
@@ -15,6 +17,7 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 		id: userData.id,
 		name: userData.name,
 		email: userData.email,
+		ouath: userData.password === null,
 	};
 
 	// Sign token
@@ -48,20 +51,8 @@ export const userRegisterHelper = async (body: RegisterForm) => {
 		body["password"] = passwordHash;
 	}
 
-	// Save user
-	// const checkUserExists = await userExists(body.email);
-	// if (!checkUserExists.success) {
 	const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
 	return { success: true, body: userData };
-	// }
-	// else {
-	// 	return {
-	// 		success: false, body: {
-	// 			message: "User with provided email already exists",
-	// 		}
-	// 	};
-	// }
-
 };
 
 
@@ -76,4 +67,131 @@ export const userExists = async (email: string) => {
 	};
 
 	return res;
+};
+
+// CHECK IF VERIFY EMAIL WAS CORRECT
+export const emailVerifyer = async (jwtQuery: string) => {
+	try {
+		type EmailVerifyJwt = {
+			email: string,
+			operation: string,
+			iat: number,
+		};
+
+		// Verify the query
+		const data: EmailVerifyJwt = jwt.verify(jwtQuery, SECRET) as EmailVerifyJwt;
+
+		let dbData;
+		if (data.operation === "resetPassword") {
+			// Fetch user info from PasswordReset Table
+			const dbRes = (await db.delete(passwordResetSchema).where(eq(passwordResetSchema.resetToken, jwtQuery)).returning())[0];
+			dbData = await changePassowrd(data.email, dbRes.newPassword);
+		}
+
+		else if (data.operation === "verifyAccount") {
+			dbData = await verifyAccount(data.email);
+		}
+		// Return both contents combined
+		return ({
+			success: true,
+			body: { ...dbData?.body, ...data },
+		});
+	}
+
+	// Invalid or exipred key
+	catch (e) {
+		return ({
+			success: false,
+			body: {
+				message: "Error. Invalid or expired link",
+			},
+		});
+	}
+};
+
+
+// SEND VERIFICATION EMAIL
+export const verifyMailSender = async (email: string, operation: string, newPassword?: string) => {
+
+	// If email is valid
+	if (email !== "") {
+
+		// Create payload with type of operation
+		const jwtPayload = {
+			"email": email,
+			"operation": operation,
+		};
+
+		// Create token valid for 10 minutes
+		const jwtToken = jwt.sign(jwtPayload, SECRET, {
+			expiresIn: 600
+		});
+
+		let message = "";
+
+		if (operation === "resetPassword") {
+			// Insert it into a new database
+			await db.insert(passwordResetSchema).values({ resetToken: jwtToken, newPassword: newPassword as string });
+			message = "Reset your Password";
+		}
+		else message = "Verify your Account";
+
+		// Get mail ready
+		const transporter: Transporter = nodemailer.createTransport({
+			service: "gmail",
+			auth: {
+				user: EMAIL_ACCOUNT,
+				pass: EMAIL_APP_PASS,
+			}
+		});
+
+		// What and who to send
+		const mailOptions = {
+			from: EMAIL_ACCOUNT,
+			to: email,
+			subject: "Confirm email for Recipe Recommender App",
+			html: `
+			Click on the link below to <b>${message}</b> <br>
+			https://recipe-recommender-backend.vercel.app/user/auth/verify/${jwtToken}
+			`
+		};
+
+		// Send mail
+		transporter.sendMail(mailOptions)
+			.then((resData) => console.log("done" + resData.response))
+			.catch((err) => new Error(err.message as string));
+	}
+
+	// Return send even if email is invalid
+	return ({
+		"success": true,
+		"body": {
+			"message": `Verification code send to ${email}. Valid for 10 minutes`
+		}
+	});
+};
+
+
+// Reset Password
+export const changePassowrd = async (email: string, newPassword: string) => {
+	const hashPassword = await bcrypt.hash(newPassword, 10);
+
+	const userData: UserDataDB = (await db.update(userSchema).set({ password: hashPassword }).where(eq(userSchema.email, email)))[0];
+	return ({
+		success: true,
+		body: {
+			message: `Password successfully changed for ${email}`
+		}
+	});
+};
+
+
+export const verifyAccount = async (email: string) => {
+	await db.update(userSchema).set({ verified: 1 }).where(eq(userSchema.email, email));
+	return ({
+		success: true,
+		body: {
+			message: `Account verified for ${email}`
+		}
+	});
 };

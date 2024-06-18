@@ -19,6 +19,7 @@ import { recipeSchema } from "@/api/recipes/recipes.models";
 import { followerSchema, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 
+
 /****************
 * ROUTES
 ****************/
@@ -97,6 +98,37 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
 };
 
 
+// CHECK IF PROVIDED TOKEN IS VALID OR NOT
+export const validateToken = (req: Request, res: Response, _: NextFunction) => {
+  const token = req.cookies;
+
+  if (!token.token) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Token not available",
+      }
+    });
+  }
+
+  try {
+    jwt.verify(token.token as string, SECRET);
+    return res.json({
+      success: true,
+      body: {
+        message: "Valid Token",
+      }
+    });
+  }
+  catch (err) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Invalid Token",
+      }
+    });
+  }
+};
 
 export const tmpDemo = (_: Request, res: Response, next: NextFunction) => {
   const helper = async () => {
