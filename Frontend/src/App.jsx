@@ -18,7 +18,7 @@ function App() {
 
   useEffect(() => {
     setIsLoggedIn(isAuthenticated());
-    console.log("isloggedin",isLoggedIn);
+    // console.log("isloggedin",isLoggedIn);
   }, []);
 
   const handleLogout = () => {

@@ -5,7 +5,6 @@ import logo from "../../assets/Images/Logo_SVG.svg";
 import { useEffect, useState } from "react";
 
 const Navbar = ({isLogin}) => {
-  console.log("isLogin",isLogin);
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
 

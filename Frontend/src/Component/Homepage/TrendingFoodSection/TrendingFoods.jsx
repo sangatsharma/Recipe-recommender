@@ -12,7 +12,7 @@ const TrendingFoods = () => {
 
         // select the no of items by trending or popular
         //just an example for now
-        setPopularItems(items.slice(0, 59));
+        setPopularItems(items.slice(0, 15));
       } catch (err) {
         console.error(err);
       }
