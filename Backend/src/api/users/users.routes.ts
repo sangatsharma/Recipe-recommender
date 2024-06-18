@@ -11,6 +11,7 @@ import express, { RequestHandler } from "express";
 import { changePasswordHandler, userLoginHandler, userRegisterHandler, verifyEmailHandler } from "./auth/passwordAuth.controllers";
 import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
 import { followUser, tmpDemo, validateToken } from "./users.controllers";
+import { authenticateJWT } from "@/utils/middleware";
 
 const userRouter = express.Router();
 
@@ -19,11 +20,11 @@ userRouter.post("/auth/register", userRegisterHandler as RequestHandler);
 userRouter.post("/auth/login", userLoginHandler as RequestHandler);
 userRouter.get("/auth/oauth", oAuthHandler as RequestHandler);
 userRouter.get("/auth/osuccess", oAuth2Server as RequestHandler);
-userRouter.post("/auth/password-reset", changePasswordHandler as RequestHandler);
+userRouter.post("/auth/password-reset", authenticateJWT, changePasswordHandler as RequestHandler);
 userRouter.get("/auth/verify/:jwt", verifyEmailHandler as RequestHandler);
 
-userRouter.post("/follow", followUser as RequestHandler);
-userRouter.get("/recipes", tmpDemo);
+userRouter.post("/follow", authenticateJWT, followUser as RequestHandler);
+userRouter.get("/recipes", authenticateJWT, tmpDemo);
 userRouter.get("/validate", validateToken);
 
 export default userRouter;

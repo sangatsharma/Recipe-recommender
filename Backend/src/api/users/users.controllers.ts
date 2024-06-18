@@ -34,7 +34,7 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   const data: { email: string } = req.body as { email: string };
   const cookie = req.cookies;
 
-  const userToken = jwt.verify(cookie.token as string, SECRET) as JwtPayload;
+  const userToken = jwt.verify(cookie.auth_token as string, SECRET) as JwtPayload;
 
 
   // Make sure user with email exists
@@ -102,7 +102,7 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
 export const validateToken = (req: Request, res: Response, _: NextFunction) => {
   const token = req.cookies;
 
-  if (!token.token) {
+  if (!token.auth_token) {
     return res.json({
       success: false,
       body: {
