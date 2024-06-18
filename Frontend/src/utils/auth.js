@@ -1,34 +1,30 @@
+// export const getToken = () => {
+//   return Cookies.get("token");
+// };
 
-
-export const getToken = () => {
-  return Cookies.get("token");
-};
-
-export const removeToken = () => {
-  Cookies.remove("token");
-};
+// export const removeToken = () => {
+//   Cookies.remove("token");
+// };
 
 export const isAuthenticated = () => {
-  const token = getToken();
-  
+  // const token = getToken();
 
-  if (token) {
-    try {
-      console.log("token", token);
-      const decodedToken = jwtDecode(token);
+  // if (token) {
+  //   try {
+  //     console.log("token", token);
+  //     const decodedToken = jwtDecode(token);
 
-      if (decodedToken.exp * 1000 < Date.now()) {
-        removeToken();
-        return false;
-      }
+  //     if (decodedToken.exp * 1000 < Date.now()) {
+  //       removeToken();
+  //       return false;
+  //     }
 
-      return true;
-    } catch (error) {
-      console.error("Invalid token:", error);
-      return false;
-    }
-  }
+  //     return true;
+  //   } catch (error) {
+  //     console.error("Invalid token:", error);
+  //     return false;
+  //   }
+  // }
 
   return false;
 };
-

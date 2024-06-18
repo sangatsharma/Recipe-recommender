@@ -21,15 +21,13 @@ const Search = (props) => {
               urls.push(matches[1]);
             }
             return (
-              <>
-                <ItemsCard
-                  key={item.RecipeId}
-                  id={item.RecipeId}
-                  src={urls[0]}
-                  name={item.Name}
-                  rating={item.AggregatedRating}
-                ></ItemsCard>
-              </>
+              <ItemsCard
+                key={item.RecipeId}
+                id={item.RecipeId}
+                src={urls[0]}
+                name={item.Name}
+                rating={item.AggregatedRating}
+              ></ItemsCard>
             );
           })}
       </div>

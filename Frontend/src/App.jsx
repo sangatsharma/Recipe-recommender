@@ -11,7 +11,7 @@ import Search from "./Pages/Search.jsx";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Settings from "./Pages/Profile/Settings.jsx";
 import PageNotFound from "./Pages/PageNotFound.jsx";
-import { isAuthenticated, removeToken } from "./utils/auth.js";
+import { isAuthenticated } from "./utils/auth.js";
 import { useEffect, useState } from "react";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -22,7 +22,7 @@ function App() {
   }, []);
 
   const handleLogout = () => {
-    removeToken();
+    // removeToken();
     setIsLoggedIn(false);
   };
 
