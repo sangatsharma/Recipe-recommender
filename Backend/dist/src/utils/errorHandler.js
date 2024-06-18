@@ -4,6 +4,7 @@ exports.errorHandler = void 0;
 const postgres_1 = require("postgres");
 const errorHandler = (err, _, res, __) => {
     let message = "Unknown Error";
+    console.log(err);
     // TODO: Error message based on DB ERROR
     if (err.name === "CastError") {
         message = "Malformatted Id";
