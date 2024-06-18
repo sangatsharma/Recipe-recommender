@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 const Navbar = ({ isLogin }) => {
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
-
   const [isIdle, setIsIdle] = useState(false);
   const idleTimeout = 3000; // 3 seconds of idle time
 
@@ -44,7 +43,7 @@ const Navbar = ({ isLogin }) => {
       <Link to="/home">
         <div className="LogoWrapper">
           <img loading="lazy" src={logo} alt="Logo" />
-          <p className="BrandName">Cook It Yourself {`${isLogin}`}</p>
+          <p className="BrandName">Cook It Yourself</p>
         </div>
       </Link>
       <nav>

@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import { fetchValue } from "../utils/auth";
+import { isAuthenticated } from "../utils/auth";
 
-const LoginPage = ({setIsLoggedIn}) => {
+const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
   const googleOauth = () => {
     window.location.href =
       "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
   };
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -37,11 +36,10 @@ const LoginPage = ({setIsLoggedIn}) => {
       if (!res.data.success) alert(res.data.body.message);
       // Successfully signed in then
       else {
-        fetchValue(setIsLoggedIn);
+        isAuthenticated(setIsLoggedIn);
       }
     },
   });
-
   return (
     <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4 mt-[20px]">
       {/* Right Side with Information */}

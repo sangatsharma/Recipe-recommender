@@ -1,22 +1,20 @@
 import "./SearchBanner.css";
 import React, { useState } from "react";
 import axios from "axios";
-import { rankFoodItems, recipes } from "../../utils/filterItems";
+import { rankFoodItems } from "../../utils/filterItems";
 
-const SearchBanner = ({ foodItems, setFoodItems }) => {
-  const [search, setSearch] = useState("");
+const SearchBanner = ({ setFoodItems, setSearchPerformed,search,setSearch }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // Function to fetch the items from the backend
   const fetchAndProcessItems = async (search) => {
     try {
-      //todo : remove this line and uncomment the axios call
-      // const response = await axios.get(
-      //   "https://recipe-recommender-backend.vercel.app/recipe"
-      // );
-      // const items = response.data;
-      // console.log(items);
-      const rankedItems = rankFoodItems(recipes, search);
+      const response = await axios.get(
+        "https://recipe-recommender-backend.vercel.app/recipe",
+        { withCredentials: true }
+      );
+      const items = response.data;
+      const rankedItems = rankFoodItems(items, search);
       setFoodItems(rankedItems);
     } catch (error) {
       console.error("Error fetching or processing items:", error);
@@ -42,6 +40,7 @@ const SearchBanner = ({ foodItems, setFoodItems }) => {
       setIsButtonDisabled(false);
     }, 5000);
     console.log(search);
+    setSearchPerformed(true);
     fetchAndProcessItems(search);
   };
 

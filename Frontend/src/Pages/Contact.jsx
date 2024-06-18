@@ -42,7 +42,6 @@ const Contact = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
-  console.log(weatherData);
   return (
     <div>
       <h1>City: {data.city}</h1>
@@ -81,4 +80,4 @@ const Contact = () => {
   );
 };
 export default Contact;
-// const response1 = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${}&lon=${}&appid=c0782f881857714abe48b042951abed4&units=metric`);
+
