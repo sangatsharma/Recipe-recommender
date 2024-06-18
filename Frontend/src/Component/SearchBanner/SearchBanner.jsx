@@ -1,8 +1,27 @@
 import "./SearchBanner.css";
 import React, { useState } from "react";
-const SearchBanner = () => {
+import axios from "axios";
+import { rankFoodItems, recipes } from "../../utils/filterItems";
+
+const SearchBanner = ({ foodItems, setFoodItems }) => {
   const [search, setSearch] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  // Function to fetch the items from the backend
+  const fetchAndProcessItems = async (search) => {
+    try {
+      //todo : remove this line and uncomment the axios call
+      // const response = await axios.get(
+      //   "https://recipe-recommender-backend.vercel.app/recipe"
+      // );
+      // const items = response.data;
+      // console.log(items);
+      const rankedItems = rankFoodItems(recipes, search);
+      setFoodItems(rankedItems);
+    } catch (error) {
+      console.error("Error fetching or processing items:", error);
+    }
+  };
 
   // Function to handle the change in the search bar
   const handleChange = (e) => {
@@ -11,15 +30,19 @@ const SearchBanner = () => {
 
   //function to handle the search button
   const handleSearch = () => {
+    if (search.trim() === "") {
+      alert("Please enter a search term.");
+      return;
+    }
     // Disable the button to prevent rapid presses
+    setFoodItems([]);
     setIsButtonDisabled(true);
-
     // Re-enable the button after 5 second  to allow the user to search again
     setTimeout(() => {
       setIsButtonDisabled(false);
     }, 5000);
-    //todo call api to search for the recipe
     console.log(search);
+    fetchAndProcessItems(search);
   };
 
   //function to execute the search if the user presses enter
@@ -41,13 +64,17 @@ const SearchBanner = () => {
         <div className="SearchBar">
           <input
             type="text"
-            placeholder="Find recipes, ingredients, or dishes"
+            placeholder="Search tasty recipes"
             aria-label="Find recipes, ingredients, or dishes"
             onChange={handleChange}
             value={search}
             onKeyDown={handleKeyDown}
           />
-          <button type="button" onClick={handleSearch} disabled={isButtonDisabled}>
+          <button
+            type="button"
+            onClick={handleSearch}
+            disabled={isButtonDisabled}
+          >
             Search
           </button>
         </div>
