@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const recipes_routes_1 = __importDefault(require("./api/recipes/recipes.routes"));
 const users_routes_1 = __importDefault(require("./api/users/users.routes"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const path_1 = __importDefault(require("path"));
 const middleware_1 = require("./utils/middleware");
 const errorHandler_1 = require("./utils/errorHandler");
 const app = (0, express_1.default)();
@@ -19,6 +20,9 @@ app.use((0, cors_1.default)({
     maxAge: 86400,
     methods: "GET, POST, PUT, DELETE"
 }));
+app.set("view engine", "ejs");
+console.log(__dirname);
+app.set("views", path_1.default.join(__dirname, "views"));
 app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.json());
 /*

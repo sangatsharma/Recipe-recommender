@@ -69,6 +69,7 @@ const oAuth2Server = async (req, res, next) => {
         const userData = {
             email: email,
             name: name,
+            verified: 1,
         };
         try {
             // Register user
