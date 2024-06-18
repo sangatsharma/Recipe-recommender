@@ -8,6 +8,7 @@ export const errorHandler = (err: Error, _: Request, res: Response, __: NextFunc
   } else if (err.name === "ValidationError") {
     return res.status(400).json({ error: err.message });
   } else if (err.name === "PostgresError") {
+    console.log(err);
     return res.status(200).json({ error: "DB Error" });
   } else if (err.name === "Error") {
     if (err.message === "UNDEFINED_VALUE: Undefined values are not allowed") {

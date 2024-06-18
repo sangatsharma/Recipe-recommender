@@ -1,7 +1,8 @@
 export type RegisterForm = {
   name: string,
   email: string,
-  password: string,
+  password?: string,
+  verified?: number,
 };
 
 export type LoginForm = {
@@ -17,6 +18,7 @@ export type UserDataDB = {
   joinedOn: Date;
   followers: number;
   following: number;
+  verified: number,
 };
 
 export type JsonResponse = {

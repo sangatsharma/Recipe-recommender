@@ -39,6 +39,9 @@ const GOOGLE_OAUTH_URL: string = process.env.GOOGLE_OAUTH_URL as string;
 const GOOGLE_ACCESS_TOKEN_URL: string = process.env.GOOGLE_ACCESS_TOKEN_URL as string;
 const GOOGLE_TOKEN_INFO_URL: string = process.env.GOOGLE_TOKEN_INFO_UR as string;
 
+const EMAIL_APP_PASS: string = process.env.EMAIL_APP_PASS as string;
+const EMAIL_ACCOUNT: string = process.env.EMAIL_ACCOUNT as string;
+
 export {
   PORT,
   ENV,
@@ -55,4 +58,6 @@ export {
   GOOGLE_OAUTH_URL,
   GOOGLE_ACCESS_TOKEN_URL,
   GOOGLE_TOKEN_INFO_URL,
+  EMAIL_APP_PASS,
+  EMAIL_ACCOUNT,
 };

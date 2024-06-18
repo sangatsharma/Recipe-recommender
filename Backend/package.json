@@ -20,14 +20,18 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
+    "ejs": "^3.1.10",
     "express": "^4.19.2",
     "google-auth-library": "^9.10.0",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.13",
     "package.json": "^0.0.0",
     "postgres": "^3.4.4",
     "vercel": "^34.2.6"
   },
   "devDependencies": {
+    "@types/ejs": "^3.1.5",
+    "@types/nodemailer": "^6.4.15",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",

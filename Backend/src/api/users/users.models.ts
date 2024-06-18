@@ -8,6 +8,7 @@ export const userSchema = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password"),
+  verified: integer("verified").notNull().default(0),
   joinedOn: timestamp("joinedOn", {
     withTimezone: true
   }).defaultNow().notNull(),
@@ -19,6 +20,11 @@ export const followerSchema = pgTable("followers", {
   id: serial("id").primaryKey(),
   follower: integer("follower").references(() => userSchema.id, { onDelete: "cascade" }),
   followedUser: integer("followedUser").references(() => userSchema.id, { onDelete: "cascade" }),
+});
+
+export const passwordResetSchema = pgTable("passwordReset", {
+  resetToken: text("resetToken").notNull(),
+  newPassword: text("newPassword").notNull(),
 });
 
 // One to Many Relation: A user can post multiple recipies
