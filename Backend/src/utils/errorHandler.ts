@@ -3,6 +3,7 @@ import { PostgresError } from "postgres";
 
 export const errorHandler = (err: Error, _: Request, res: Response, __: NextFunction) => {
   let message = "Unknown Error";
+  console.log(err);
 
   // TODO: Error message based on DB ERROR
   if (err.name === "CastError") {

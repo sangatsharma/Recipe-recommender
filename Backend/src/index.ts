@@ -9,8 +9,6 @@ import path from "path";
 import { unknownEndPoint } from "@/utils/middleware";
 import { errorHandler } from "@/utils/errorHandler";
 
-import ejs from "ejs";
-
 const app = express();
 
 app.use(cors({
