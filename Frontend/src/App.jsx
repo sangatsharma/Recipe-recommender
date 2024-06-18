@@ -11,12 +11,27 @@ import Search from "./Pages/Search.jsx";
 import Profile from "./Pages/Profile/Profile.jsx";
 import Settings from "./Pages/Profile/Settings.jsx";
 import PageNotFound from "./Pages/PageNotFound.jsx";
-
+import { isAuthenticated, removeToken } from "./utils/auth.js";
+import { useEffect, useState } from "react";
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(isAuthenticated());
+    console.log("isloggedin",isLoggedIn);
+  }, []);
+
+  const handleLogout = () => {
+    removeToken();
+    setIsLoggedIn(false);
+  };
+
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <RootPageLayout />,
+      element: (
+        <RootPageLayout isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+      ),
       errorElement: <PageNotFound />,
       children: [
         { path: "/", element: <Homepage /> },
