@@ -25,9 +25,9 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 
 	// Set cookie
 	res.cookie("auth_token", token, {
-		maxAge: (1000 * 60 * 60 * 24 * 7),
-		sameSite: "none",
 		secure: true,
+		sameSite: "none",
+		maxAge: (1000 * 60 * 60 * 24 * 7),
 	});
 
 	// Return user details
