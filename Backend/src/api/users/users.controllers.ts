@@ -112,7 +112,7 @@ export const validateToken = (req: Request, res: Response, _: NextFunction) => {
   }
 
   try {
-    jwt.verify(token.token as string, SECRET);
+    jwt.verify(token.auth_token as string, SECRET);
     return res.json({
       success: true,
       body: {
