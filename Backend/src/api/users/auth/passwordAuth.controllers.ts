@@ -3,6 +3,7 @@ import { changePassowrd, emailVerifyer, handleToken, userRegisterHelper, verifyA
 import { JsonResponse, LoginForm, RegisterForm, UserDataDB } from "../users.types";
 import { userExists } from "./auth.helpers";
 import bcrypt from "bcrypt";
+import { PostgresError } from "postgres";
 
 export const userRegisterHandler = async (req: Request, res: Response, next: NextFunction) => {
 
