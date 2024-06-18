@@ -1,5 +1,4 @@
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode"; // For CommonJS environment
+
 
 export const getToken = () => {
   return Cookies.get("token");
