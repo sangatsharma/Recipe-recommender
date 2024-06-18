@@ -1,6 +1,6 @@
-import "./Banner.css";
+import "./SearchBanner.css";
 import React, { useState } from "react";
-const Banner = () => {
+const SearchBanner = () => {
   const [search, setSearch] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -56,4 +56,4 @@ const Banner = () => {
     </>
   );
 };
-export default Banner;
+export default SearchBanner;

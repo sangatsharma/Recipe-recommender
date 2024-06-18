@@ -1,8 +1,10 @@
+import Wrapper from "../Component/Wrapper";
+import SearchBanner from "../Component/SearchBanner/SearchBanner";
 const Search = (props) => {
   return (
-    <div>
-      <h1>Search</h1>
-    </div>
+
+      <SearchBanner />
+ 
   );
 };
 export default Search;
