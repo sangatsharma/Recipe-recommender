@@ -84,7 +84,7 @@ const validateToken = (req, res, _) => {
         });
     }
     try {
-        jsonwebtoken_1.default.verify(token.token, config_1.SECRET);
+        jsonwebtoken_1.default.verify(token.auth_token, config_1.SECRET);
         return res.json({
             success: true,
             body: {
