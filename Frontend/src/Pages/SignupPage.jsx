@@ -65,6 +65,7 @@ const SignupPage = () => {
         // Else, signed in successfully
         else {
           // Redirect
+          window.location.href = "/";
         }
       }
     },

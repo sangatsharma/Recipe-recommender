@@ -36,7 +36,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
       if (!res.data.success) alert(res.data.body.message);
       // Successfully signed in then
       else {
-        isAuthenticated(setIsLoggedIn);
+        window.location.href = "/";
       }
     },
   });
@@ -147,7 +147,6 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
             </span>
           </p>
         </div>
-        {/* { //todo navigate to signup page } */}
       </div>
     </div>
   );

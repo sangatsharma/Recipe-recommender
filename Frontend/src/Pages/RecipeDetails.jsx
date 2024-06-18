@@ -45,7 +45,8 @@ const RecipeDetails = () => {
         {
           name: RecipeName,
           id: RecipeId,
-        }
+        },
+        { withCredentials: true }
       );
       if (response.data.success == false) return response.data;
       return response.data.body[0];
@@ -67,7 +68,6 @@ const RecipeDetails = () => {
     urls.push(matches[1]);
   }
 
-
   return (
     <Wrapper>
       <div>
@@ -79,7 +79,12 @@ const RecipeDetails = () => {
                 key={index} // Use index as key (unique for each URL)
                 src={url} // Use extracted URL
                 alt={`Recipe ${index + 1}`}
-                style={{ width: "20%", height: "10%", marginBottom: "20px", aspectRatio:"1" }} // Optional styling
+                style={{
+                  width: "20%",
+                  height: "10%",
+                  marginBottom: "20px",
+                  aspectRatio: "1",
+                }} // Optional styling
               />
             ))}
         </div>

@@ -10,7 +10,7 @@ const ItemsCard = ({ id, src, name, rating }) => {
 
   //navigate to the recipe details page
   const handleClick = () => {
-    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
+    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating }, });
   };
 
   const fallbackSrc =

@@ -37,6 +37,9 @@ const Navbar = ({ isLogin }) => {
       window.removeEventListener("touchstart", resetIdleTimer);
     };
   }, []);
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <header className={`${isIdle ? "hide" : "show"}`}>
@@ -47,19 +50,34 @@ const Navbar = ({ isLogin }) => {
         </div>
       </Link>
       <nav>
-        <button className={isActive ? "activePage" : ""}>
+        <button
+          className={isActive ? "activePage" : ""}
+          onClick={isActive ? handleScrollToTop : null}
+        >
           <Link to="/home">Home</Link>
         </button>
-        <button className={location === "/recipes" ? "activePage" : ""}>
+        <button
+          className={location === "/recipes" ? "activePage" : ""}
+          onClick={location === "/recipes" ? handleScrollToTop : null}
+        >
           <Link to="/recipes">Recipes</Link>
         </button>
-        <button className={location === "/explore" ? "activePage" : ""}>
+        <button
+          className={location === "/explore" ? "activePage" : ""}
+          onClick={location === "/explore" ? handleScrollToTop : null}
+        >
           <Link to="/explore">Explore</Link>
         </button>
-        <button className={location === "/search" ? "activePage" : ""}>
+        <button
+          className={location === "/search" ? "activePage" : ""}
+          onClick={location === "/search" ? handleScrollToTop : null}
+        >
           <Link to="/search">Search</Link>
         </button>
-        <button className={location === "/contact" ? "activePage" : ""}>
+        <button
+          className={location === "/contact" ? "activePage" : ""}
+          onClick={location === "/contact" ? handleScrollToTop : null}
+        >
           <Link to="/contact">Contact</Link>
         </button>
       </nav>
