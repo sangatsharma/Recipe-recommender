@@ -120,6 +120,19 @@ const verifyMailSender = async (email, operation, newPassword) => {
                 pass: config_1.EMAIL_APP_PASS,
             }
         });
+        await new Promise((resolve, reject) => {
+            // verify connection configuration
+            transporter.verify(function (error, success) {
+                if (error) {
+                    console.log(error);
+                    reject(error);
+                }
+                else {
+                    console.log("Server is ready to take our messages");
+                    resolve(success);
+                }
+            });
+        });
         // What and who to send
         const mailOptions = {
             from: config_1.EMAIL_ACCOUNT,
@@ -130,10 +143,21 @@ const verifyMailSender = async (email, operation, newPassword) => {
 			https://recipe-recommender-backend.vercel.app/user/auth/verify/${jwtToken}
 			`
         };
+        await new Promise((resolve, reject) => {
+            // send mail
+            transporter.sendMail(mailOptions, (err, info) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(info);
+                }
+            });
+        });
         // Send mail
-        transporter.sendMail(mailOptions)
-            .then((resData) => console.log("done" + resData.response))
-            .catch((err) => new Error(err.message));
+        // 	transporter.sendMail(mailOptions)
+        // 		.then((resData) => console.log("done" + resData.response))
+        // 		.catch((err) => new Error(err.message as string));
     }
     // Return send even if email is invalid
     return ({
