@@ -17,7 +17,7 @@ app.use(cors({
   credentials: true,
   optionsSuccessStatus: 200,
   maxAge: 86400,
-  methods: "GET, POST, PUT, DELETE"
+  methods: ["GET, POST, PUT, DELETE"]
 }));
 
 app.set("view engine", "ejs");
