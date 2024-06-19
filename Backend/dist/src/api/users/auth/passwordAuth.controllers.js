@@ -162,7 +162,7 @@ const logoutHandler = (req, res, _) => {
         path: "/",
         sameSite: "none",
         secure: true,
-        domain: "recipe-recommender-backend.vercel.app",
+        // domain: "recipe-recommender-backend.vercel.app",
         partitioned: true,
     });
     // Send success message
