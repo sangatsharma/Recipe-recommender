@@ -186,7 +186,9 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
 export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // Clear cookie
   res.clearCookie("auth_token", {
-    path: "/"
+    path: "/",
+    sameSite: "none",
+    secure: true,
   });
 
   // Send success message
