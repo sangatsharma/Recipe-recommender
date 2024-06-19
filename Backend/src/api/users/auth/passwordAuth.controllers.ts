@@ -106,7 +106,7 @@ export const userLoginHandler = async (req: Request, res: Response, next: NextFu
 
 
 // VERIFICATION EMAILS
-export const verifyEmailHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyEmailHandler = async (req: Request, res: Response, _: NextFunction) => {
 
   // Get token from url param
   const jwtParam = req.params.jwt;
@@ -176,4 +176,22 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
     next(err);
   }
 
+};
+
+
+/*
+  LOG USER OUT
+  WARNING: THIS DOSEN'T INVALIDATE THE TOKEN
+*/
+export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
+  // Clear cookie
+  res.clearCookie("auth_token");
+
+  // Send success message
+  res.json({
+    success: true,
+    body: {
+      message: "Successfully loggedout",
+    },
+  });
 };
