@@ -159,7 +159,9 @@ exports.changePasswordHandler = changePasswordHandler;
 const logoutHandler = (req, res, _) => {
     // Clear cookie
     res.clearCookie("auth_token", {
-        path: "/"
+        path: "/",
+        sameSite: "none",
+        secure: true,
     });
     // Send success message
     res.json({
