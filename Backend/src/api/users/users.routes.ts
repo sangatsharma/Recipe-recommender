@@ -27,6 +27,6 @@ userRouter.get("/auth/logout", authenticateJWT, logoutHandler);
 userRouter.get("/", authenticateJWT, userInfoHandler as RequestHandler);
 userRouter.post("/follow", authenticateJWT, followUser as RequestHandler);
 userRouter.get("/recipes", authenticateJWT, tmpDemo);
-userRouter.get("/validate", validateToken);
+userRouter.get("/validate", authenticateJWT, validateToken);
 
 export default userRouter;
