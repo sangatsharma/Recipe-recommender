@@ -13,7 +13,7 @@ const ProfileDropdown = ({ isLogin }) => {
   };
   const Logout = () => {
     handleLogout();
-    window.location.reload();
+   
   };
 
   // Close dropdown when clicking outside
