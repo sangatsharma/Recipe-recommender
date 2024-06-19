@@ -162,6 +162,7 @@ const logoutHandler = (req, res, _) => {
         path: "/",
         sameSite: "none",
         secure: true,
+        domain: "recipe-recommender-backend.vercel.app",
     });
     // Send success message
     res.json({
