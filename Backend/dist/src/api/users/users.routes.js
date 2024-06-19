@@ -28,5 +28,5 @@ userRouter.get("/auth/logout", middleware_1.authenticateJWT, passwordAuth_contro
 userRouter.get("/", middleware_1.authenticateJWT, users_controllers_1.userInfoHandler);
 userRouter.post("/follow", middleware_1.authenticateJWT, users_controllers_1.followUser);
 userRouter.get("/recipes", middleware_1.authenticateJWT, users_controllers_1.tmpDemo);
-userRouter.get("/validate", users_controllers_1.validateToken);
+userRouter.get("/validate", middleware_1.authenticateJWT, users_controllers_1.validateToken);
 exports.default = userRouter;
