@@ -16,6 +16,7 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
 
   jwt.verify(cookie.auth_token as string, SECRET, (err, user) => {
     if (err) return res.status(403).json({ success: false, body: { message: "Forbidden" } });
+    res.locals.user = user;
     next();
   });
 };

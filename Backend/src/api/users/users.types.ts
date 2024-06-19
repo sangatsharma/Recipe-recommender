@@ -31,6 +31,7 @@ export type JsonResponse = {
 export type JwtPayload = {
   id: number
   email: string,
+  verified: number,
 };
 
 

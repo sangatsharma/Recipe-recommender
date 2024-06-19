@@ -10,7 +10,7 @@ import express, { RequestHandler } from "express";
 // Types
 import { changePasswordHandler, userLoginHandler, userRegisterHandler, verifyEmailHandler } from "./auth/passwordAuth.controllers";
 import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
-import { followUser, tmpDemo, validateToken } from "./users.controllers";
+import { followUser, tmpDemo, userInfoHandler, validateToken } from "./users.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 const userRouter = express.Router();
@@ -23,6 +23,7 @@ userRouter.get("/auth/osuccess", oAuth2Server as RequestHandler);
 userRouter.post("/auth/password-reset", authenticateJWT, changePasswordHandler as RequestHandler);
 userRouter.get("/auth/verify/:jwt", verifyEmailHandler as RequestHandler);
 
+userRouter.get("/", authenticateJWT, userInfoHandler as RequestHandler);
 userRouter.post("/follow", authenticateJWT, followUser as RequestHandler);
 userRouter.get("/recipes", authenticateJWT, tmpDemo);
 userRouter.get("/validate", validateToken);

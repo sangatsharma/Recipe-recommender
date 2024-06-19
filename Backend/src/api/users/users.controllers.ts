@@ -25,6 +25,32 @@ import { userExists } from "./auth/auth.helpers";
 ****************/
 
 /*
+  GET USER DATA
+*/
+export const userInfoHandler = async (req: Request, res: Response, _: NextFunction) => {
+
+  // Get this data from middleware
+  const userJwt: JwtPayload = res.locals.user as JwtPayload;
+
+  // Check if email exists
+  const userTmp = await userExists(userJwt.email);
+
+  if (!userTmp.success) {
+    return res.json({
+      success: false,
+      body: {
+        message: "User with provoded email not found",
+      },
+    });
+  }
+
+  // Remove password and return user data
+  userTmp.body.password = null;
+  return res.json(userTmp);
+};
+
+
+/*
   FOLLOW USER
 */
 export const followUser = async (req: Request, res: Response, _: NextFunction) => {
