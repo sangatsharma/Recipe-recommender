@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { handleLogout } from "../../utils/auth";
 const ProfileDropdown = ({ isLogin }) => {
   //get current location path
   const location = useLocation().pathname;
@@ -9,6 +10,10 @@ const ProfileDropdown = ({ isLogin }) => {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
+  };
+  const Logout = () => {
+    handleLogout();
+    window.location.reload();
   };
 
   // Close dropdown when clicking outside
@@ -64,8 +69,8 @@ const ProfileDropdown = ({ isLogin }) => {
             </li>
             <li>
               <Link
-                onClick={handleToggle}
                 to="/"
+                onClick={Logout}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >
                 <i className="fas fa-sign-out-alt mr-2"></i> Logout

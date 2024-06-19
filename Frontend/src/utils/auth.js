@@ -11,3 +11,15 @@ export const isAuthenticated = async (setIsLoggedIn) => {
     console.error(err);
   }
 };
+export const handleLogout = async () => {
+  try {
+    const response = await axios.get(
+      "https://recipe-recommender-backend.vercel.app/user/auth/logout",
+      { withCredentials: true }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (err) {
+    console.error(err);
+  }
+};
