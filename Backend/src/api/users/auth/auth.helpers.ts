@@ -29,7 +29,8 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 		sameSite: "none",
 		maxAge: (1000 * 60 * 60 * 24 * 7),
 		domain: "recipe-recommender-backend.vercel.app",
-		path: "/"
+		path: "/",
+		partitioned: true,
 	});
 
 	// Return user details
