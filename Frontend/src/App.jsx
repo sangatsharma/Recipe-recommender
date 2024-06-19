@@ -21,7 +21,10 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    isAuthenticated(setIsLoggedIn);
+    const handleLogin = async () => {
+      await isAuthenticated(setIsLoggedIn);
+    };
+    handleLogin();
   }, []);
 
   const handleLogout = () => {
@@ -48,7 +51,6 @@ function App() {
             { path: "/login", element: <Navigate to="/" /> },
             { path: "/signup", element: <Navigate to="/" /> },
             { path: "/profile", element: <Profile /> },
-            { path: "/profile", element: <SignupPage /> },
             { path: "/settings", element: <Settings /> },
           ]
         : [
