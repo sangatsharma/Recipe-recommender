@@ -24,6 +24,8 @@ userRouter.get("/auth/oauth", googleAuth_controllers_1.oAuthHandler);
 userRouter.get("/auth/osuccess", googleAuth_controllers_1.oAuth2Server);
 userRouter.post("/auth/password-reset", middleware_1.authenticateJWT, passwordAuth_controllers_1.changePasswordHandler);
 userRouter.get("/auth/verify/:jwt", passwordAuth_controllers_1.verifyEmailHandler);
+userRouter.get("/auth/logout", middleware_1.authenticateJWT, passwordAuth_controllers_1.logoutHandler);
+userRouter.get("/", middleware_1.authenticateJWT, users_controllers_1.userInfoHandler);
 userRouter.post("/follow", middleware_1.authenticateJWT, users_controllers_1.followUser);
 userRouter.get("/recipes", middleware_1.authenticateJWT, users_controllers_1.tmpDemo);
 userRouter.get("/validate", users_controllers_1.validateToken);

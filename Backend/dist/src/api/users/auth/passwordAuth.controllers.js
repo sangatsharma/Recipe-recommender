@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.changePasswordHandler = exports.verifyEmailHandler = exports.userLoginHandler = exports.userRegisterHandler = void 0;
+exports.logoutHandler = exports.changePasswordHandler = exports.verifyEmailHandler = exports.userLoginHandler = exports.userRegisterHandler = void 0;
 const auth_helpers_1 = require("./auth.helpers");
 const auth_helpers_2 = require("./auth.helpers");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -93,7 +93,7 @@ const userLoginHandler = async (req, res, next) => {
 };
 exports.userLoginHandler = userLoginHandler;
 // VERIFICATION EMAILS
-const verifyEmailHandler = async (req, res, next) => {
+const verifyEmailHandler = async (req, res, _) => {
     // Get token from url param
     const jwtParam = req.params.jwt;
     // Verify email
@@ -152,3 +152,19 @@ const changePasswordHandler = async (req, res, next) => {
     }
 };
 exports.changePasswordHandler = changePasswordHandler;
+/*
+  LOG USER OUT
+  WARNING: THIS DOSEN'T INVALIDATE THE TOKEN
+*/
+const logoutHandler = (req, res, _) => {
+    // Clear cookie
+    res.clearCookie("auth_token");
+    // Send success message
+    res.json({
+        success: true,
+        body: {
+            message: "Successfully loggedout",
+        },
+    });
+};
+exports.logoutHandler = logoutHandler;

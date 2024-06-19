@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tmpDemo = exports.validateToken = exports.followUser = void 0;
+exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -16,6 +16,27 @@ const auth_helpers_1 = require("./auth/auth.helpers");
 /****************
 * ROUTES
 ****************/
+/*
+  GET USER DATA
+*/
+const userInfoHandler = async (req, res, _) => {
+    // Get this data from middleware
+    const userJwt = res.locals.user;
+    // Check if email exists
+    const userTmp = await (0, auth_helpers_1.userExists)(userJwt.email);
+    if (!userTmp.success) {
+        return res.json({
+            success: false,
+            body: {
+                message: "User with provoded email not found",
+            },
+        });
+    }
+    // Remove password and return user data
+    userTmp.body.password = null;
+    return res.json(userTmp);
+};
+exports.userInfoHandler = userInfoHandler;
 /*
   FOLLOW USER
 */

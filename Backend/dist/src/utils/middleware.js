@@ -19,6 +19,7 @@ const authenticateJWT = (req, res, next) => {
     jsonwebtoken_1.default.verify(cookie.auth_token, config_1.SECRET, (err, user) => {
         if (err)
             return res.status(403).json({ success: false, body: { message: "Forbidden" } });
+        res.locals.user = user;
         next();
     });
 };
