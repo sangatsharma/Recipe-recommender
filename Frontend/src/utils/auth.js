@@ -16,8 +16,8 @@ export const checkCookieStatus = async () => {
 //todo add the following function to the logout section
 export const handleLogout = async () => {
   try {
-    const response = await axios.get(
-      "https://recipe-recommender-backend.vercel.app/user/auth/logout",
+    const response = await axios.post(
+      "https://recipe-recommender-backend.vercel.app/user/auth/logout", {},
       { withCredentials: true }
     );
     return response.data;

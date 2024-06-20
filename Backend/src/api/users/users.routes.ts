@@ -22,7 +22,7 @@ userRouter.get("/auth/oauth", oAuthHandler as RequestHandler);
 userRouter.get("/auth/osuccess", oAuth2Server as RequestHandler);
 userRouter.post("/auth/password-reset", authenticateJWT, changePasswordHandler as RequestHandler);
 userRouter.get("/auth/verify/:jwt", verifyEmailHandler as RequestHandler);
-userRouter.get("/auth/logout", authenticateJWT, logoutHandler);
+userRouter.post("/auth/logout", authenticateJWT, logoutHandler);
 
 userRouter.get("/", authenticateJWT, userInfoHandler as RequestHandler);
 userRouter.post("/follow", authenticateJWT, followUser as RequestHandler);
