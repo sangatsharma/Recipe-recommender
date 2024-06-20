@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { handleLogout } from "../../utils/auth";
-const ProfileDropdown = ({ isLogin }) => {
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
+const ProfileDropdown = () => {
+  const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+
   //get current location path
   const location = useLocation().pathname;
 
@@ -11,9 +15,13 @@ const ProfileDropdown = ({ isLogin }) => {
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-  const Logout = () => {
-    handleLogout();
-   
+  const Logout = async () => {
+    const isLogout = await handleLogout();
+    if (isLogout.success) {
+      setIsAuthenticated(false);
+      toast.success("Logout successful!");
+      navigate("/");
+    }
   };
 
   // Close dropdown when clicking outside
@@ -31,11 +39,11 @@ const ProfileDropdown = ({ isLogin }) => {
   return (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        onClick={isLogin ? handleToggle : null}
+        onClick={isAuthenticated ? handleToggle : null}
         className="focus:outline-none"
       >
         {/* check if user is login if not redirect to login page */}
-        <Link to={isLogin ? `${location}` : "/login"}>
+        <Link to={isAuthenticated ? `${location}` : "/login"}>
           <img
             loading="lazy"
             src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"

@@ -6,7 +6,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated} = useContext(AuthContext);
   const navigate = useNavigate();
 
   const location = useLocation().pathname;
@@ -110,7 +110,7 @@ const Navbar = () => {
             Sign Up
           </button>
         )}
-        <ProfileDropdown isLogin={isAuthenticated} />
+        <ProfileDropdown />
       </div>
     </header>
   );

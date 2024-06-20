@@ -20,8 +20,7 @@ export const handleLogout = async () => {
       "https://recipe-recommender-backend.vercel.app/user/auth/logout",
       { withCredentials: true }
     );
-    console.log(response.data);
-    return response.data;
+    return response.data.body;
   } catch (err) {
     console.error(err);
   }
