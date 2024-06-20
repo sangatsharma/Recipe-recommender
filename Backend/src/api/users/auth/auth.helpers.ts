@@ -25,12 +25,12 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 
 	// Set cookie
 	res.cookie("auth_token", token, {
-		secure: true,
-		sameSite: "none",
+		// secure: true,
+		// sameSite: "none",
 		maxAge: (1000 * 60 * 60 * 24 * 7),
-		domain: "recipe-recommender-backend.vercel.app",
-		path: "/",
-		partitioned: true,
+		// domain: "recipe-recommender-backend.vercel.app",
+		// path: "/",
+		// partitioned: true,
 	});
 
 	// Return user details
