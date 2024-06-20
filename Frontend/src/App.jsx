@@ -41,58 +41,23 @@ function App() {
     },
   ]);
   return (
-    <>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-      </AuthProvider>
-    </>
+    <AuthProvider>
+      <RouterProvider router={router} />
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        bodyStyle={{ fontSize: ".8rem" }}
+      />
+    </AuthProvider>
   );
 }
 
 export default App;
-
-// children: [
-//   { path: "/", element: <Homepage /> },
-//   { path: "/home", element: <Homepage /> },
-//   { path: "/recipes", element: <Recipes /> },
-//   { path: "/recipes/:recipeName", element: <RecipeDetails /> },
-//   { path: "/search", element: <Search /> },
-//   { path: "/contact", element: <Contact /> },
-//   { path: "/explore", element: <Explore /> },
-//   {
-//     path: "/login",
-//     element: isLoggedIn ? (
-//       <Navigate to="/" />
-//     ) : (
-//       <LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-//     ),
-//   },
-//   {
-//     path: "/signup",
-//     element: isLoggedIn ? (
-//       <Navigate to="/" />
-//     ) : (
-//       <SignupPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-//     ),
-//   },
-//   {
-//     path: "/profile",
-//     element: isLoggedIn ? <Profile /> : <Navigate to="/login" />,
-//   },
-//   {
-//     path: "/settings",
-//     element: isLoggedIn ? <Settings /> : <Navigate to="/login" />,
-//   },
-// ],
