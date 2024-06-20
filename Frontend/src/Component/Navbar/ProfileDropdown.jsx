@@ -2,10 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { handleLogout } from "../../utils/auth";
 import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+
 const ProfileDropdown = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
-
+  const navigate = useNavigate();
   //get current location path
   const location = useLocation().pathname;
 
@@ -15,11 +18,13 @@ const ProfileDropdown = () => {
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
+
   const Logout = async () => {
     const isLogout = await handleLogout();
     if (isLogout.success) {
       setIsAuthenticated(false);
-      toast.success("Logout successful!");
+      handleToggle();
+      toast.success(isLogout.body.message);
       navigate("/");
     }
   };
