@@ -163,7 +163,7 @@ const logoutHandler = (req, res, _) => {
         sameSite: "none",
         secure: true,
         // domain: "recipe-recommender-backend.vercel.app",
-        partitioned: true,
+        maxAge: 0
     });
     // Send success message
     res.json({
