@@ -1,8 +1,14 @@
 import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const ItemsCard = ({ id, src, name, rating }) => {
   const navigate = useNavigate();
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleFavouriteClick = () => {
+    setIsFavorite(!isFavorite);
+  };
 
   // Create a URL-friendly name
   //todo check with double space after building the post page.
@@ -10,7 +16,7 @@ const ItemsCard = ({ id, src, name, rating }) => {
 
   //navigate to the recipe details page
   const handleClick = () => {
-    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating }, });
+    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
   };
 
   const fallbackSrc =
@@ -25,15 +31,32 @@ const ItemsCard = ({ id, src, name, rating }) => {
   }
 
   return (
-    <div className="ItemsCard" onClick={handleClick}>
+    <div className="ItemsCard group">
       <div className="ImageContainer">
         <img
           loading="lazy"
           src={isValidImageUrl(src) ? src : fallbackSrc}
           alt={name}
+          onClick={handleClick}
         />
+        <button
+          className={`absolute top-4 right-4 text-1xl pt-1 px-2 rounded-[50%] transition-ease-in-out 
+                            ${
+                              isFavorite
+                                ? "text-red-500 bg-white opacity-100"
+                                : "text-gray-500 bg-gray-200 opacity-0"
+                            }
+                             group-hover:opacity-100 hover:shadow-lg hover:scale-110 focus:outline-none`}
+          onClick={handleFavouriteClick}
+        >
+          {isFavorite ? (
+            <i className="fas fa-heart"></i>
+          ) : (
+            <i className="far fa-heart"></i>
+          )}
+        </button>
       </div>
-      <div className="RecipeInfo">
+      <div className="RecipeInfo" onClick={handleClick}>
         <p id="RecipeName">{name}</p>
         <p id="RecipeRating">{rating || 4.6} ratings</p>
       </div>

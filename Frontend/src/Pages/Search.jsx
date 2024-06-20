@@ -15,7 +15,9 @@ const Search = () => {
         setSearch={setSearch}
       />
 
-      {foodItems.length > 0 && <p className="mb-4">Search Results for {search} : </p>}
+      {foodItems.length > 0 && (
+        <p className="mb-4">Search Results for {search} : </p>
+      )}
       <div className="w-[100%] flex flex-row flex-wrap justify-center gap-2">
         {foodItems.length > 0 &&
           foodItems.map((item) => {
@@ -37,7 +39,7 @@ const Search = () => {
             );
           })}
       </div>
-      {searchPerformed && <p>No results found.</p>}
+      {searchPerformed && foodItems.length === 0 && <p>No results found.</p>}
     </>
   );
 };

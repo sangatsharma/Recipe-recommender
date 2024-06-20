@@ -53,7 +53,7 @@ const ProfileDropdown = () => {
             loading="lazy"
             src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
             alt="Profile"
-            className="w-12 h-12 rounded-full transition-shadow hover:shadow-md"
+            className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
           />
         </Link>
       </button>

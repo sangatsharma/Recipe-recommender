@@ -6,7 +6,7 @@ import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 const Navbar = () => {
-  const { isAuthenticated} = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const location = useLocation().pathname;
@@ -104,11 +104,16 @@ const Navbar = () => {
       <div className="Profile">
         {!isAuthenticated && (
           <button
-            className={location === "/signup" ? "activeButton" : ""}
+            className={location === "/signup" ? "activeButton signup" : ""}
             onClick={() => navigate("/signup")}
           >
             Sign Up
           </button>
+        )}
+        {isAuthenticated && (
+          <span className="flex items-center justify-center  cursor-pointer m-auto pb-1 transition-all hover:scale-125 hover:border-b-2 border-orange-500 w-5 h-8 mr-2 ">
+            <i className="fas fa-bookmark text-orange-500 text-2xl"></i>
+          </span>
         )}
         <ProfileDropdown />
       </div>
