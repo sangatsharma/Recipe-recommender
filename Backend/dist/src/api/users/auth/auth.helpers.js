@@ -26,7 +26,6 @@ const handleToken = (userData, res) => {
         secure: true,
         sameSite: "none",
         maxAge: (1000 * 60 * 60 * 24 * 7),
-        domain: "recipe-recommender-backend.vercel.app",
         path: "/",
         partitioned: true,
     });

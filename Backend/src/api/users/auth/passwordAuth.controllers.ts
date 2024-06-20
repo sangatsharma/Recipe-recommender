@@ -185,11 +185,11 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
 */
 export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // Clear cookie
-  res.clearCookie("auth_token", {
+  res.cookie("auth_token", null, {
     path: "/",
+    partitioned: true,
     sameSite: "none",
     secure: true,
-    partitioned: true,
     maxAge: 0,
   });
 
