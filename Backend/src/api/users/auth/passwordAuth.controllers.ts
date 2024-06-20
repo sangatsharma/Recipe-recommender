@@ -189,8 +189,8 @@ export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
     path: "/",
     sameSite: "none",
     secure: true,
+    partitioned: true,
     maxAge: 0,
-    partitioned: true
   });
 
   // Send success message
