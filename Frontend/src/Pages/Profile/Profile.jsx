@@ -1,4 +1,6 @@
+import PreferencesForm from "./PreferencesForm";
+
 const Profile = () => {
-  return <div>Profile</div>;
+  return <PreferencesForm />;
 };
 export default Profile;

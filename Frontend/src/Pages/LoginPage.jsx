@@ -1,11 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import { isAuthenticated } from "../utils/auth";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
-const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
+const LoginPage = () => {
+  const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    toast.success("Login successful!");
+    navigate("/");
+  };
+
   const googleOauth = () => {
     window.location.href =
       "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
@@ -33,10 +51,12 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
       );
 
       // If error
-      if (!res.data.success) alert(res.data.body.message);
+      if (!res.data.success) {
+        toast.error(`${res.data.body.message}`);
+      }
       // Successfully signed in then
       else {
-        window.location.href = "/";
+        handleLogin();
       }
     },
   });

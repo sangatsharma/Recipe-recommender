@@ -1,16 +1,19 @@
 import axios from "axios";
-export const isAuthenticated = async (setIsLoggedIn) => {
+//export to AuthContext.jsx
+export const checkCookieStatus = async () => {
   try {
     const response = await axios.get(
       "https://recipe-recommender-backend.vercel.app/user/validate",
       { withCredentials: true }
     );
-    console.log(response.data);
-    setIsLoggedIn(response.data.success);
+    return response.data.success;
   } catch (err) {
     console.error(err);
   }
 };
+
+
+//todo add the following function to the logout section
 export const handleLogout = async () => {
   try {
     const response = await axios.get(
@@ -22,4 +25,15 @@ export const handleLogout = async () => {
   } catch (err) {
     console.error(err);
   }
+};
+export const getCookie = (name) => {
+  const cookieString = document.cookie;
+  const cookies = cookieString.split("; "); // Split into individual cookies
+  for (let cookie of cookies) {
+    const [cookieName, cookieValue] = cookie.split("=");
+    if (cookieName == name) {
+      return cookieValue; // Return the value if name matches
+    }
+  }
+  return null; // Return null if not found
 };

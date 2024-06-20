@@ -2,11 +2,10 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../Component/Navbar/Navbar";
 import Wrapper from "../Component/Wrapper";
 
-
-const RootPageLayout = ({isLoggedIn}) => {
+const RootPageLayout = () => {
   return (
     <div className="root-page-layout">
-      <Navbar  isLogin={isLoggedIn}/>
+      <Navbar />
       <Wrapper>
         <Outlet />
       </Wrapper>

@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import axios from "axios";
-
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import bullet from "../assets/Images/list.png";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const SignupPage = () => {
-  const googleOauth = () => {
-    window.location.href = "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
-  }
+  const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated]);
 
+  const googleOauth = () => {
+    window.location.href =
+      "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
+  };
+  const handleSignup = () => {
+    setIsAuthenticated(true);
+    toast.success("Signup successful!");
+    navigate("/");
+  };
   // setup schema and formik
   const formik = useFormik({
     initialValues: {
@@ -55,17 +70,16 @@ const SignupPage = () => {
             withCredentials: true,
           }
         );
-        const data = res.data;
 
         // If not successful
-        if (!data.success) {
-          alert(data.body.message);
+        if (!res.data.success) {
+          toast.error(`${res.data.body.message}`);
         }
 
         // Else, signed in successfully
         else {
           // Redirect
-          window.location.href = "/";
+          handleSignup();
         }
       }
     },
@@ -194,15 +208,18 @@ const SignupPage = () => {
 
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
-            <button className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline" onClick={googleOauth}>
-              Continue with
-              <img
-                className="w-7 h-7 rounded-full"
-                src="https://www.svgrepo.com/show/475656/google-color.svg"
-                loading="lazy"
-                alt="google logo"
-              />
-            </button>
+          <button
+            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={googleOauth}
+          >
+            Continue with
+            <img
+              className="w-7 h-7 rounded-full"
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              loading="lazy"
+              alt="google logo"
+            />
+          </button>
           <p className="text-gray-600 text-xm">
             Already have an account?
             <span className="text-blue-600 cursor-pointer hover:underline">

@@ -1,10 +1,14 @@
 import "./Navbar.css";
 import ProfileDropdown from "./ProfileDropdown";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Logo_SVG.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
-const Navbar = ({ isLogin }) => {
+const Navbar = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
   const [isIdle, setIsIdle] = useState(false);
@@ -43,7 +47,7 @@ const Navbar = ({ isLogin }) => {
 
   return (
     <header className={`${isIdle ? "hide" : "show"}`}>
-      <Link to="/home">
+      <Link to="/">
         <div className="LogoWrapper">
           <img loading="lazy" src={logo} alt="Logo" />
           <p className="BrandName">Cook It Yourself</p>
@@ -52,42 +56,61 @@ const Navbar = ({ isLogin }) => {
       <nav>
         <button
           className={isActive ? "activePage" : ""}
-          onClick={isActive ? handleScrollToTop : null}
+          onClick={isActive ? handleScrollToTop : () => navigate("/home")}
         >
-          <Link to="/home">Home</Link>
+          Home
         </button>
         <button
           className={location === "/recipes" ? "activePage" : ""}
-          onClick={location === "/recipes" ? handleScrollToTop : null}
+          onClick={
+            location === "/recipes"
+              ? handleScrollToTop
+              : () => navigate("/recipes")
+          }
         >
-          <Link to="/recipes">Recipes</Link>
+          Recipes
         </button>
         <button
           className={location === "/explore" ? "activePage" : ""}
-          onClick={location === "/explore" ? handleScrollToTop : null}
+          onClick={
+            location === "/explore"
+              ? handleScrollToTop
+              : () => navigate("/explore")
+          }
         >
-          <Link to="/explore">Explore</Link>
+          Explore
         </button>
         <button
           className={location === "/search" ? "activePage" : ""}
-          onClick={location === "/search" ? handleScrollToTop : null}
+          onClick={
+            location === "/search"
+              ? handleScrollToTop
+              : () => navigate("/search")
+          }
         >
-          <Link to="/search">Search</Link>
+          Search
         </button>
         <button
           className={location === "/contact" ? "activePage" : ""}
-          onClick={location === "/contact" ? handleScrollToTop : null}
+          onClick={
+            location === "/contact"
+              ? handleScrollToTop
+              : () => navigate("/contact")
+          }
         >
-          <Link to="/contact">Contact</Link>
+          Contact
         </button>
       </nav>
       <div className="Profile">
-        {!isLogin && (
-          <button className={location === "/signup" ? "activeButton" : ""}>
-            <Link to="/signup">Sign Up</Link>
+        {!isAuthenticated && (
+          <button
+            className={location === "/signup" ? "activeButton" : ""}
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
           </button>
         )}
-        <ProfileDropdown isLogin={isLogin} />
+        <ProfileDropdown isLogin={isAuthenticated} />
       </div>
     </header>
   );
