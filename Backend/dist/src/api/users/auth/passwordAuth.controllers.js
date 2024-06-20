@@ -159,10 +159,10 @@ exports.changePasswordHandler = changePasswordHandler;
 const logoutHandler = (req, res, _) => {
     // Clear cookie
     res.clearCookie("auth_token", {
-        // path: "/",
-        // sameSite: "none",
-        // secure: true,
-        // domain: "recipe-recommender-backend.vercel.app",
+        path: "/",
+        sameSite: "none",
+        secure: true,
+        domain: "recipe-recommender-backend.vercel.app",
         maxAge: 0
     });
     // Send success message
