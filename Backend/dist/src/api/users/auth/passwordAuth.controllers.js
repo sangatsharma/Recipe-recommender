@@ -161,7 +161,6 @@ const logoutHandler = (req, res, _) => {
     res.cookie("auth_token", null, {
         secure: true,
         sameSite: "none",
-        maxAge: 0,
         path: "/",
         domain: "recipe-recommender-backend.vercel.app",
         partitioned: true,
