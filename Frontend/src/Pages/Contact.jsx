@@ -43,41 +43,41 @@ const Contact = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return (
-    <div>
-      <h1>City: {data.city}</h1>
-
-      <br />
-      <hr />
-      <ul className="text-sm">
-        {weatherData && (
-          <div>
-            <p>
-              <strong>Location:</strong> {weatherData.name}
-            </p>
-            <p>
-              <strong>Temperature:</strong> {weatherData.main.temp}°C
-            </p>
-            <p>
-              <strong>Feels Like:</strong> {weatherData.main.feels_like}°C
-            </p>
-            <p>
-              <strong>Weather:</strong> {weatherData.weather[0].main} -
-              {weatherData.weather[0].description}
-            </p>
-            <p>
-              <strong>Humidity:</strong> {weatherData.main.humidity}%
-            </p>
-            <p>
-              <strong>Wind Speed:</strong> {weatherData.wind.speed} m/s
-            </p>
-            <p>
-              <strong>Visibility:</strong> {weatherData.visibility} meters
-            </p>
-          </div>
-        )}
-      </ul>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex-grow">
+        <h1>City: {data.city}</h1>
+        <br />
+        <hr />
+        <ul className="text-sm">
+          {weatherData && (
+            <div>
+              <p>
+                <strong>Location:</strong> {weatherData.name}
+              </p>
+              <p>
+                <strong>Temperature:</strong> {weatherData.main.temp}°C
+              </p>
+              <p>
+                <strong>Feels Like:</strong> {weatherData.main.feels_like}°C
+              </p>
+              <p>
+                <strong>Weather:</strong> {weatherData.weather[0].main} -
+                {weatherData.weather[0].description}
+              </p>
+              <p>
+                <strong>Humidity:</strong> {weatherData.main.humidity}%
+              </p>
+              <p>
+                <strong>Wind Speed:</strong> {weatherData.wind.speed} m/s
+              </p>
+              <p>
+                <strong>Visibility:</strong> {weatherData.visibility} meters
+              </p>
+            </div>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
 export default Contact;
-
