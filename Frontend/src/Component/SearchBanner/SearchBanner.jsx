@@ -3,7 +3,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { rankFoodItems } from "../../utils/filterItems";
 
-const SearchBanner = ({ setFoodItems, setSearchPerformed,search,setSearch }) => {
+const SearchBanner = ({
+  setFoodItems,
+  setSearchPerformed,
+  search,
+  setSearch,
+}) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // Function to fetch the items from the backend
@@ -55,9 +60,9 @@ const SearchBanner = ({ setFoodItems, setSearchPerformed,search,setSearch }) => 
     <>
       <div className="Banner">
         <div className="BannerTitleWrapper">
-          <h1 id="Title">Welcome to Cooking Club</h1>
+          <p id="Title">Explore Recipes from Our Community</p>
           <p id="SubTitle">
-            A community of cooks, food lovers, and recipe enthusiasts.
+            Discover, cook, and enjoy meals shared by fellow food enthusiasts.
           </p>
         </div>
         <div className="SearchBar">
