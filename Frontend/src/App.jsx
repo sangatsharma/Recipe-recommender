@@ -15,6 +15,7 @@ import PrivateRoute from "./Component/PrivateRoute.jsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./context/AuthContext.jsx";
+import BookmarkRecipes from "./Pages/BookmarkRecipes.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -37,6 +38,7 @@ function App() {
         { path: "/signup", element: <SignupPage /> },
         { path: "/profile", element: <PrivateRoute element={Profile} /> },
         { path: "/settings", element: <PrivateRoute element={Settings} /> },
+        { path: "/bookmarks", element: <PrivateRoute element={BookmarkRecipes} /> },
       ],
     },
   ]);
