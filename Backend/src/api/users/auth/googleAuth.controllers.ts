@@ -87,6 +87,21 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       maxAge: 60 * 60 * 24 * 7 * 52, // 1 year
       domain: ".recipe-recommender-backend.vercel.app"
     });
+    res.cookie("XSRF-TOKEN-1", "Demo123", { // XSRF-TOKEN is the name of your cookie
+      sameSite: "none", // lax is important, don't use 'strict' or 'none'
+      path: "/",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7 * 52, // 1 year
+      domain: ".recipe-recommender-backend.vercel.app"
+    });
+    res.cookie("XSRF-TOKEN-2", "Demo123", { // XSRF-TOKEN is the name of your cookie
+      sameSite: "none", // lax is important, don't use 'strict' or 'none'
+      path: "/",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7 * 52, // 1 year
+      domain: ".recipe-recommender-backend.vercel.app",
+      partitioned: true,
+    });
     return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
   }
 
