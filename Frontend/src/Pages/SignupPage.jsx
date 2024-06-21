@@ -86,14 +86,14 @@ const SignupPage = () => {
   });
 
   return (
-    <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4">
+    <div className="bg-white shadow-lg rounded-lg flex flex-row below-sm:flex-col overflow-hidden w-3/4 below-sm:w-[400px]">
       {/* Left Side with Form */}
-      <div className="w-1/2 px-10 py-5 bg-slate-200">
+      <div className="w-1/2 below-sm:w-[100%] px-10 pt-2 pb-1 bg-slate-200">
         <div className="flex flex-row justify-center mb-4">
-          {/* <img src="path/to/logo.png" alt="ads" className="h-12" /> */}
-          <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
-            Cook It Yourself
-          </span>
+          <p className="text-2xl below-sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg pb-4 ">
+          Sign Up
+        </p>
+          
         </div>
         <form onSubmit={formik.handleSubmit}>
           <label
@@ -111,10 +111,6 @@ const SignupPage = () => {
             onBlur={formik.handleBlur}
             value={formik.values.userName}
           />
-
-          {/* //todo check if username exist */}
-
-          {/* / Display error message/*/}
 
           {formik.touched.userName && formik.errors.userName ? (
             <span className="text-red-500 text-sm">
@@ -193,7 +189,7 @@ const SignupPage = () => {
 
           <div className="mb-1">
             <button
-              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
               type="submit"
             >
               Sign Up
@@ -209,7 +205,7 @@ const SignupPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           <button
-            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
             onClick={googleOauth}
           >
             Continue with
@@ -230,13 +226,13 @@ const SignupPage = () => {
       </div>
 
       {/* Right Side with Information */}
-      <div className="perks w-2/3 p-10 flex flex-col justify-center bg-signup-bg bg-cover">
-        <h2 className="text-5xl text-orange-50 font-bold mb-2">
-          Sign Up Today
+      <div className="perks w-2/3 p-10 below-sm:p-5 flex flex-col justify-center bg-signup-bg bg-cover below-sm:w-[100%]">
+        <h2 className="text-5xl text-orange-50 font-bold">
+          Create your account
         </h2>
         <br />
         <p className="text-2xl text-teal-50 mb-4">Here's What You'll Get:</p>
-        <ul className=" text-teal-100 list-disc list-inside space-y-1 text-[20px]">
+        <ul className=" text-teal-100 list-disc list-inside space-y-1 text-[20px] below-sm:text-white">
           <li className="flex items-center">
             <img
               src={bullet}

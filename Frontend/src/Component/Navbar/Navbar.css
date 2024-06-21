@@ -2,7 +2,7 @@ header {
     background-color: #fcfaf7;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 1000;
     height: auto;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -51,7 +51,6 @@ header {
     }
   }
   nav {
-    position: sticky;
     display: flex;
     gap: 20px;
     font-size: 14px;
@@ -60,8 +59,10 @@ header {
     white-space: nowrap;
     line-height: 150%;
     padding: 10px 8px;
-    @media (max-width: 991px) {
+    @media (max-width: 750px) {
+      font-size: 5px;
       white-space: normal;
+      gap: 10px;
     }
   }
   nav > button {

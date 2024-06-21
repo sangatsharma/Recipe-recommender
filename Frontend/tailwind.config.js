@@ -830,6 +830,7 @@ export default {
       150: "1.5",
     },
     screens: {
+      'below-sm': { 'raw': '(max-width: 750px)' },
       sm: "640px",
       md: "768px",
       lg: "1024px",

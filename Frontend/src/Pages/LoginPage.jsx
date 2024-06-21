@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import logo from "../assets/Images/Logo_SVG.svg";
 
 const LoginPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
@@ -61,24 +62,13 @@ const LoginPage = () => {
     },
   });
   return (
-    <div className="bg-white shadow-lg rounded-lg flex flex-row  flex-wrap overflow-hidden w-3/4 mt-[20px] md:flex-col">
-      {/* Right Side with Information */}
-      <div className="w-1/2 p-10 flex flex-col justify-end text-center bg-login-bg bg-cover">
-        <h2 className="text-5xl text-sky-500 p-5 font-bold mb-2">Welcome Back!</h2>
-        <br />
-        <p className="text-2xl text-black mb-4 pl-4">
-          Explore and share more delicious recipes today!
+    <div className="bg-white shadow-lg rounded-lg flex flex-row flex-wrap overflow-hidden mt-[20px] below-sm:flex-col below-sm:w-[95%] w-[400px]">
+      <div className="below-sm:w-[100%] p-10 bg-slate-200 w-[100%]" >
+        {/* <img className="h-12 " src={logo} /> */}
+        <p className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg py-4 ">
+          Login
         </p>
-      </div>
 
-      {/* Left Side with Form */}
-      <div className="w-1/2 p-10 bg-slate-200">
-        <div className="flex flex-row justify-center mb-4">
-          {/* <img src="path/to/logo.png" alt="ads" className="h-12" /> */}
-          <span className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg">
-            Cook It Yourself
-          </span>
-        </div>
         <form onSubmit={formik.handleSubmit}>
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
@@ -135,9 +125,9 @@ const LoginPage = () => {
               </p>
             </div>
           )}
-          <div className="mb-1 ">
+          <div className="my-1 ">
             <button
-              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-[8px] "
+              className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-[8px] w-full"
               type="submit"
             >
               Login
@@ -148,7 +138,7 @@ const LoginPage = () => {
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           {/* <Link to="/"> */}
           <button
-            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="flex flex-row gap-2 m-auto justify-center w-full bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             onClick={googleOauth}
           >
             Continue with
