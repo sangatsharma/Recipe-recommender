@@ -14,6 +14,7 @@ export const recipeSchema = pgTable("recipes", {
     withTimezone: true,
   }).defaultNow(),
   Description: text("Description").notNull(),
+  TotalLikes: integer("TotalLikes").default(0),
   Images: text("Images"),
   RecipeCategory: text("RecipeCategory"),
   Keywords: text("Keywords"),
@@ -33,6 +34,11 @@ export const recipeSchema = pgTable("recipes", {
   RecipeInstructions: text("RecipeInstructions").notNull(),
 });
 
+// One recipies can have multiple likes
+export const recipeLikes = pgTable("recipeLikes", {
+  recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
+  userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" })
+});
 
 // One to One Relation: One recipe will have single author
 export const recipeRelations = relations(recipeSchema, ({ one }) => ({

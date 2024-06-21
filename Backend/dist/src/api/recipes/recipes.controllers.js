@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.recipeLikeHandler = exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -127,3 +127,38 @@ const recipeDetails = async (req, res, next) => {
     }
 };
 exports.recipeDetails = recipeDetails;
+const recipeLikeHandler = async (req, res, next) => {
+    // TODO: Better imp with types
+    const data = req.body;
+    const cookieInfo = res.locals.user;
+    try {
+        // Get the recipe
+        const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data.recipeId));
+        // If not found
+        if (recipeDB.length === 0) {
+            return res.send({
+                success: false,
+                body: {
+                    message: "Recipe with provided id not found",
+                },
+            });
+        }
+        // Check if user already liked this post
+        const alreadyLiked = await db_1.db.select().from(recipes_models_1.recipeLikes).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.recipeId, data.recipeId), (0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.userId, cookieInfo.id)));
+        // If no, like
+        if (alreadyLiked.length === 0) {
+            await db_1.db.insert(recipes_models_1.recipeLikes).values({ recipeId: data.recipeId, userId: cookieInfo.id });
+            await db_1.db.update(recipes_models_1.recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes + 1 }).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data.recipeId));
+        }
+        // Else, remove like
+        else {
+            await db_1.db.delete(recipes_models_1.recipeLikes).where(((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.recipeId, data.recipeId), (0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.userId, cookieInfo.id))));
+            await db_1.db.update(recipes_models_1.recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes - 1 }).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data.recipeId));
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+    return res.send("sasa");
+};
+exports.recipeLikeHandler = recipeLikeHandler;

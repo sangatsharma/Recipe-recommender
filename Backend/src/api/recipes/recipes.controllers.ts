@@ -1,8 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
-import { recipeSchema } from "./recipes.models";
+import { recipeLikes, recipeSchema } from "./recipes.models";
 import { SQL, eq, lte, and, ilike } from "drizzle-orm";
-
 
 /*
   FETCH ALL RECIPIES
@@ -140,4 +139,48 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
   catch (err) {
     next(err);
   }
+};
+
+
+export const recipeLikeHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+  // TODO: Better imp with types
+  const data = req.body as { recipeId: number };
+  const cookieInfo = res.locals.user;
+
+  try {
+    // Get the recipe
+    const recipeDB = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, data.recipeId));
+
+    // If not found
+    if (recipeDB.length === 0) {
+      return res.send({
+        success: false,
+        body: {
+          message: "Recipe with provided id not found",
+        },
+      });
+    }
+
+    // Check if user already liked this post
+    const alreadyLiked = await db.select().from(recipeLikes).where(and(eq(recipeLikes.recipeId, data.recipeId), eq(recipeLikes.userId, cookieInfo.id as number)));
+
+    // If no, like
+    if (alreadyLiked.length === 0) {
+      await db.insert(recipeLikes).values({ recipeId: data.recipeId, userId: cookieInfo.id as number });
+      await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number + 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
+    }
+
+    // Else, remove like
+    else {
+      await db.delete(recipeLikes).where((and(eq(recipeLikes.recipeId, data.recipeId), eq(recipeLikes.userId, cookieInfo.id as number))));
+      await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number - 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
+    }
+  }
+
+  catch (err) {
+    next(err);
+  }
+
+  return res.send("sasa");
 };

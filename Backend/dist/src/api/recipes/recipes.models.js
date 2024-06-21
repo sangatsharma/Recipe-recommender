@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeRelations = exports.recipeSchema = void 0;
+exports.recipeRelations = exports.recipeLikes = exports.recipeSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const users_models_1 = require("../../api/users/users.models");
@@ -16,6 +16,7 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
         withTimezone: true,
     }).defaultNow(),
     Description: (0, pg_core_1.text)("Description").notNull(),
+    TotalLikes: (0, pg_core_1.integer)("TotalLikes").default(0),
     Images: (0, pg_core_1.text)("Images"),
     RecipeCategory: (0, pg_core_1.text)("RecipeCategory"),
     Keywords: (0, pg_core_1.text)("Keywords"),
@@ -33,6 +34,11 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     SugarContent: (0, pg_core_1.numeric)("SugarContent"),
     ProteinContent: (0, pg_core_1.numeric)("ProteinContent"),
     RecipeInstructions: (0, pg_core_1.text)("RecipeInstructions").notNull(),
+});
+// One recipies can have multiple likes
+exports.recipeLikes = (0, pg_core_1.pgTable)("recipeLikes", {
+    recipeId: (0, pg_core_1.integer)("recipeId").notNull().references(() => exports.recipeSchema.RecipeId, { onDelete: "cascade" }),
+    userId: (0, pg_core_1.integer)("userId").notNull().references(() => users_models_1.userSchema.id, { onDelete: "cascade" })
 });
 // One to One Relation: One recipe will have single author
 exports.recipeRelations = (0, drizzle_orm_1.relations)(exports.recipeSchema, ({ one }) => ({

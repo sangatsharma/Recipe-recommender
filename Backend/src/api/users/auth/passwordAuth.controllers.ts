@@ -185,12 +185,6 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
 */
 export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // Clear cookie
-  res.cookie("demo", "hello", {
-    secure: true,
-    sameSite: "none",
-    partitioned: true,
-    maxAge: (1000 * 60 * 60)
-  });
   res.cookie("auth_token", "", {
     secure: true,
     sameSite: "none",
@@ -198,10 +192,6 @@ export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
     partitioned: true,
   });
 
-  res.clearCookie("demo", {
-    sameSite: "none",
-    secure: true,
-  });
 
   res.set("Set-Cookie", "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; Partitioned; SameSite=None");
 
