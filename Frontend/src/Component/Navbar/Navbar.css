@@ -19,7 +19,7 @@ header {
   /* Hide the navbar */
   /* Adjust this value according to  navbar height */
   header.hide {
-    top: -200px;
+    top: -500px;
   }
   
   /* Show the navbar */
@@ -60,7 +60,6 @@ header {
     line-height: 150%;
     padding: 10px 8px;
     @media (max-width: 750px) {
-      font-size: 5px;
       white-space: normal;
       gap: 10px;
     }
