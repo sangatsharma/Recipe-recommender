@@ -14,6 +14,8 @@ const unknownEndPoint = (_, res) => {
 exports.unknownEndPoint = unknownEndPoint;
 const authenticateJWT = (req, res, next) => {
     const cookie = req.cookies;
+    if (cookie?.token)
+        cookie.auth_token = cookie.token;
     if (!cookie?.auth_token)
         return res.status(401).json({ success: false, body: { message: "Unauthorized" } });
     jsonwebtoken_1.default.verify(cookie.auth_token, config_1.SECRET, (err, user) => {
