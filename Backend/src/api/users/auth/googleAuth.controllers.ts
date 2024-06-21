@@ -85,7 +85,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       path: "/",
       secure: true,
       maxAge: 60 * 60 * 24 * 7 * 52, // 1 year
-      domain: ".recipe-recommender-five.vercel.app"
+      domain: ".recipe-recommender-backend.vercel.app"
     });
     return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
   }
