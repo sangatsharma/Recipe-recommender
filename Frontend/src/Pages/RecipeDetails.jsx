@@ -63,9 +63,13 @@ const RecipeDetails = () => {
   const regex = /"([^"]+)"/g;
   let matches;
   let urls = [];
+  let instructions=[];
   // Loop through all matches
   while ((matches = regex.exec(item.Images)) !== null) {
     urls.push(matches[1]);
+  }
+  while ((matches = regex.exec(item.RecipeInstructions)) !== null) {
+    instructions.push(matches[1]);
   }
 
   return (
@@ -144,8 +148,13 @@ const RecipeDetails = () => {
           <p>
             <strong>Protein Content:</strong> {item.ProteinContent} g
           </p>
-          <h4>Instructions:</h4>
-          <ol>{item.RecipeInstructions}</ol>
+          <strong>Instructions:</strong>
+          <ol>
+          {item.RecipeInstructions &&
+            instructions.map((inst, index) => (
+              <li key={index}>{index+1+")   "+inst}</li>
+            ))}
+          </ol>
         </div>
       </div>
     </Wrapper>

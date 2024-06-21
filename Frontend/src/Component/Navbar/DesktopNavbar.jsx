@@ -4,6 +4,7 @@ import { useLocation, Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Logo_SVG.svg";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import NotificationButton from "./NotificationButton";
 
 const DesktopNavbar = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -111,9 +112,12 @@ const DesktopNavbar = () => {
           </button>
         )}
         {isAuthenticated && (
-          <span className="flex items-center justify-center  cursor-pointer m-auto pb-1 transition-all hover:scale-125 hover:border-b-2 border-orange-500 w-5 h-8 mr-2 ">
-            <i className="fas fa-bookmark text-orange-500 text-2xl"></i>
-          </span>
+          <>
+            <span className="flex items-center justify-center  cursor-pointer m-auto pb-1 transition-all hover:scale-125 hover:border-b-2 border-orange-500 w-5 h-8 mr-2 ">
+              <i className="fas fa-bookmark text-orange-500 text-2xl"></i>
+            </span>
+            <NotificationButton />
+          </>
         )}
         <ProfileDropdown />
       </div>
