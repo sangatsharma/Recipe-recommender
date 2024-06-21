@@ -79,6 +79,14 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
   if (userTmp.success) {
     const tokenRes: JsonResponse = handleToken(userTmp.body, res);
     // return res.json(tokenRes);
+
+    res.cookie("XSRF-TOKEN", "Demo123", { // XSRF-TOKEN is the name of your cookie
+      sameSite: "lax", // lax is important, don't use 'strict' or 'none'
+      path: "/",
+      secure: true,
+      maxAge: 60 * 60 * 24 * 7 * 52, // 1 year
+      domain: ".recipe-recommender-five.vercel.app"
+    });
     return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
   }
 
