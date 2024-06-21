@@ -169,3 +169,8 @@ export const tmpDemo = (_: Request, res: Response, next: NextFunction) => {
     next(err);
   });
 };
+
+
+export const recipeFavouriteHandler = (req: Request, res: Response, next: NextFunction) => {
+
+};

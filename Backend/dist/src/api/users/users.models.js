@@ -26,6 +26,13 @@ exports.passwordResetSchema = (0, pg_core_1.pgTable)("passwordReset", {
     resetToken: (0, pg_core_1.text)("resetToken").notNull(),
     newPassword: (0, pg_core_1.text)("newPassword").notNull(),
 });
+// export const favouriteRecipes = pgTable("favouriteRecipes", {
+//   userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
+//   recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
+//   favouritedOn: timestamp("favouritedOn", {
+//     withTimezone: true,
+//   })
+// });
 // One to Many Relation: A user can post multiple recipies
 exports.userRelations = (0, drizzle_orm_1.relations)(exports.userSchema, ({ many }) => ({
     recipies: many(recipes_models_1.recipeSchema),

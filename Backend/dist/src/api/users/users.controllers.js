@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.recipeFavouriteHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -136,3 +136,6 @@ const tmpDemo = (_, res, next) => {
     });
 };
 exports.tmpDemo = tmpDemo;
+const recipeFavouriteHandler = (req, res, next) => {
+};
+exports.recipeFavouriteHandler = recipeFavouriteHandler;

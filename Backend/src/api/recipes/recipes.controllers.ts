@@ -182,5 +182,10 @@ export const recipeLikeHandler = async (req: Request, res: Response, next: NextF
     next(err);
   }
 
-  return res.send("sasa");
+  return res.json({
+    succuess: true,
+    body: {
+      message: "Recipe Liked",
+    },
+  });
 };

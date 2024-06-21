@@ -159,6 +159,11 @@ const recipeLikeHandler = async (req, res, next) => {
     catch (err) {
         next(err);
     }
-    return res.send("sasa");
+    return res.json({
+        succuess: true,
+        body: {
+            message: "Recipe Liked",
+        },
+    });
 };
 exports.recipeLikeHandler = recipeLikeHandler;
