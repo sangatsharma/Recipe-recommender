@@ -78,6 +78,14 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
   // If yes, create token and return
   if (userTmp.success) {
     const tokenRes: JsonResponse = handleToken(userTmp.body, res);
+    res.cookie("demo", "hello", {
+      maxAge: 86400,
+      path: "/",
+      secure: true,
+      sameSite: "none",
+      partitioned: true,
+    });
+    res.set("Set-Cookie", "demo123=123; Path=/; Secure; Expires=Thu, 27 Jun 2022 13:52:54 GMT; Partitioned; SameSite=None");
     // return res.json(tokenRes);
     return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
   }
