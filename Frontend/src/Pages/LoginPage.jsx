@@ -61,10 +61,10 @@ const LoginPage = () => {
     },
   });
   return (
-    <div className="bg-white shadow-lg rounded-lg flex overflow-hidden w-3/4 mt-[20px]">
+    <div className="bg-white shadow-lg rounded-lg flex flex-row  flex-wrap overflow-hidden w-3/4 mt-[20px] md:flex-col">
       {/* Right Side with Information */}
-      <div className="w-2/3 p-10 flex flex-col justify-end text-center bg-login-bg bg-cover">
-        <h2 className="text-5xl text-sky-500  font-bold mb-2">Welcome Back!</h2>
+      <div className="w-1/2 p-10 flex flex-col justify-end text-center bg-login-bg bg-cover">
+        <h2 className="text-5xl text-sky-500 p-5 font-bold mb-2">Welcome Back!</h2>
         <br />
         <p className="text-2xl text-black mb-4 pl-4">
           Explore and share more delicious recipes today!
