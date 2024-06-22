@@ -27,13 +27,13 @@ export const passwordResetSchema = pgTable("passwordReset", {
   newPassword: text("newPassword").notNull(),
 });
 
-// export const favouriteRecipes = pgTable("favouriteRecipes", {
-//   userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
-//   recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
-//   favouritedOn: timestamp("favouritedOn", {
-//     withTimezone: true,
-//   })
-// });
+export const favouriteRecipes = pgTable("favouriteRecipes", {
+  userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
+  recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
+  favouritedOn: timestamp("favouritedOn", {
+    withTimezone: true,
+  }).defaultNow().notNull()
+});
 
 // One to Many Relation: A user can post multiple recipies
 export const userRelations = relations(userSchema, ({ many }) => ({

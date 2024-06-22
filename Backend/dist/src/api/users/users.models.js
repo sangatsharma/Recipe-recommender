@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRelations = exports.passwordResetSchema = exports.followerSchema = exports.userSchema = void 0;
+exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
@@ -26,13 +26,13 @@ exports.passwordResetSchema = (0, pg_core_1.pgTable)("passwordReset", {
     resetToken: (0, pg_core_1.text)("resetToken").notNull(),
     newPassword: (0, pg_core_1.text)("newPassword").notNull(),
 });
-// export const favouriteRecipes = pgTable("favouriteRecipes", {
-//   userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
-//   recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
-//   favouritedOn: timestamp("favouritedOn", {
-//     withTimezone: true,
-//   })
-// });
+exports.favouriteRecipes = (0, pg_core_1.pgTable)("favouriteRecipes", {
+    userId: (0, pg_core_1.integer)("userId").notNull().references(() => exports.userSchema.id, { onDelete: "cascade" }),
+    recipeId: (0, pg_core_1.integer)("recipeId").notNull().references(() => recipes_models_1.recipeSchema.RecipeId, { onDelete: "cascade" }),
+    favouritedOn: (0, pg_core_1.timestamp)("favouritedOn", {
+        withTimezone: true,
+    }).defaultNow().notNull()
+});
 // One to Many Relation: A user can post multiple recipies
 exports.userRelations = (0, drizzle_orm_1.relations)(exports.userSchema, ({ many }) => ({
     recipies: many(recipes_models_1.recipeSchema),

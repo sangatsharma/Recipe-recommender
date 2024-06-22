@@ -12,11 +12,11 @@ import {
 } from "@/utils/config";
 
 // DB
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { recipeSchema } from "@/api/recipes/recipes.models";
-import { followerSchema, userSchema } from "@/api/users/users.models";
+import { favouriteRecipes, followerSchema, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 
 
@@ -171,6 +171,58 @@ export const tmpDemo = (_: Request, res: Response, next: NextFunction) => {
 };
 
 
-export const recipeFavouriteHandler = (req: Request, res: Response, next: NextFunction) => {
+/*
+  Add/remove recipes to/from favourite
+  USAGE:
+  {
+    recipeId: 'valid id' as number
+  }
+*/
+export const favouriteRecipeHandler = async (req: Request, res: Response, next: NextFunction) => {
 
+  // Get recipeId and cookie info
+  // TODO: seperate types
+  const body = req.body as { recipeId: number };
+  const userCookie = res.locals.user as { id: number };
+
+  try {
+
+    // Check if recipeId is valid
+    const recipeDB = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+    if (recipeDB.length === 0) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Invalid recipe id.",
+        }
+      });
+    }
+
+    // Check if item is aready favourited
+    const alreadyFav = await db.select().from(favouriteRecipes).where(and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id)));
+
+    // If no then add
+    if (alreadyFav.length === 0) {
+      await db.insert(favouriteRecipes).values({
+        userId: userCookie.id,
+        recipeId: recipeDB[0].RecipeId,
+      });
+    }
+
+    // Else, remove
+    else {
+      await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
+    }
+
+    // Return response
+    return res.json({
+      success: true,
+      body: {
+        message: "Successfully " + (alreadyFav.length !== 0 ? "removed from " : "added to ") + "favourites."
+      }
+    });
+  }
+  catch (err) {
+    next(err);
+  }
 };

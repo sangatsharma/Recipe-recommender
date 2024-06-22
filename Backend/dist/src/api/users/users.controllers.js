@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeFavouriteHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -136,6 +136,52 @@ const tmpDemo = (_, res, next) => {
     });
 };
 exports.tmpDemo = tmpDemo;
-const recipeFavouriteHandler = (req, res, next) => {
+/*
+  Add/remove recipes to/from favourite
+  USAGE:
+  {
+    recipeId: 'valid id' as number
+  }
+*/
+const favouriteRecipeHandler = async (req, res, next) => {
+    // Get recipeId and cookie info
+    // TODO: seperate types
+    const body = req.body;
+    const userCookie = res.locals.user;
+    try {
+        // Check if recipeId is valid
+        const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, body.recipeId));
+        if (recipeDB.length === 0) {
+            return res.json({
+                success: false,
+                body: {
+                    message: "Invalid recipe id.",
+                }
+            });
+        }
+        // Check if item is aready favourited
+        const alreadyFav = await db_1.db.select().from(users_models_1.favouriteRecipes).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.recipeId, body.recipeId), (0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id)));
+        // If no then add
+        if (alreadyFav.length === 0) {
+            await db_1.db.insert(users_models_1.favouriteRecipes).values({
+                userId: userCookie.id,
+                recipeId: recipeDB[0].RecipeId,
+            });
+        }
+        // Else, remove
+        else {
+            await db_1.db.delete(users_models_1.favouriteRecipes).where(((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.recipeId, body.recipeId), (0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id))));
+        }
+        // Return response
+        return res.json({
+            success: true,
+            body: {
+                message: "Successfully " + (alreadyFav.length !== 0 ? "removed from " : "added to ") + "favourites."
+            }
+        });
+    }
+    catch (err) {
+        next(err);
+    }
 };
-exports.recipeFavouriteHandler = recipeFavouriteHandler;
+exports.favouriteRecipeHandler = favouriteRecipeHandler;

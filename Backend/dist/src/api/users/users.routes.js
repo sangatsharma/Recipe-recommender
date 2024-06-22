@@ -29,4 +29,5 @@ userRouter.get("/", middleware_1.authenticateJWT, users_controllers_1.userInfoHa
 userRouter.post("/follow", middleware_1.authenticateJWT, users_controllers_1.followUser);
 userRouter.get("/recipes", middleware_1.authenticateJWT, users_controllers_1.tmpDemo);
 userRouter.get("/validate", middleware_1.authenticateJWT, users_controllers_1.validateToken);
+userRouter.post("/favourite", middleware_1.authenticateJWT, users_controllers_1.favouriteRecipeHandler);
 exports.default = userRouter;
