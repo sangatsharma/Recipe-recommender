@@ -10,7 +10,7 @@ import express, { RequestHandler } from "express";
 // Types
 import { changePasswordHandler, logoutHandler, userLoginHandler, userRegisterHandler, verifyEmailHandler } from "./auth/passwordAuth.controllers";
 import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
-import { favouriteRecipeHandler, followUser, tmpDemo, userInfoHandler, validateToken } from "./users.controllers";
+import { favouriteRecipeHandler, followUser, recipeFavouriteGetHandler, tmpDemo, userInfoHandler, validateToken } from "./users.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 const userRouter = express.Router();
@@ -29,5 +29,6 @@ userRouter.post("/follow", authenticateJWT, followUser as RequestHandler);
 userRouter.get("/recipes", authenticateJWT, tmpDemo);
 userRouter.get("/validate", authenticateJWT, validateToken);
 userRouter.post("/favourite", authenticateJWT, favouriteRecipeHandler as RequestHandler);
+userRouter.get("/favourite", authenticateJWT, recipeFavouriteGetHandler as RequestHandler);
 
 export default userRouter;

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -185,3 +185,24 @@ const favouriteRecipeHandler = async (req, res, next) => {
     }
 };
 exports.favouriteRecipeHandler = favouriteRecipeHandler;
+/*
+  Fetch favourite list
+*/
+const recipeFavouriteGetHandler = async (req, res, next) => {
+    // User info from cookie
+    const userCookie = res.locals.user;
+    try {
+        // Fetch all for the user
+        const favRec = await db_1.db.select().from(users_models_1.favouriteRecipes).where((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id));
+        // Return response
+        return res.json({
+            success: true,
+            length: favRec.length,
+            body: favRec
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.recipeFavouriteGetHandler = recipeFavouriteGetHandler;

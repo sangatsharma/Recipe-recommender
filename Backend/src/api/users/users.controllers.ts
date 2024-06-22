@@ -226,3 +226,29 @@ export const favouriteRecipeHandler = async (req: Request, res: Response, next: 
     next(err);
   }
 };
+
+
+/*
+  Fetch favourite list
+*/
+export const recipeFavouriteGetHandler = async (req: Request, res: Response, next: NextFunction) => {
+
+  // User info from cookie
+  const userCookie = res.locals.user as { id: number };
+
+  try {
+
+    // Fetch all for the user
+    const favRec = await db.select().from(favouriteRecipes).where(eq(favouriteRecipes.userId, userCookie.id));
+
+    // Return response
+    return res.json({
+      success: true,
+      length: favRec.length,
+      body: favRec
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
