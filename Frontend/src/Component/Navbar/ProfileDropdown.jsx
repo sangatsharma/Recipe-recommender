@@ -12,7 +12,7 @@ const ProfileDropdown = ({ isMobile }) => {
   const navigate = useNavigate();
   //get current location path
   const location = useLocation().pathname;
-  const User = { Name: "Sangat" };
+  const User = { Name: "Chef" };
   const isActive = location === "/" || location === "/home";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -196,29 +196,35 @@ const ProfileDropdown = ({ isMobile }) => {
               ></i>
               Settings
             </button>
+
+            {isAuthenticated && (
+              <button onClick={Logout}>
+                <i
+                  className={`fas fa-sign-out-alt text-2xl pr-2 ${
+                    location === "/logout"
+                      ? " text-orange-400"
+                      : " text-gray-500"
+                  } `}
+                ></i>
+                Logout
+              </button>
+            )}
           </nav>
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t pt-2 mb-16" onClick={handleToggle}>
+        <div className="border-t  py-2 mb-32" onClick={handleToggle}>
           <div className="flex justify-between mb-4"></div>
-          <div className="flex justify-around text-sm text-gray-500">
+          <div className="flex justify-around text-sm text-black">
             <Link to="/privacy" className="hover:text-blue-500">
               Privacy
             </Link>
             <Link to="/terms" className="hover:text-blue-500">
               Terms
             </Link>
-            {isAuthenticated && (
-              <p className="hover:text-blue-500" onClick={Logout}>
-                Log out
-              </p>
-            )}
-            {!isAuthenticated && (
-              <Link to="/login" className="hover:text-blue-500">
-                Login
-              </Link>
-            )}
+            <Link to="/aboutus" className="hover:text-blue-500">
+              About us
+            </Link>
           </div>
         </div>
       </div>
@@ -264,7 +270,7 @@ const ProfileDropdown = ({ isMobile }) => {
             </li>
             <li>
               <Link
-                to="/"
+           
                 onClick={Logout}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >

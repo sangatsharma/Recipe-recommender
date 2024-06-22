@@ -16,6 +16,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./context/AuthContext.jsx";
 import BookmarkRecipes from "./Pages/BookmarkRecipes.jsx";
+import { FavItemsProvider } from "./context/FavContext.jsx";
 
 function App() {
   const router = createBrowserRouter([
@@ -38,26 +39,31 @@ function App() {
         { path: "/signup", element: <SignupPage /> },
         { path: "/profile", element: <PrivateRoute element={Profile} /> },
         { path: "/settings", element: <PrivateRoute element={Settings} /> },
-        { path: "/bookmarks", element: <PrivateRoute element={BookmarkRecipes} /> },
+        {
+          path: "/bookmarks",
+          element: <PrivateRoute element={BookmarkRecipes} />,
+        },
       ],
     },
   ]);
   return (
     <AuthProvider>
-      <RouterProvider router={router} />
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        bodyStyle={{ fontSize: ".8rem" }}
-      />
+      <FavItemsProvider>
+        <RouterProvider router={router} />
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          bodyStyle={{ fontSize: ".8rem" }}
+        />
+      </FavItemsProvider>
     </AuthProvider>
   );
 }

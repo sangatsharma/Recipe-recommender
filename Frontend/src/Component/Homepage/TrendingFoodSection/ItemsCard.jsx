@@ -1,21 +1,11 @@
 import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { FavouriteRecipe } from "../../../utils/sampleData";
 
-const ItemsCard = ({ id, src, name, rating }) => {
+
+const ItemsCard = ({ id, src, name, rating, isFavorite,toggleTick }) => {
+  
+
   const navigate = useNavigate();
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  const handleFavouriteClick = (RecipeDetails) => {
-    setIsFavorite(!isFavorite);
-    if (isFavorite) {
-      FavouriteRecipe.push(RecipeDetails);
-    }
-    if (!isFavorite) {
-      FavouriteRecipe.splice(FavouriteRecipe.indexOf(RecipeName), 1);
-    }
-  };
 
   // Create a URL-friendly name
   //todo check with double space after building the post page.
@@ -54,7 +44,7 @@ const ItemsCard = ({ id, src, name, rating }) => {
                                 : "text-gray-500 bg-gray-200 opacity-0"
                             }
                              group-hover:opacity-100 hover:shadow-lg hover:scale-110 focus:outline-none`}
-          onClick={() => handleFavouriteClick({ "RecipeId" :id, "Src":src,"Name": name,"Rating": rating })}
+          onClick={() => toggleTick(id)}
         >
           {isFavorite ? (
             <i className="fas fa-heart"></i>
