@@ -121,7 +121,7 @@ const DesktopNavbar = () => {
             <NotificationButton />
           </>
         )}
-        <ProfileDropdown />
+        <ProfileDropdown isMobile={false} />
       </div>
     </header>
   );

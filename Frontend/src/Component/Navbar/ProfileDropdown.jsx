@@ -6,17 +6,23 @@ import { toast } from "react-toastify";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-const ProfileDropdown = () => {
+const ProfileDropdown = ({ isMobile }) => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+
   const navigate = useNavigate();
   //get current location path
   const location = useLocation().pathname;
+  const User = { Name: "Sangat" };
+  const isActive = location === "/" || location === "/home";
 
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
+  };
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const Logout = async () => {
@@ -41,7 +47,183 @@ const ProfileDropdown = () => {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [dropdownRef]);
-  return (
+
+  return isMobile ? (
+    <div ref={dropdownRef}>
+      <p onClick={handleToggle} className="focus:outline-none">
+        {/* check if user is login if not redirect to login page */}
+
+        <i className="fas fa-bars text-2xl cursor-pointer text-gray-500 hover:text-orange-400"></i>
+      </p>
+      <div
+        className={`sidebar ${
+          isOpen ? "open" : "closed"
+        }  h-screen w-64 bg-white shadow-lg p-4 flex flex-col justify-between fixed top-0 right-0 transition-all`}
+      >
+        <div>
+          {/* Profile Section */}
+          <Link
+            to={`${isAuthenticated ? "/profile" : "/login"}`}
+            onClick={handleToggle}
+          >
+            <div className="flex items-center space-x-4 p-2 mb-4">
+              <i className="fas fa-user-circle text-4xl text-gray-400"></i>
+              <div>
+                {isAuthenticated ? (
+                  <>
+                    <h2 className="font-semibold">Good Day 👋</h2>
+                    <span className="text-sm text-gray-500">{User.Name}</span>
+                  </>
+                ) : (
+                  <p className="text-[28px] text-gray-500">Login</p>
+                )}
+              </div>
+            </div>
+          </Link>
+          <hr className="h-2"></hr>
+
+          {/* Navigation */}
+          <nav onClick={handleToggle}>
+            <button
+              className={isActive ? "activePage" : ""}
+              onClick={isActive ? handleScrollToTop : () => navigate("/home")}
+            >
+              <i
+                className={`fas fa-home text-2xl pr-2 ${
+                  isActive ? " text-orange-400" : " text-gray-500"
+                } `}
+              ></i>
+              Home
+            </button>
+            <button
+              className={location === "/recipes" ? "activePage" : ""}
+              onClick={
+                location === "/recipes"
+                  ? handleScrollToTop
+                  : () => navigate("/recipes")
+              }
+            >
+              <i
+                className={`fas fa-utensils text-2xl pr-2 ${
+                  location === "/recipes"
+                    ? " text-orange-400"
+                    : " text-gray-500"
+                } `}
+              ></i>
+              Recipes
+            </button>
+            <button
+              className={location === "/explore" ? "activePage" : ""}
+              onClick={
+                location === "/explore"
+                  ? handleScrollToTop
+                  : () => navigate("/explore")
+              }
+            >
+              <i
+                className={`fas fa-compass text-2xl pr-2 ${
+                  location === "/explore"
+                    ? " text-orange-400"
+                    : " text-gray-500"
+                } `}
+              ></i>
+              Explore
+            </button>
+            <button
+              className={location === "/search" ? "activePage" : ""}
+              onClick={
+                location === "/search"
+                  ? handleScrollToTop
+                  : () => navigate("/search")
+              }
+            >
+              <i
+                className={`fas fa-search text-2xl pr-2 ${
+                  location === "/search" ? " text-orange-400" : " text-gray-500"
+                } `}
+              ></i>
+              Search
+            </button>
+            <button
+              className={location === "/contact" ? "activePage" : ""}
+              onClick={
+                location === "/contact"
+                  ? handleScrollToTop
+                  : () => navigate("/contact")
+              }
+            >
+              <i
+                className={`fas fa-address-book text-2xl pr-2 ${
+                  location === "/contact"
+                    ? " text-orange-400"
+                    : " text-gray-500"
+                } `}
+              ></i>
+              Contact
+            </button>
+
+            <button
+              className={location === "/bookmarks" ? "activePage" : ""}
+              onClick={
+                location === "/bookmarks"
+                  ? handleScrollToTop
+                  : () => navigate("/bookmarks")
+              }
+            >
+              <i
+                className={`fas fa-bookmark text-2xl pr-2 ${
+                  location === "/bookmarks"
+                    ? " text-orange-400"
+                    : " text-gray-500"
+                } `}
+              ></i>
+              Favorites
+            </button>
+            <button
+              className={location === "/settings" ? "activePage" : ""}
+              onClick={
+                location === "/settings"
+                  ? handleScrollToTop
+                  : () => navigate("/settings")
+              }
+            >
+              <i
+                className={`fas fa-cog text-2xl pr-2 ${
+                  location === "/settings"
+                    ? " text-orange-400"
+                    : " text-gray-500"
+                } `}
+              ></i>
+              Settings
+            </button>
+          </nav>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="border-t pt-4" onClick={handleToggle}>
+          <div className="flex justify-between mb-4"></div>
+          <div className="flex justify-around text-sm text-gray-500">
+            <Link to="/privacy" className="hover:text-blue-500">
+              Privacy
+            </Link>
+            <Link to="#terms" className="hover:text-blue-500">
+              Terms
+            </Link>
+            {isAuthenticated && (
+              <p className="hover:text-blue-500" onClick={Logout}>
+                Log out
+              </p>
+            )}
+            {!isAuthenticated && (
+              <Link to="/login" className="hover:text-blue-500">
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
         onClick={isAuthenticated ? handleToggle : null}
