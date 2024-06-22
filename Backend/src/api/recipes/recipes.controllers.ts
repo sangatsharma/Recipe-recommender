@@ -167,7 +167,6 @@ export const recipeLikeHandler = async (req: Request, res: Response, next: NextF
 
     // If no, like
     if (alreadyLiked.length === 0) {
-      await db.insert(recipeLikes).values({ recipeId: data.recipeId, userId: cookieInfo.id as number });
       await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number + 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
     }
 
@@ -176,16 +175,17 @@ export const recipeLikeHandler = async (req: Request, res: Response, next: NextF
       await db.delete(recipeLikes).where((and(eq(recipeLikes.recipeId, data.recipeId), eq(recipeLikes.userId, cookieInfo.id as number))));
       await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number - 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
     }
+
+    return res.json({
+      success: true,
+      body: {
+        message: "Recipe " + (alreadyLiked.length === 0 ? "liked." : "disliked.")
+      },
+    });
   }
 
   catch (err) {
     next(err);
   }
 
-  return res.json({
-    succuess: true,
-    body: {
-      message: "Recipe Liked",
-    },
-  });
 };

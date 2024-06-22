@@ -147,7 +147,6 @@ const recipeLikeHandler = async (req, res, next) => {
         const alreadyLiked = await db_1.db.select().from(recipes_models_1.recipeLikes).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.recipeId, data.recipeId), (0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.userId, cookieInfo.id)));
         // If no, like
         if (alreadyLiked.length === 0) {
-            await db_1.db.insert(recipes_models_1.recipeLikes).values({ recipeId: data.recipeId, userId: cookieInfo.id });
             await db_1.db.update(recipes_models_1.recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes + 1 }).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data.recipeId));
         }
         // Else, remove like
@@ -155,15 +154,15 @@ const recipeLikeHandler = async (req, res, next) => {
             await db_1.db.delete(recipes_models_1.recipeLikes).where(((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.recipeId, data.recipeId), (0, drizzle_orm_1.eq)(recipes_models_1.recipeLikes.userId, cookieInfo.id))));
             await db_1.db.update(recipes_models_1.recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes - 1 }).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, data.recipeId));
         }
+        return res.json({
+            success: true,
+            body: {
+                message: "Recipe " + (alreadyLiked.length === 0 ? "liked." : "disliked.")
+            },
+        });
     }
     catch (err) {
         next(err);
     }
-    return res.json({
-        succuess: true,
-        body: {
-            message: "Recipe Liked",
-        },
-    });
 };
 exports.recipeLikeHandler = recipeLikeHandler;

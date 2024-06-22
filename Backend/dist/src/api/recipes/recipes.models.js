@@ -38,7 +38,9 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
 // One recipies can have multiple likes
 exports.recipeLikes = (0, pg_core_1.pgTable)("recipeLikes", {
     recipeId: (0, pg_core_1.integer)("recipeId").notNull().references(() => exports.recipeSchema.RecipeId, { onDelete: "cascade" }),
-    userId: (0, pg_core_1.integer)("userId").notNull().references(() => users_models_1.userSchema.id, { onDelete: "cascade" })
+    userId: (0, pg_core_1.integer)("userId").notNull().references(() => users_models_1.userSchema.id, { onDelete: "cascade" }),
+    rating: (0, pg_core_1.integer)("rating").notNull(),
+    review: (0, pg_core_1.text)("review")
 });
 // One to One Relation: One recipe will have single author
 exports.recipeRelations = (0, drizzle_orm_1.relations)(exports.recipeSchema, ({ one }) => ({

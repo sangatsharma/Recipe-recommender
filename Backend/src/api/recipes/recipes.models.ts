@@ -37,7 +37,9 @@ export const recipeSchema = pgTable("recipes", {
 // One recipies can have multiple likes
 export const recipeLikes = pgTable("recipeLikes", {
   recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
-  userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" })
+  userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
+  rating: integer("rating").notNull(),
+  review: text("review")
 });
 
 // One to One Relation: One recipe will have single author
