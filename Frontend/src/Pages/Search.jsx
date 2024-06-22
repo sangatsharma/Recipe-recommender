@@ -1,7 +1,11 @@
 import SearchBanner from "../Component/SearchBanner/SearchBanner";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard";
 import { useState } from "react";
+import { useFavContext } from "../context/FavContext";
+
 const Search = () => {
+  const { tickedItems, toggleTick } = useFavContext();
+
   const [foodItems, setFoodItems] = useState([]);
   const [search, setSearch] = useState("");
   const [searchPerformed, setSearchPerformed] = useState(false);
@@ -35,6 +39,8 @@ const Search = () => {
                 src={urls[0]}
                 name={item.Name}
                 rating={item.AggregatedRating}
+                isFavorite={tickedItems.has(item.RecipeId)}
+                toggleTick={toggleTick}
               ></ItemsCard>
             );
           })}

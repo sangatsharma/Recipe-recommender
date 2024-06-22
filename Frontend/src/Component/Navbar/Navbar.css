@@ -46,7 +46,7 @@ header {
     font-weight: 700;
     white-space: nowrap;
     letter-spacing: -0.27px;
-    @media (max-width: 991px) {
+    @media (max-width: 900px) {
 
       white-space: normal;
     }
@@ -61,7 +61,7 @@ header {
     white-space: nowrap;
     line-height: 150%;
     padding: 10px 8px;
-    @media (max-width: 800px) {
+    @media (max-width: 900px) {
       flex-direction: column;
       justify-content: center;
       align-items: start;
@@ -82,8 +82,7 @@ header {
     cursor: pointer;
     outline: none;
     transition: ease-in-out 0.2s;
-    @media (max-width: 800) {
-   
+    @media (max-width: 900px) {
       white-space: normal;
       gap: 10px;
     }

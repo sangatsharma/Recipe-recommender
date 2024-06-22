@@ -1,10 +1,14 @@
 import "./TrendingFoods.css";
 import ItemsCard from "./ItemsCard.jsx";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
+import { useFavContext } from "../../../context/FavContext.jsx";
 
 const TrendingFoods = () => {
+  const { tickedItems, toggleTick } = useFavContext();
+  
   const [popularItems, setPopularItems] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,6 +58,8 @@ const TrendingFoods = () => {
               src={urls[0]}
               name={item.Name}
               rating={item.AggregatedRating}
+              toggleTick={toggleTick}
+              isFavorite={tickedItems.has(item.RecipeId)}
             ></ItemsCard>
           );
         })}
