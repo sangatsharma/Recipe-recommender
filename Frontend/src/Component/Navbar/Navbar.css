@@ -67,6 +67,8 @@ header {
       align-items: start;
       padding: 8px 8px;
       gap: 15px;
+  
+     
     }
   }
   nav > button {
@@ -81,6 +83,7 @@ header {
     outline: none;
     transition: ease-in-out 0.2s;
     @media (max-width: 800) {
+   
       white-space: normal;
       gap: 10px;
     }
