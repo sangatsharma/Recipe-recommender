@@ -49,7 +49,7 @@ const ProfileDropdown = ({ isMobile }) => {
   }, [dropdownRef]);
 
   return isMobile ? (
-    <div ref={dropdownRef}>
+    <div ref={dropdownRef} className="overflow-hidden">
       <p onClick={handleToggle} className="focus:outline-none">
         {/* check if user is login if not redirect to login page */}
 
@@ -200,13 +200,13 @@ const ProfileDropdown = ({ isMobile }) => {
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t pt-4" onClick={handleToggle}>
+        <div className="border-t pt-2 mb-16" onClick={handleToggle}>
           <div className="flex justify-between mb-4"></div>
           <div className="flex justify-around text-sm text-gray-500">
             <Link to="/privacy" className="hover:text-blue-500">
               Privacy
             </Link>
-            <Link to="#terms" className="hover:text-blue-500">
+            <Link to="/terms" className="hover:text-blue-500">
               Terms
             </Link>
             {isAuthenticated && (
