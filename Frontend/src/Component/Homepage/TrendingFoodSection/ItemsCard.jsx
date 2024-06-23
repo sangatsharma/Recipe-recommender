@@ -41,7 +41,7 @@ const {isDarkMode} = useThemeContext();
           className={`absolute top-4 right-4 text-1xl pt-1 px-2 rounded-[50%] transition-ease-in-out 
                             ${
                               isFavorite
-                                ? "text-red-500 bg-white opacity-100"
+                                ? "text-red-500 bg-gray-200 opacity-100"
                                 : "text-gray-500 bg-gray-200 opacity-0"
                             }
                              group-hover:opacity-100 hover:shadow-lg hover:scale-110 focus:outline-none`}

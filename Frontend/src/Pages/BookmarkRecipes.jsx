@@ -46,7 +46,7 @@ const BookmarkRecipes = () => {
       <h1 className="text-3xl font-bold text-center mb-8">
         My Favorite Recipes
       </h1>
-      <div className="flex flex-row flex-wrap justify-center items-center">
+      <div className="flex flex-row gap-2 flex-wrap justify-center">
         {saveIds.length > 0 &&
           Save.map((item) => {
             const regex = /"([^"]+)"/g;

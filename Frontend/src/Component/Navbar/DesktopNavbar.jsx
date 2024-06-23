@@ -110,15 +110,7 @@ const DesktopNavbar = () => {
         </button>
       </nav>
       <div className="Profile">
-        <ThemeToggle />
-        {!isAuthenticated && (
-          <button
-            className={location === "/signup" ? "activeButton signup" : ""}
-            onClick={() => navigate("/signup")}
-          >
-            Sign Up
-          </button>
-        )}
+     
         {isAuthenticated && (
           <>
             <Link to="/bookmarks">
@@ -128,6 +120,16 @@ const DesktopNavbar = () => {
             </Link>
             <NotificationButton />
           </>
+          
+        )}
+        <ThemeToggle />
+        {!isAuthenticated && (
+          <button
+            className={location === "/signup" ? "activeButton signup" : ""}
+            onClick={() => navigate("/signup")}
+          >
+            Sign Up
+          </button>
         )}
         <ProfileDropdown isMobile={false} />
       </div>
