@@ -1,16 +1,21 @@
 import "./Navbar.css";
-import { useLocation, Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/Images/Logo_SVG.svg";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import NotificationButton from "./NotificationButton";
 import ProfileDropdown from "./ProfileDropdown";
+import ThemeToggle from "./ThemeToggle";
+import { useThemeContext } from "../../context/ThemeContext";
 
 const MobileNavbar = () => {
+const { isDarkMode } = useThemeContext();
+
+
   const { isAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   return (
-    <header className="">
+    <header className={isDarkMode?"dark-mode":"light-mode"}>
       <div className="flex flex-wrap  h-auto px-1 w-[100%] justify-between ">
         <Link to="/">
           <div className="LogoWrapper flex">
@@ -19,6 +24,7 @@ const MobileNavbar = () => {
           </div>
         </Link>
         <div className="Profile flex">
+          <ThemeToggle />
           {isAuthenticated && <NotificationButton />}
           {!isAuthenticated && (
           <button

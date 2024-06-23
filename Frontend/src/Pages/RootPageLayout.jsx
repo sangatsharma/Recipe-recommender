@@ -5,27 +5,15 @@ import Footer from "../Component/Footer";
 
 const RootPageLayout = () => {
   return (
-    <>
-      <div className="root-page-layout">
-        <Navbar />
+    <div className="root-page-layout">
+      <Navbar />
+      <div className="content-wrapper">
         <Wrapper>
           <Outlet />
         </Wrapper>
       </div>
       <Footer />
-    </>
+    </div>
   );
 };
 export default RootPageLayout;
-
-<div className="flex flex-col min-h-screen">
-  {/* Main content of the page */}
-  <main className="flex-grow">
-    {/* Your main content here */}
-    <div className="container mx-auto py-10">
-      <h1 className="text-2xl font-bold">Welcome to Our Site</h1>
-      <p>Your content goes here...</p>
-    </div>
-  </main>
-  <Footer />
-</div>;

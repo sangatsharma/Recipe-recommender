@@ -44,7 +44,7 @@ const Contact = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error.message}</p>;
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col ">
       <div className="flex-grow">
         <h1>City: {data.city}</h1>
         <br />
