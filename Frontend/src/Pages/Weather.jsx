@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+
 const Weather = () => {
+  const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const [data, setData] = useState([]);
   const [weatherData, setWeatherData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,15 +21,13 @@ const Weather = () => {
         await fetchWeather(latitude, longitude);
       } catch (err) {
         setError(err);
-      } finally {
-        console.log("finally");
-      }
+      } 
     };
 
     const fetchWeather = async (lat, long) => {
       try {
         const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=c0782f881857714abe48b042951abed4&units=metric`
+          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=${API_KEY}&units=metric`
         );
         setWeatherData(response.data);
       } catch (err) {
@@ -45,7 +45,7 @@ const Weather = () => {
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="flex flex-col ">
-        <hr />
+      <hr />
       <div className="flex-grow">
         <h1>City: {data.city}</h1>
         <br />

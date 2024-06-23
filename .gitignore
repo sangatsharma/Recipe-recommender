@@ -13,6 +13,7 @@ Frontend/src/tempCodeRunnerFile.js
 Backend/node_modules
 dist-ssr
 *.local
+Frontend/.env
 
 # Editor directories and files
 .vscode/*
