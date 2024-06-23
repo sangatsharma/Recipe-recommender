@@ -27,7 +27,7 @@ const LoginPage = () => {
 
   const googleOauth = () => {
     window.location.href =
-      "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
+      `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };
   const formik = useFormik({
     initialValues: {
@@ -43,7 +43,7 @@ const LoginPage = () => {
     onSubmit: async (values) => {
       // Req to backend
       const res = await axios.post(
-        "https://recipe-recommender-backend.vercel.app/user/auth/login",
+        `${import.meta.env.VITE_SERVER_URL}/user/auth/login`,
         values,
         {
           headers: { "Content-Type": "application/json" },
