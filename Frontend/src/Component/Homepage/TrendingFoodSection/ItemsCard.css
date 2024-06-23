@@ -9,6 +9,7 @@
   transition: box-shadow 0.25s ease-in-out;
   border-radius: 8px;
   padding: 2px;
+  box-shadow: inset 0 0 0 1000px rgba(16, 15, 15, 0.1);
 }
 .ImageContainer {
   width: 100%;
@@ -27,7 +28,7 @@
   transform: scale(1.2);
 }
 .ItemsCard:hover {
-  box-shadow: inset 0 0 0 1000px rgba(16, 15, 15, 0.1);
+  box-shadow: inset 0 0 0 1000px rgba(63, 63, 63, 0.247);
 }
 .ItemsCard-dark-mode {
   box-shadow: inset 0 0 0 1000px rgba(235, 234, 234, 0.155);
@@ -40,10 +41,22 @@
   flex-direction: column;
   align-items: start;
   justify-content: start;
-  height: auto;
+  height: 95px;
   width: inherit;
   padding: 10px;
 }
+.RecipeName{
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Show ellipsis for overflow */
+  white-space: normal; /* Allow wrapping */
+  word-wrap: break-word; /* Break long words */
+  padding: 2px;
+}
+
+
 #RecipeName {
   font-size: 16px;
   font-weight: 500;

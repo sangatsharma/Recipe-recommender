@@ -63,8 +63,10 @@ const ItemsCard = ({
           )}
         </button>
       </div>
-      <div className="RecipeInfo" onClick={handleClick}>
-        <p id="RecipeName">{name}</p>
+      <div className="RecipeInfo" onClick={handleClick} title={name}>
+        <div className="RecipeName">
+          <p id="RecipeName">{name}</p>
+        </div>
         <div className="flex flex-row justify-between w-[100%]">
           <div className="flex flex-row gap-1">
             <p className="cooktime inline">
@@ -74,7 +76,7 @@ const ItemsCard = ({
             <p id="RecipeRating">{rating || 4.6} ⭐</p>
           </div>
           <div className="w-auto">
-            <p className="text-gray-400 text-[14px] ">{RecipeCategory}</p>
+            <p className="text-gray-500 text-[14px] ">{RecipeCategory}</p>
           </div>
         </div>
       </div>
