@@ -15,7 +15,7 @@ const SearchBanner = ({
   const fetchAndProcessItems = async (search) => {
     try {
       const response = await axios.get(
-        "https://recipe-recommender-backend.vercel.app/recipe",
+        `${import.meta.env.VITE_SERVER_URL}/recipe`,
         { withCredentials: true }
       );
       const items = response.data;

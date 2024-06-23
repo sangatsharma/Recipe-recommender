@@ -41,7 +41,7 @@ const RecipeDetails = () => {
   const fetchItemById = async (RecipeId, RecipeName) => {
     try {
       const response = await axios.post(
-        "https://recipe-recommender-backend.vercel.app/recipe/filter",
+        `${import.meta.env.VITE_SERVER_URL}/recipe/filter`,
         {
           name: RecipeName,
           id: RecipeId,
@@ -63,7 +63,7 @@ const RecipeDetails = () => {
   const regex = /"([^"]+)"/g;
   let matches;
   let urls = [];
-  let instructions=[];
+  let instructions = [];
   // Loop through all matches
   while ((matches = regex.exec(item.Images)) !== null) {
     urls.push(matches[1]);
@@ -150,10 +150,10 @@ const RecipeDetails = () => {
           </p>
           <strong>Instructions:</strong>
           <ol>
-          {item.RecipeInstructions &&
-            instructions.map((inst, index) => (
-              <li key={index}>{index+1+")   "+inst}</li>
-            ))}
+            {item.RecipeInstructions &&
+              instructions.map((inst, index) => (
+                <li key={index}>{index + 1 + ")   " + inst}</li>
+              ))}
           </ol>
         </div>
       </div>

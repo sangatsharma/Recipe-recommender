@@ -14,7 +14,7 @@ export const FavItemsProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const favItems = await axios.get(
-          "https://recipe-recommender-backend.vercel.app/user/favourite",
+          `${import.meta.env.VITE_SERVER_URL}/user/favourite`,
           { withCredentials: true }
         );
         const favItemsId = [];
@@ -40,14 +40,14 @@ export const FavItemsProvider = ({ children }) => {
       }
       setTickedItems(updatedFavItems);
       const response = await axios.post(
-        "https://recipe-recommender-backend.vercel.app/user/favourite",
+        `${import.meta.env.VITE_SERVER_URL}/user/favourite`,
         {
           recipeId: itemId,
         },
         { withCredentials: true }
       );
-      if(response.status === 200){
-       toast.success(response.data.body.message)
+      if (response.status === 200) {
+        toast.success(response.data.body.message);
       }
     } catch (error) {
       console.error("Error saving ticked state:", error);

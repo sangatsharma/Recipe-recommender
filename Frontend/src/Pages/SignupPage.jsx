@@ -19,7 +19,7 @@ const SignupPage = () => {
 
   const googleOauth = () => {
     window.location.href =
-      "https://recipe-recommender-backend.vercel.app/user/auth/oauth";
+      `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };
   const handleSignup = () => {
     setIsAuthenticated(true);
@@ -63,7 +63,7 @@ const SignupPage = () => {
 
         // Send creds to backend
         const res = await axios.post(
-          "https://recipe-recommender-backend.vercel.app/user/auth/register",
+          `${import.meta.env.VITE_SERVER_URL}/user/auth/register`,
           values,
           {
             headers: { "Content-Type": "application/json" },

@@ -3,7 +3,7 @@ import axios from "axios";
 export const checkCookieStatus = async () => {
   try {
     const response = await axios.get(
-      "https://recipe-recommender-backend.vercel.app/user/validate",
+      `${import.meta.env.VITE_SERVER_URL}/user/validate`,
       { withCredentials: true }
     );
     return response.data.success;
@@ -17,7 +17,7 @@ export const checkCookieStatus = async () => {
 export const handleLogout = async () => {
   try {
     const response = await axios.post(
-      "https://recipe-recommender-backend.vercel.app/user/auth/logout", {},
+      `${import.meta.env.VITE_SERVER_URL}/user/auth/logout`,
       { withCredentials: true }
     );
     return response.data;
