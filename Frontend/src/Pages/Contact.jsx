@@ -1,84 +1,62 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import ContactForm from "../Component/ContactForm";
+import { useThemeContext } from "../context/ThemeContext";
+import Weather from "./Weather";
 
 const Contact = () => {
-  const [data, setData] = useState([]);
-  const [weatherData, setWeatherData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { isDarkMode } = useThemeContext();
+const handleReportProblem=(e)=>{
+  const recipientEmail = 'reciperecommenderapp@gmail.com';
 
-  useEffect(() => {
-    // Define an async function inside useEffect
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("https://ipapi.co/json");
-        setData(response.data);
+  // Example email content
+  const subject = 'Report a Problem.';
+  const body = 'I found a bug in the app. Here are the details: \n\n\n-';
+  const mailtoUrl = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+  window.location.href = mailtoUrl;
+}
 
-        // Fetch weather data only if we have the location data
-        const { latitude, longitude } = response.data;
-        await fetchWeather(latitude, longitude);
-      } catch (err) {
-        setError(err);
-      } finally {
-        console.log("finally");
-      }
-    };
 
-    const fetchWeather = async (lat, long) => {
-      try {
-        const response = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=c0782f881857714abe48b042951abed4&units=metric`
-        );
-        setWeatherData(response.data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    // Call fetchData
-    fetchData();
-  }, []); // Empty dependency array means this effect runs once when the component mounts
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
   return (
-    <div className="flex flex-col ">
-      <div className="flex-grow">
-        <h1>City: {data.city}</h1>
-        <br />
-        <hr />
-        <ul className="text-sm">
-          {weatherData && (
-            <div>
-              <p>
-                <strong>Location:</strong> {weatherData.name}
-              </p>
-              <p>
-                <strong>Temperature:</strong> {weatherData.main.temp}°C
-              </p>
-              <p>
-                <strong>Feels Like:</strong> {weatherData.main.feels_like}°C
-              </p>
-              <p>
-                <strong>Weather:</strong> {weatherData.weather[0].main} -
-                {weatherData.weather[0].description}
-              </p>
-              <p>
-                <strong>Humidity:</strong> {weatherData.main.humidity}%
-              </p>
-              <p>
-                <strong>Wind Speed:</strong> {weatherData.wind.speed} m/s
-              </p>
-              <p>
-                <strong>Visibility:</strong> {weatherData.visibility} meters
-              </p>
-            </div>
-          )}
+    <div className="w-auto p-4 flex flex-row  justify-center mt-2 gap-4  below-sm:flex-col-reverse">
+      <div
+        className={`w-1/2  below-sm:w-[100%] ${
+          isDarkMode ? "bg-gray-800" : "bg-gray-50"
+        } p-8 rounded-lg shadow-lg`}
+      >
+        <h2 className="text-2xl font-bold mb-4">Contact Us</h2>
+        <p className="mb-4">
+          We're here to help. Let us know how we can assist you.
+        </p>
+        <button className="w-full cursor-pointer hover:bg-gray-300 bg-gray-200 text-black p-2 rounded mb-4" onClick={handleReportProblem}>
+          Report a Problem
+        </button>
+        <h3 className="text-xl font-semibold mb-2">Connect with us</h3>
+        <ul>
+          <li className="mb-2 flex items-center">
+            <i className="fab fa-facebook fa-lg mr-2"></i>
+            <span>Facebook</span>
+          </li>
+          <li className="mb-2 flex items-center">
+            <i className="fab fa-whatsapp fa-lg mr-2"></i>
+            <span>WhatsApp</span>
+          </li>
+          <li className="mb-2 flex items-center">
+            <i className="fab fa-instagram fa-lg mr-2"></i>
+            <span>Instagram</span>
+          </li>
+          <li className="mb-2 flex items-center">
+            <i className="fas fa-phone fa-lg mr-2"></i>
+            <span>+977-9812345670</span>
+          </li>
         </ul>
+        <Weather />
+      </div>
+      <div className="w-1/2  below-sm:w-[100%]">
+        <ContactForm isDarkMode={isDarkMode} />
       </div>
     </div>
   );
 };
+
 export default Contact;
