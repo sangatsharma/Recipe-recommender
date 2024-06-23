@@ -5,17 +5,15 @@ import Weather from "./Weather";
 
 const Contact = () => {
   const { isDarkMode } = useThemeContext();
-const handleReportProblem=(e)=>{
-  const recipientEmail = 'reciperecommenderapp@gmail.com';
+  const handleReportProblem = (e) => {
+    const recipientEmail = "reciperecommenderapp@gmail.com";
 
-  // Example email content
-  const subject = 'Report a Problem.';
-  const body = 'I found a bug in the app. Here are the details: \n\n\n-';
-  const mailtoUrl = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
-  window.location.href = mailtoUrl;
-}
-
-
+    // Example email content
+    const subject = "Report a Problem.";
+    const body = "I found a bug in the app. Here are the details: \n\n\n-";
+    const mailtoUrl = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
+    window.location.href = mailtoUrl;
+  };
 
   return (
     <div className="w-auto p-4 flex flex-row  justify-center mt-2 gap-4  below-sm:flex-col-reverse">
@@ -28,7 +26,10 @@ const handleReportProblem=(e)=>{
         <p className="mb-4">
           We're here to help. Let us know how we can assist you.
         </p>
-        <button className="w-full cursor-pointer hover:bg-gray-300 bg-gray-200 text-black p-2 rounded mb-4" onClick={handleReportProblem}>
+        <button
+          className="w-full cursor-pointer hover:bg-gray-300 bg-gray-200 text-black p-2 rounded mb-4"
+          onClick={handleReportProblem}
+        >
           Report a Problem
         </button>
         <h3 className="text-xl font-semibold mb-2">Connect with us</h3>

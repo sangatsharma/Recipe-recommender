@@ -2,10 +2,17 @@ import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../../context/ThemeContext";
 
-
-const ItemsCard = ({ id, src, name, rating, isFavorite,toggleTick }) => {
-  
-const {isDarkMode} = useThemeContext();
+const ItemsCard = ({
+  id,
+  src,
+  name,
+  rating,
+  cooktime,
+  isFavorite,
+  toggleTick,
+  RecipeCategory,
+}) => {
+  const { isDarkMode } = useThemeContext();
   const navigate = useNavigate();
 
   // Create a URL-friendly name
@@ -29,7 +36,9 @@ const {isDarkMode} = useThemeContext();
   }
 
   return (
-    <div className={`ItemsCard ${isDarkMode?"ItemsCard-dark-mode":""} group`}>
+    <div
+      className={`ItemsCard ${isDarkMode ? "ItemsCard-dark-mode" : ""} group`}
+    >
       <div className="ImageContainer">
         <img
           loading="lazy"
@@ -56,7 +65,18 @@ const {isDarkMode} = useThemeContext();
       </div>
       <div className="RecipeInfo" onClick={handleClick}>
         <p id="RecipeName">{name}</p>
-        <p id="RecipeRating">{rating || 4.6} ratings</p>
+        <div className="flex flex-row justify-between w-[100%]">
+          <div className="flex flex-row gap-1">
+            <p className="cooktime inline">
+              <i className="fas fa-clock pr-2"></i>
+              {cooktime} min,
+            </p>
+            <p id="RecipeRating">{rating || 4.6} ⭐</p>
+          </div>
+          <div className="w-auto">
+            <p className="text-gray-400 text-[14px] ">{RecipeCategory}</p>
+          </div>
+        </div>
       </div>
     </div>
   );

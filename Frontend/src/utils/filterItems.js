@@ -34,6 +34,7 @@ export function rankFoodItems(foodItems, searchText) {
       ...convertToKeywordArray(item.Keywords),
       ...item.Name.split(" "),
     ];
+    combineKeywords.push(item.RecipeCategory);
     // Calculate score as the number of matched keywords
     const score = searchKeywords.reduce(
       (count, keywords) =>

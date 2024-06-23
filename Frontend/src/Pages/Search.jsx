@@ -39,6 +39,8 @@ const Search = () => {
                 src={urls[0]}
                 name={item.Name}
                 rating={item.AggregatedRating}
+                RecipeCategory={item.RecipeCategory}
+                cooktime={item.CookTime}
                 isFavorite={tickedItems.has(item.RecipeId)}
                 toggleTick={toggleTick}
               ></ItemsCard>
