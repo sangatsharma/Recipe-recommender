@@ -32,6 +32,7 @@ const TrendingFoods = () => {
           withCredentials: true
         }
       );
+      console.log("Popular items fetched:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching item:", error);
@@ -58,6 +59,8 @@ const TrendingFoods = () => {
               src={urls[0]}
               name={item.Name}
               rating={item.AggregatedRating}
+              RecipeCategory={item.RecipeCategory}
+              cooktime={item.CookTime}
               toggleTick={toggleTick}
               isFavorite={tickedItems.has(item.RecipeId)}
             ></ItemsCard>

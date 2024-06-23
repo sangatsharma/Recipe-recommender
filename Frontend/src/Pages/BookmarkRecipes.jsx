@@ -62,7 +62,9 @@ const BookmarkRecipes = () => {
                 id={item.RecipeId}
                 src={urls[0]}
                 name={item.Name}
+                RecipeCategory={item.RecipeCategory}
                 rating={item.AggregatedRating}
+                cooktime={item.CookTime}
                 toggleTick={handleClick}
                 isFavorite={tickedItems.has(item.RecipeId)}
               ></ItemsCard>
