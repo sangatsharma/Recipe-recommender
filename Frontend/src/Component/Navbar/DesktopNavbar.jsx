@@ -5,9 +5,12 @@ import logo from "../../assets/Images/Logo_SVG.svg";
 import { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import NotificationButton from "./NotificationButton";
+import ThemeToggle from "./ThemeToggle";
+import { useThemeContext } from "../../context/ThemeContext";
 
 const DesktopNavbar = () => {
   const { isAuthenticated } = useContext(AuthContext);
+  const { isDarkMode } = useThemeContext();
   const navigate = useNavigate();
 
   const location = useLocation().pathname;
@@ -47,7 +50,11 @@ const DesktopNavbar = () => {
   };
 
   return (
-    <header className={`${isIdle ? "hide" : "show"}`}>
+    <header
+      className={`${isIdle ? "hide" : "show"} ${
+        isDarkMode ? "dark-mode" : "light-mode"
+      }`}
+    >
       <Link to="/">
         <div className="LogoWrapper">
           <img loading="lazy" src={logo} alt="Logo" />
@@ -103,6 +110,7 @@ const DesktopNavbar = () => {
         </button>
       </nav>
       <div className="Profile">
+        <ThemeToggle />
         {!isAuthenticated && (
           <button
             className={location === "/signup" ? "activeButton signup" : ""}

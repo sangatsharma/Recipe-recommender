@@ -17,8 +17,16 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./context/AuthContext.jsx";
 import BookmarkRecipes from "./Pages/BookmarkRecipes.jsx";
 import { FavItemsProvider } from "./context/FavContext.jsx";
+import { useThemeContext } from "./context/ThemeContext.jsx";
+import { useEffect } from "react";
 
 function App() {
+  const { isDarkMode } = useThemeContext();
+
+  useEffect(() => {
+    document.body.className = isDarkMode ? "dark-mode" : "light-mode";
+  }, [isDarkMode]);
+
   const router = createBrowserRouter([
     {
       path: "/",

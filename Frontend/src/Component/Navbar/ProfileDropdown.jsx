@@ -5,9 +5,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { useThemeContext } from "../../context/ThemeContext";
 
 const ProfileDropdown = ({ isMobile }) => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const { isDarkMode } = useThemeContext();
 
   const navigate = useNavigate();
   //get current location path
@@ -51,14 +53,12 @@ const ProfileDropdown = ({ isMobile }) => {
   return isMobile ? (
     <div ref={dropdownRef} className="overflow-hidden">
       <p onClick={handleToggle} className="focus:outline-none">
-        {/* check if user is login if not redirect to login page */}
-
         <i className="fas fa-bars text-2xl cursor-pointer text-gray-500 hover:text-orange-400"></i>
       </p>
       <div
-        className={`sidebar ${
-          isOpen ? "open" : "closed"
-        }  h-screen w-64 bg-white shadow-lg p-4 flex flex-col justify-between fixed top-0 right-0 transition-all`}
+        className={`sidebar ${isOpen ? "open" : "closed"}  ${
+          isDarkMode ? "bg-[#303030] border-l border-[#4a4a4a]" : "bg-white"
+        } rounded-[10px] h-screen w-64 shadow-lg p-4 flex flex-col justify-between fixed top-0 right-0 transition-all`}
       >
         <div>
           {/* Profile Section */}
@@ -67,12 +67,23 @@ const ProfileDropdown = ({ isMobile }) => {
             onClick={handleToggle}
           >
             <div className="flex items-center space-x-4 p-2 mb-4">
-              <i className="fas fa-user-circle text-4xl text-gray-400"></i>
+              <img
+                loading="lazy"
+                src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+                alt="Profile"
+                className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
+              />
               <div>
                 {isAuthenticated ? (
                   <>
                     <h2 className="font-semibold">Good Day 👋</h2>
-                    <span className="text-sm text-gray-500">{User.Name}</span>
+                    <span
+                      className={`text-sm ${
+                        isDarkMode ? "text-gray-100" : "text-gray-500"
+                      } `}
+                    >
+                      {User.Name}
+                    </span>
                   </>
                 ) : (
                   <p className="text-[28px] text-gray-500">Login</p>
@@ -83,7 +94,10 @@ const ProfileDropdown = ({ isMobile }) => {
           <hr className="h-2"></hr>
 
           {/* Navigation */}
-          <nav onClick={handleToggle}>
+          <nav
+            className={`${isDarkMode ? "dark-mode" : "light-mode"}`}
+            onClick={handleToggle}
+          >
             <button
               className={isActive ? "activePage" : ""}
               onClick={isActive ? handleScrollToTop : () => navigate("/home")}
@@ -215,7 +229,7 @@ const ProfileDropdown = ({ isMobile }) => {
         {/* Footer Actions */}
         <div className="border-t  py-2 mb-32" onClick={handleToggle}>
           <div className="flex justify-between mb-4"></div>
-          <div className="flex justify-around text-sm text-black">
+          <div className="flex justify-around text-sm">
             <Link to="/privacy" className="hover:text-blue-500">
               Privacy
             </Link>
@@ -270,7 +284,6 @@ const ProfileDropdown = ({ isMobile }) => {
             </li>
             <li>
               <Link
-           
                 onClick={Logout}
                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               >

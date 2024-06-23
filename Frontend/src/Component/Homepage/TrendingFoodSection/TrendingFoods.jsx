@@ -41,7 +41,7 @@ const TrendingFoods = () => {
 
   return (
     <div className="TrendingFood">
-      <h2>Popular this week</h2>
+      <p>Popular this week</p>
       <div className="ItemsWrapper">
         {popularItems.map((item) => {
           const regex = /"([^"]+)"/g;

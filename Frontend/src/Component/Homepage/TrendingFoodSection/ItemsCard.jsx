@@ -1,10 +1,11 @@
 import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
+import { useThemeContext } from "../../../context/ThemeContext";
 
 
 const ItemsCard = ({ id, src, name, rating, isFavorite,toggleTick }) => {
   
-
+const {isDarkMode} = useThemeContext();
   const navigate = useNavigate();
 
   // Create a URL-friendly name
@@ -28,7 +29,7 @@ const ItemsCard = ({ id, src, name, rating, isFavorite,toggleTick }) => {
   }
 
   return (
-    <div className="ItemsCard group">
+    <div className={`ItemsCard ${isDarkMode?"ItemsCard-dark-mode":""} group`}>
       <div className="ImageContainer">
         <img
           loading="lazy"
