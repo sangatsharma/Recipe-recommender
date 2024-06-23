@@ -20,7 +20,7 @@ const { isDarkMode } = useThemeContext();
         <Link to="/">
           <div className="LogoWrapper flex">
             <img loading="lazy" src={logo} alt="Logo" />
-            <p className="BrandName">Cook It Yourself</p>
+            {/* <p className="BrandName">Cook It Yourself</p> */}
           </div>
         </Link>
         <div className="Profile flex">
