@@ -68,15 +68,17 @@ const ItemsCard = ({
           <p id="RecipeName">{name}</p>
         </div>
         <div className="flex flex-row justify-between w-[100%]">
-          <div className="flex flex-row gap-1">
+          <div className="flex flex-row gap-1 items-center">
             <p className="cooktime inline">
               <i className="fas fa-clock pr-2"></i>
               {cooktime} min,
             </p>
-            <p id="RecipeRating">{rating || 4.6} ⭐</p>
+            <p id="RecipeRating">{rating || 4.6} </p>
+            <i className="fas fa-star text-[12px] text-[#e68338]"></i>
+            
           </div>
           <div className="w-auto">
-            <p className="text-gray-500 text-[14px] ">{RecipeCategory}</p>
+            <p className={`${isDarkMode?"text-gray-300":"text-gray-500"} text-[14px] `}>{RecipeCategory}</p>
           </div>
         </div>
       </div>
