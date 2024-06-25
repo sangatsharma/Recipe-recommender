@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
           <div className="flex flex-col justify-center mx-auto items-center md:items-start">
             <img src={footerLogo} alt="Logo" className="w-24 h-24 mx-auto " />
-            <p className="font-bold text-xl text-orange-400">
+            <p className="font-bold text-xl text-[#f97316]">
               Cook It Yourself
             </p>
           </div>
