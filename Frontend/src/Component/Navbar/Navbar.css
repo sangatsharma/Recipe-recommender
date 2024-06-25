@@ -50,7 +50,7 @@ header.show {
   font-weight: 700;
   white-space: nowrap;
   letter-spacing: -0.27px;
-  @media (max-width: 900px) {
+  @media (max-width: 895px) {
     white-space: normal;
   }
 }
@@ -63,7 +63,7 @@ nav {
   white-space: nowrap;
   line-height: 150%;
   padding: 10px 8px;
-  @media (max-width: 900px) {
+  @media (max-width: 895px) {
     align-items: start;
     gap: 12px;
     flex-direction: column;
@@ -85,7 +85,7 @@ nav > button {
   font-size: 20px;
   cursor: pointer;
   transition: ease-in-out 0.2s;
-  @media (max-width: 900px) {
+  @media (max-width: 895px) {
     gap: 8px;
   }
 }
