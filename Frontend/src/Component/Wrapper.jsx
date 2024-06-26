@@ -1,5 +1,5 @@
 import "./Wrapper.css";
 const Wrapper = ({ children,selectedPage }) => {
-  return <main className={`${selectedPage}`}>{children}</main>;
+  return <section className={`wrapper ${selectedPage}`}>{children}</section>;
 };
 export default Wrapper; 
