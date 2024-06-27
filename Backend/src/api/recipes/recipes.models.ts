@@ -35,7 +35,8 @@ export const recipeSchema = pgTable("recipes", {
 });
 
 // One recipies can have multiple likes
-export const recipeLikes = pgTable("recipeLikes", {
+export const recipeReview = pgTable("recipeReview", {
+  reviewId: serial("reviewId").primaryKey(),
   recipeId: integer("recipeId").notNull().references(() => recipeSchema.RecipeId, { onDelete: "cascade" }),
   userId: integer("userId").notNull().references(() => userSchema.id, { onDelete: "cascade" }),
   rating: integer("rating").notNull(),
