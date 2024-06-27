@@ -2,6 +2,7 @@ import "./SearchBanner.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { rankFoodItems } from "../../utils/filterItems";
+import {toast } from "react-toastify";
 
 const SearchBanner = ({
   setFoodItems,
@@ -34,7 +35,7 @@ const SearchBanner = ({
   //function to handle the search button
   const handleSearch = () => {
     if (search.trim() === "") {
-      alert("Please enter a search term.");
+      toast.error("Please enter a search term.");
       return;
     }
     // Disable the button to prevent rapid presses

@@ -1,8 +1,11 @@
 import EditProfile from "./EditProfile";
-import PreferencesForm from "./PreferencesForm";
+import {useThemeContext} from "../../context/ThemeContext";
+import {AuthContext} from "../../context/AuthContext";
+import { useContext } from "react";
 
 const Profile = () => {
-
-  return <EditProfile />;
+  const { userInfo } = useContext(AuthContext);
+  const { isDarkMode } = useThemeContext();
+  return <EditProfile darkMode={isDarkMode} user={ userInfo} />;
 };
 export default Profile;
