@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Wrapper from "../Component/Wrapper";
 import axios from "axios";
 import InvalidPage from "../Component/InvalidPage";
+// import ImageSlider from "../Component/ImageSlider";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
@@ -74,10 +75,11 @@ const RecipeDetails = () => {
 
   return (
     <Wrapper>
-      <div>
+      <div className="flex flex-col justify-center w-[100%]">
         <h1>Recipe Details for: {item.Name}</h1>
-        <div className="flex flex-row gap-2 flex-wrap w-[100%] h-[20%]">
-          {item.Images &&
+        <div className="">
+          {
+            // item.Images && <ImageSlider images={urls} />
             urls.map((url, index) => (
               <img
                 key={index} // Use index as key (unique for each URL)
@@ -90,12 +92,10 @@ const RecipeDetails = () => {
                   aspectRatio: "1",
                 }} // Optional styling
               />
-            ))}
+            ))
+          }
         </div>
-        <div className="min-w-10">
-          <p>
-            <strong>Recipe Image:</strong> {urls[0]}
-          </p>
+        <div className="p-4">
           <p>
             <strong>Recipe ID:</strong> {item.RecipeId}
           </p>

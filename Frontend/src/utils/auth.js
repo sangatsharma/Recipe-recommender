@@ -3,17 +3,15 @@ import axios from "axios";
 export const checkCookieStatus = async () => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_SERVER_URL}/user/validate`,
+      `${import.meta.env.VITE_SERVER_URL}/user`,
       { withCredentials: true }
     );
-    return response.data.success;
+    return response.data;
   } catch (err) {
     console.error(err);
   }
 };
 
-
-//todo add the following function to the logout section
 export const handleLogout = async () => {
   try {
     const response = await axios.post(
@@ -25,6 +23,8 @@ export const handleLogout = async () => {
     console.error(err);
   }
 };
+
+
 export const getCookie = (name) => {
   const cookieString = document.cookie;
   const cookies = cookieString.split("; "); // Split into individual cookies
