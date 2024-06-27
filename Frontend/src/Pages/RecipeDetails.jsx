@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Wrapper from "../Component/Wrapper";
 import axios from "axios";
 import InvalidPage from "../Component/InvalidPage";
-import ImageSlider from "../Component/ImageSlider";
+// import ImageSlider from "../Component/ImageSlider";
 
 const RecipeDetails = () => {
   const { recipeName } = useParams();
@@ -79,20 +79,20 @@ const RecipeDetails = () => {
         <h1>Recipe Details for: {item.Name}</h1>
         <div className="">
           {
-            item.Images && <ImageSlider images={urls} />
-            // urls.map((url, index) => (
-            //   <img
-            //     key={index} // Use index as key (unique for each URL)
-            //     src={url} // Use extracted URL
-            //     alt={`Recipe ${index + 1}`}
-            //     style={{
-            //       width: "20%",
-            //       height: "10%",
-            //       marginBottom: "20px",
-            //       aspectRatio: "1",
-            //     }} // Optional styling
-            //   />
-            // ))
+            // item.Images && <ImageSlider images={urls} />
+            urls.map((url, index) => (
+              <img
+                key={index} // Use index as key (unique for each URL)
+                src={url} // Use extracted URL
+                alt={`Recipe ${index + 1}`}
+                style={{
+                  width: "20%",
+                  height: "10%",
+                  marginBottom: "20px",
+                  aspectRatio: "1",
+                }} // Optional styling
+              />
+            ))
           }
         </div>
         <div className="p-4">
