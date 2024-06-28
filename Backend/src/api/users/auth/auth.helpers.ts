@@ -28,10 +28,9 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 		sameSite: "none",
 		maxAge: (1000 * 60 * 60 * 24 * 7),
 		path: "/",
-		partitioned: !(userData.password === null),
+		domain: ".recipe-recommender-backend.vercel.app",
+		partitioned: true,
 	} as CookieOptions;
-
-	if (userData.password === null) cookieRes.domain = ".recipe-recommender-backend.vercel.app";
 
 	// Set cookie
 	res.cookie("auth_token", token, cookieRes);
