@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeRelations = exports.recipeLikes = exports.recipeSchema = void 0;
+exports.recipeRelations = exports.recipeReview = exports.recipeSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const users_models_1 = require("../../api/users/users.models");
@@ -36,7 +36,8 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     RecipeInstructions: (0, pg_core_1.text)("RecipeInstructions").notNull(),
 });
 // One recipies can have multiple likes
-exports.recipeLikes = (0, pg_core_1.pgTable)("recipeLikes", {
+exports.recipeReview = (0, pg_core_1.pgTable)("recipeReview", {
+    reviewId: (0, pg_core_1.serial)("reviewId").primaryKey(),
     recipeId: (0, pg_core_1.integer)("recipeId").notNull().references(() => exports.recipeSchema.RecipeId, { onDelete: "cascade" }),
     userId: (0, pg_core_1.integer)("userId").notNull().references(() => users_models_1.userSchema.id, { onDelete: "cascade" }),
     rating: (0, pg_core_1.integer)("rating").notNull(),
