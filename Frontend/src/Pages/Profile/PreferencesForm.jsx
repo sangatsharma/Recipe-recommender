@@ -14,7 +14,7 @@ const PreferencesForm = ({ darkMode }) => {
     favoriteCuisines: Yup.array().min(1, "Select at least one cuisine"),
     dislikedIngredients: Yup.string(),
     mealTypes: Yup.array().min(1, "Select at least one meal type"),
-    diseases: Yup.array().min(1, "Select at least one disease if applicable"),
+    diseases: Yup.array()
   });
 
   // Initialize formik

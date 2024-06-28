@@ -76,11 +76,11 @@ const EditProfile = ({ darkMode }) => {
           </p>
           <p className="text-sm mt-2 text-center">
             Member Since:{" "}
-            <strong>
+            {/* <strong>
               {formatDate(
                 new Date(userInfo.joinedOn).toLocaleString().split(",")[0]
               )}
-            </strong>
+            </strong> */}
           </p>
         </div>
       </div>
@@ -119,7 +119,7 @@ const EditProfile = ({ darkMode }) => {
                   autoComplete="Name"
                   name="fullName"
                   {...formik.getFieldProps("fullName")}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded text-black"
                 />
                 {formik.touched.fullName && formik.errors.fullName ? (
                   <div className="text-red-600">{formik.errors.fullName}</div>
@@ -132,7 +132,7 @@ const EditProfile = ({ darkMode }) => {
                   type="text"
                   name="username"
                   {...formik.getFieldProps("username")}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded  text-black"
                 />
                 {formik.touched.username && formik.errors.username ? (
                   <div className="text-red-600">{formik.errors.username}</div>
@@ -145,7 +145,7 @@ const EditProfile = ({ darkMode }) => {
                   type="email"
                   name="email"
                   {...formik.getFieldProps("email")}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded  text-black"
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-600">{formik.errors.email}</div>
@@ -158,7 +158,7 @@ const EditProfile = ({ darkMode }) => {
                   type="text"
                   name="bio"
                   {...formik.getFieldProps("bio")}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded  text-black"
                 />
                 {formik.touched.bio && formik.errors.bio ? (
                   <div className="text-red-600">{formik.errors.bio}</div>
