@@ -23,15 +23,6 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 	// Sign token
 	const token = jwt.sign(jwtToken, SECRET);
 
-	type CookieRes = {
-		secure: boolean;
-		sameSite: string;
-		maxAge: number;
-		path: string;
-		partitioned: boolean;
-		domain?: string;
-	};
-
 	const cookieRes = {
 		secure: true,
 		sameSite: "none",
