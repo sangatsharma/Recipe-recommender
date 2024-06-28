@@ -29,7 +29,7 @@ const handleToken = (userData, res) => {
         partitioned: !(userData.password === null),
     };
     if (userData.password === null)
-        cookieRes.domain = "recipe-recommender-backend.vercel.app";
+        cookieRes.domain = ".recipe-recommender-backend.vercel.app";
     // Set cookie
     res.cookie("auth_token", token, cookieRes);
     // Return user details
