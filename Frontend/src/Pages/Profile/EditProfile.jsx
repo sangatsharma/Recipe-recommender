@@ -8,7 +8,6 @@ import { AuthContext } from "../../context/AuthContext";
 const EditProfile = ({ darkMode }) => {
   const { userInfo, loading } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
-
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
@@ -38,12 +37,12 @@ const EditProfile = ({ darkMode }) => {
 
   return (
     <div
-      className={`min-h-screen w-[60%] below-sm:w-[90%] p-6 flex flex-row below-sm:flex-col gap-4 ${
+      className={`min-h-screen w-[60%] below-sm:w-[100%] p-6 flex flex-row below-sm:flex-col gap-4 ${
         darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
       }`}
     >
       {/*left side*/}
-      <div className="w-[40%] below-sm:w-[100%] mt-10">
+      <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
         <div className="flex flex-col items-center  p-4 ">
           <div className="relative inline-block">
             <img
@@ -76,11 +75,7 @@ const EditProfile = ({ darkMode }) => {
           </p>
           <p className="text-sm mt-2 text-center">
             Member Since:{" "}
-            {/* <strong>
-              {formatDate(
-                new Date(userInfo.joinedOn).toLocaleString().split(",")[0]
-              )}
-            </strong> */}
+            <strong>{formatDate(new Date(userInfo.joinedOn))}</strong>
           </p>
         </div>
       </div>
