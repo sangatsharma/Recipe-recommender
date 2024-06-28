@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, CookieOptions } from "express";
 import { emailVerifyer, handleToken, userRegisterHelper, verifyMailSender } from "./auth.helpers";
 import { JsonResponse, LoginForm, RegisterForm, UserDataDB } from "../users.types";
 import { userExists } from "./auth.helpers";
@@ -185,12 +185,16 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
 */
 export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // Clear cookie
-  res.cookie("auth_token", "", {
+  const cookieRes = {
     secure: true,
     sameSite: "none",
     path: "/",
-    partitioned: true,
-  });
+    partitioned: !(res.locals.user.oauth as boolean),
+  } as CookieOptions;
+
+  if ((res.locals.user.oauth)) cookieRes.domain = ".recipe-recommender-backend.vercel.app";
+
+  res.cookie("auth_token", "", cookieRes);
 
 
   res.set("Set-Cookie", "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; Partitioned; SameSite=None");
