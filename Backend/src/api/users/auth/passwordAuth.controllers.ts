@@ -185,19 +185,19 @@ export const changePasswordHandler = async (req: Request, res: Response, next: N
 */
 export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // Clear cookie
-  const cookieRes = {
-    secure: true,
-    sameSite: "none",
-    path: "/",
-    partitioned: !(res.locals.user.oauth as boolean),
-  } as CookieOptions;
-
-  if ((res.locals.user.oauth)) cookieRes.domain = ".recipe-recommender-backend.vercel.app";
-
-  res.cookie("auth_token", "", cookieRes);
+  // const cookieRes = {
+  //   secure: true,
+  //   sameSite: "none",
+  //   path: "/",
+  //   partitioned: true,
+  // } as CookieOptions;
 
 
-  res.set("Set-Cookie", "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; Partitioned; SameSite=None");
+  // res.cookie("auth_token", "", cookieRes);
+
+  const cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; Partitioned; SameSite=None; Domain=.recipe-recommender-backend.vercel.app";
+
+  res.set("Set-Cookie", cookieRes);
 
   // Send success message
   res.json({
