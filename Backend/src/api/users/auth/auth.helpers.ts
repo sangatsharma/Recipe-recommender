@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import nodemailer, { Transporter } from "nodemailer";
@@ -23,15 +23,27 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 	// Sign token
 	const token = jwt.sign(jwtToken, SECRET);
 
-	// Set cookie
-	res.cookie("auth_token", token, {
+	type CookieRes = {
+		secure: boolean;
+		sameSite: string;
+		maxAge: number;
+		path: string;
+		partitioned: boolean;
+		domain?: string;
+	};
+
+	const cookieRes = {
 		secure: true,
 		sameSite: "none",
 		maxAge: (1000 * 60 * 60 * 24 * 7),
 		path: "/",
-		// domain: ".recipe-recommender-backend.vercel.app",
 		partitioned: !(userData.password === null),
-	});
+	} as CookieOptions;
+
+	if (userData.password === null) cookieRes.domain = "recipe-recommender-backend.vercel.app";
+
+	// Set cookie
+	res.cookie("auth_token", token, cookieRes);
 
 	// Return user details
 	return ({
