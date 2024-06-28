@@ -8,7 +8,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 
-
 const LoginPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
 
@@ -21,13 +20,12 @@ const LoginPage = () => {
 
   const handleLogin = () => {
     setIsAuthenticated(true);
+    window.location.reload();
     toast.success("Login successful!");
-    navigate("/");
   };
 
   const googleOauth = () => {
-    window.location.href =
-      `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
+    window.location.href = `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };
   const formik = useFormik({
     initialValues: {
@@ -63,7 +61,7 @@ const LoginPage = () => {
   });
   return (
     <div className="bg-white shadow-lg rounded-lg flex flex-row flex-wrap overflow-hidden mt-[20px] below-sm:flex-col below-sm:w-[95%] w-[400px]">
-      <div className="below-sm:w-[100%] p-10 bg-slate-200 w-[100%]" >
+      <div className="below-sm:w-[100%] p-10 bg-slate-200 w-[100%]">
         {/* <img className="h-12 " src={logo} /> */}
         <p className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg py-4 ">
           Login

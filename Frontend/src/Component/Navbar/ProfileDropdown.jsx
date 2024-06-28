@@ -227,7 +227,7 @@ const ProfileDropdown = ({ isMobile }) => {
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t  py-2 mb-32" onClick={handleToggle}>
+        <div className="border-t  py-2 mb-32">
           <div className="flex justify-between mb-4"></div>
           <div className="flex justify-around text-sm">
             <Link to="/privacy" className="hover:text-blue-500">

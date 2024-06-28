@@ -32,7 +32,6 @@ const TrendingFoods = () => {
           withCredentials: true
         }
       );
-      console.log("Popular items fetched:", response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching item:", error);

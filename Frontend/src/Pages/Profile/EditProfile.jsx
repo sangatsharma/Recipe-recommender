@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PreferencesForm from "./PreferencesForm";
 import { formatDate } from "../../utils/dateFormat";
+import { AuthContext } from "../../context/AuthContext";
 
-const EditProfile = ({ darkMode, user }) => {
+const EditProfile = ({ darkMode }) => {
+  const { userInfo, loading } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
-  console.log(user);
 
   const formik = useFormik({
     initialValues: {
-      fullName: user.name,
-      username: user.name.split(" ")[0] + user.id,
-      email: user.email,
+      fullName: userInfo?.name || "",
+      username: userInfo ? `${userInfo.name.split(" ")[0]}${userInfo.id}` : "",
+      email: userInfo?.email || "",
       bio: "",
     },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       fullName: Yup.string().required("Required"),
       username: Yup.string().required("Required"),
@@ -23,9 +25,16 @@ const EditProfile = ({ darkMode, user }) => {
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
-      z;
     },
   });
+
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state
+  }
+
+  if (!userInfo) {
+    return <div>Failed to load user info</div>; // Show error if userInfo is not available
+  }
 
   return (
     <div
@@ -42,16 +51,18 @@ const EditProfile = ({ darkMode, user }) => {
               alt="User Avatar"
               className="rounded-full size-32 mb-2 border-1 border-gray-400"
             />
-            <div
-              className="absolute top-1 right-3 w-6 h-6
+            {userInfo.verified ? (
+              <div
+                className="absolute top-1 right-3 w-6 h-6
               rounded-full border-2 border-white bg-blue-500 m-auto flex justify-center items-center p-2"
-            >
-              <i className={`fas fa-check text-white`}></i>
-            </div>
+              >
+                <i className={`fas fa-check text-white`}></i>
+              </div>
+            ) : null}
           </div>
-          <strong className="text-2xl">{user.name}</strong>
+          <strong className="text-2xl">{userInfo.name}</strong>
           <p className="mb-2 text-gray-400">
-            @{user.name.split(" ")[0] + user.id}
+            @{userInfo.name.split(" ")[0] + userInfo.id}
           </p>
 
           <button className="py-2 px-4 bg-orange-500 text-white rounded">
@@ -67,7 +78,7 @@ const EditProfile = ({ darkMode, user }) => {
             Member Since:{" "}
             <strong>
               {formatDate(
-                new Date(user.joinedOn).toLocaleString().split(",")[0]
+                new Date(userInfo.joinedOn).toLocaleString().split(",")[0]
               )}
             </strong>
           </p>
@@ -81,7 +92,7 @@ const EditProfile = ({ darkMode, user }) => {
         <div className="flex flex-row w-full gap-16 mt-4 ml-8">
           <h2
             className={` ${
-              currentPage == "userInfo" ? "border-b-4 text-2xl" : ""
+              currentPage === "userInfo" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userInfo")}
           >
@@ -89,7 +100,7 @@ const EditProfile = ({ darkMode, user }) => {
           </h2>
           <h2
             className={` ${
-              currentPage == "userPreferences" ? "border-b-4 text-2xl" : ""
+              currentPage === "userPreferences" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userPreferences")}
           >
@@ -149,40 +160,10 @@ const EditProfile = ({ darkMode, user }) => {
                   {...formik.getFieldProps("bio")}
                   className="w-full p-2 border rounded"
                 />
-                {formik.touched.email && formik.errors.bio ? (
+                {formik.touched.bio && formik.errors.bio ? (
                   <div className="text-red-600">{formik.errors.bio}</div>
                 ) : null}
               </div>
-              {/* <div className="mb-4">
-                <label className="block">Password</label>
-                <input
-                  autoComplete="new-password"
-                  type="password"
-                  name="password"
-                  {...formik.getFieldProps("password")}
-                  className="w-full p-2 border rounded"
-                />
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="text-red-600">{formik.errors.password}</div>
-                ) : null}
-              </div>
-              <div className="mb-4">
-                <label className="block">Confirm Password</label>
-                <input
-                  autoComplete="new-password"
-                  type="password"
-                  name="confirmPassword"
-                  {...formik.getFieldProps("confirmPassword")}
-                  className="w-full p-2 border rounded"
-                />
-                {formik.touched.confirmPassword &&
-                formik.errors.confirmPassword ? (
-                  <div className="text-red-600">
-                    {formik.errors.confirmPassword}
-                  </div>
-                ) : null}
-              </div> */}
-
               <button
                 type="submit"
                 className="block w-full py-2 px-4 bg-blue-500 text-white rounded"

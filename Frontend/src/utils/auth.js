@@ -11,28 +11,28 @@ export const checkCookieStatus = async () => {
     console.error(err);
   }
 };
-
 export const handleLogout = async () => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_SERVER_URL}/user/auth/logout`,
-      { withCredentials: true }
+      {},
+      {
+        withCredentials: true,
+      }
     );
     return response.data;
   } catch (err) {
-    console.error(err);
-  }
-};
-
-
-export const getCookie = (name) => {
-  const cookieString = document.cookie;
-  const cookies = cookieString.split("; "); // Split into individual cookies
-  for (let cookie of cookies) {
-    const [cookieName, cookieValue] = cookie.split("=");
-    if (cookieName == name) {
-      return cookieValue; // Return the value if name matches
+    if (err.response) {
+      // Handle response errors
+      console.error("Logout failed with status:", err.response.status);
+      console.error("Response data:", err.response.data);
+    } else if (err.request) {
+      // Handle request errors
+      console.error("No response received:", err.request);
+    } else {
+      // Handle other errors
+      console.error("Error in request setup:", err.message);
     }
+    throw err; // Optionally rethrow the error
   }
-  return null; // Return null if not found
 };

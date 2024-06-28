@@ -6,6 +6,6 @@ import { useContext } from "react";
 const Profile = () => {
   const { userInfo } = useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
-  return <EditProfile darkMode={isDarkMode} user={ userInfo} />;
+  return <EditProfile darkMode={isDarkMode}/>;
 };
 export default Profile;
