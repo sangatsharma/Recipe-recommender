@@ -1,4 +1,4 @@
-import Slider from "../Component/Homepage/Slider/Slider.jsx";
+import Slider from "../Component/Slider.jsx";
 import TrendingFoods from "../Component/Homepage/TrendingFoodSection/TrendingFoods.jsx";
 import banner1 from '../assets/Images/banner1.jpg';
 import banner2 from '../assets/Images/banner2.jpg';
