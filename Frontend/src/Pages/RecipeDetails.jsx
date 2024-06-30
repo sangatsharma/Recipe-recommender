@@ -78,49 +78,41 @@ const RecipeDetailsPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8  rounded-lg shadow-lg">
+    <div className="max-w-4xl mx-auto p-2  rounded-lg shadow-lg">
       {/* Recipe Overview */}
       <section className="mb-8">
-        <h1 className="text-4xl font-bold flex items-center">
-          <span role="img" aria-label="document">
-            📄
-          </span>
+        <h1 className="text-4xl  below-sm:text-2xl font-bold flex items-center">
           {item.Name}
         </h1>
-        <p className="text-xl mt-2">{item.Description}</p>
-        <p className="mt-1 text-sm">Category: {item.RecipeCategory}</p>
-        <p className="mt-1 text-sm">
-          Date Published:{new Date(item.DatePublished).toLocaleString()}
+        <p className="text-xl below-sm:text-[14px] leading-snug mt-2">{item.Description}</p>
+        <p className="mt-4 text-sm ">Category: {item.RecipeCategory}</p>
+        <p className="mt-1 text-sm ">
+          Date Published:{" "}{new Date(item.DatePublished).toLocaleString()}
         </p>
       </section>
-      <div className="flex flex-row  flex-wrap gap-2">
+      <div className="flex flex-row  flex-wrap gap-2 pl-4 below-sm:pl-0 ">
         {urls.map((url, index) => (
           <img
             key={index}
             src={url}
             alt={`Recipe ${index + 1}`}
-            style={{
-              width: "20%",
-              height: "10%",
-              marginBottom: "20px",
-              aspectRatio: "1",
-            }}
+           className="w-80 h-80 below-sm:w-full  object-cover aspect-square mb-8 rounded-lg shadow-lg"
           />
         ))}
       </div>
 
       {/* Time Details */}
-      <section className="mb-4 ">
+      <section className="mb-4 mt-2  ">
         <h2 className="text-2xl  font-semibold flex items-center">
           <span role="img" aria-label="clock">
             ⏱️
           </span>
           Time Details
         </h2>
-        <div className="flex flex-row flex-wrap gap-4">
-          <p className="mt-1  pl-5">Prep Time: {item.PrepTime} minutes</p>
-          <p className="mt-1 pl-5">Cook Time: {item.CookTime} minutes</p>
-          <p className="mt-1 pl-5">Total Time:{item.TotalTime} minutes</p>
+        <div className="flex flex-row flex-wrap gap-4 below-sm:gap-0">
+          <p className="mt-1 pl-8">Prep Time: {item.PrepTime} minutes</p>
+          <p className="mt-1 pl-8">Cook Time: {item.CookTime} minutes</p>
+          <p className="mt-1 pl-8">Total Time:{item.TotalTime} minutes</p>
         </div>
       </section>
       <div className="flex flex-row flex-wrap gap-10">
