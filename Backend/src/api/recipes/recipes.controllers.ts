@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
-import { recipeLikes, recipeSchema } from "./recipes.models";
+import { recipeReview, recipeSchema } from "./recipes.models";
 import { SQL, eq, lte, and, ilike } from "drizzle-orm";
+import { userSchema } from "../users/users.models";
 
 /*
   FETCH ALL RECIPIES
@@ -57,7 +58,8 @@ export const addNewRecipe = (req: Request, res: Response, next: NextFunction) =>
 export const filterRecipe = (req: Request, res: Response, next: NextFunction) => {
 
   // Get filter data from frontend
-  const data: Record<string, string | number> = req.body as Record<string, string | number>;
+  type FilterRecord = Record<string, string | number>;
+  const data: FilterRecord = req.body as FilterRecord;
   const q: SQL[] = [];
 
   // If name search is present
@@ -142,15 +144,22 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
 };
 
 
-export const recipeLikeHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const recipeReviewAddHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const body = req.body as { recipeId: number, rating: number, review?: string };
+  const userCookie = res.locals.user as { id: number };
 
-  // TODO: Better imp with types
-  const data = req.body as { recipeId: number };
-  const cookieInfo = res.locals.user;
+  if (!body?.recipeId || !body?.rating) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Please provide all required fields",
+      }
+    });
+  }
 
   try {
     // Get the recipe
-    const recipeDB = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, data.recipeId));
+    const recipeDB = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
 
     // If not found
     if (recipeDB.length === 0) {
@@ -162,30 +171,103 @@ export const recipeLikeHandler = async (req: Request, res: Response, next: NextF
       });
     }
 
-    // Check if user already liked this post
-    const alreadyLiked = await db.select().from(recipeLikes).where(and(eq(recipeLikes.recipeId, data.recipeId), eq(recipeLikes.userId, cookieInfo.id as number)));
-
-    // If no, like
-    if (alreadyLiked.length === 0) {
-      await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number + 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
-    }
-
-    // Else, remove like
-    else {
-      await db.delete(recipeLikes).where((and(eq(recipeLikes.recipeId, data.recipeId), eq(recipeLikes.userId, cookieInfo.id as number))));
-      await db.update(recipeSchema).set({ TotalLikes: recipeDB[0].TotalLikes as number - 1 }).where(eq(recipeSchema.RecipeId, data.recipeId));
-    }
+    // Add review
+    const addedReview = await db.insert(recipeReview).values({
+      recipeId: body.recipeId,
+      userId: userCookie.id,
+      rating: body.rating,
+      review: (body?.review) ? body.review : null,
+    }).returning();
 
     return res.json({
       success: true,
-      body: {
-        message: "Recipe " + (alreadyLiked.length === 0 ? "liked." : "disliked.")
-      },
+      body: addedReview
     });
   }
-
   catch (err) {
     next(err);
   }
+};
 
+
+export const recipeReviewRemoveHandler = async (req: Request, res: Response, next: NextFunction) => {
+  // Pass
+  const body = req.body as { id: number };
+  const userCookie = res.locals.user as { id: number };
+
+  if (!body?.id) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Please provide all required fields",
+      }
+    });
+  }
+
+  try {
+
+    // Check review Id
+    const reviewDb = await db.select().from(recipeReview).where(eq(recipeReview.reviewId, body.id));
+
+    // Exists or not
+    if (reviewDb.length === 0) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Invalid review Id",
+        }
+      });
+    }
+
+    // Check who posted it
+    else if (reviewDb[0].userId !== userCookie.id) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Unauthorized Operation",
+        }
+      });
+    }
+
+    // Remove the review
+    await db.delete(recipeReview).where(eq(recipeReview.reviewId, body.id));
+    return res.json({
+      success: true,
+      body: {
+        message: "Review removed",
+      },
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
+
+/*
+ Get review details for recipes
+*/
+export const recipeReviewGet = async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id;
+
+  try {
+    // Get reviews from provided recipeId with username
+    const reviewDb = await db.select().from(recipeReview).leftJoin(userSchema, eq(recipeReview.userId, userSchema.id)).where(eq(recipeReview.recipeId, Number(id)));
+
+    // Return only required data
+    const resData = reviewDb.map((reviewItem) => {
+      const uNameTmp = { userName: reviewItem.users?.name };
+      return { ...reviewItem.recipeReview, ...uNameTmp };
+    });
+
+    // Return data
+    return res.json({
+      success: true,
+      length: resData.length,
+      body: resData
+    });
+  }
+  catch (err) {
+    next(err);
+  }
 };

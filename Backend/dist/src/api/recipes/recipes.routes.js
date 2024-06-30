@@ -19,5 +19,7 @@ recipeRouter.get("/", middleware_1.authenticateJWT, recipes_controllers_1.return
 recipeRouter.post("/", middleware_1.authenticateJWT, recipes_controllers_1.addNewRecipe);
 recipeRouter.post("/filter", middleware_1.authenticateJWT, recipes_controllers_1.filterRecipe);
 recipeRouter.get("/:id", middleware_1.authenticateJWT, recipes_controllers_1.recipeDetails);
-recipeRouter.post("/like", middleware_1.authenticateJWT, recipes_controllers_1.recipeLikeHandler);
+recipeRouter.post("/review/add", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewAddHandler);
+recipeRouter.post("/review/remove", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewRemoveHandler);
+recipeRouter.get("/review/:id", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewGet);
 exports.default = recipeRouter;

@@ -21,15 +21,16 @@ const handleToken = (userData, res) => {
     };
     // Sign token
     const token = jsonwebtoken_1.default.sign(jwtToken, config_1.SECRET);
-    // Set cookie
-    res.cookie("auth_token", token, {
+    const cookieRes = {
         secure: true,
         sameSite: "none",
         maxAge: (1000 * 60 * 60 * 24 * 7),
         path: "/",
         domain: ".recipe-recommender-backend.vercel.app",
-        partitioned: !(userData.password === null),
-    });
+        partitioned: true,
+    };
+    // Set cookie
+    res.cookie("auth_token", token, cookieRes);
     // Return user details
     return ({
         "success": true,
