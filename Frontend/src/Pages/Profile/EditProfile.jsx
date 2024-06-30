@@ -37,7 +37,7 @@ const EditProfile = ({ darkMode }) => {
 
   return (
     <div
-      className={`min-h-screen w-[60%] below-sm:w-[100%] p-6 flex flex-row below-sm:flex-col gap-4 ${
+      className={`min-h-screen w-[60%] below-sm:w-[100%] p-6 below-sm:px-2 flex flex-row below-sm:flex-col gap-4 ${
         darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
       }`}
     >
@@ -59,10 +59,12 @@ const EditProfile = ({ darkMode }) => {
               </div>
             ) : null}
           </div>
-          <strong className="text-2xl">{userInfo.name}</strong>
+          <div className="text-center">
+          <strong className="text-[18px]">{userInfo.name}</strong>
           <p className="mb-2 text-gray-400">
             @{userInfo.name.split(" ")[0] + userInfo.id}
           </p>
+          </div>
 
           <button className="py-2 px-4 bg-orange-500 text-white rounded">
             Upload New Photo

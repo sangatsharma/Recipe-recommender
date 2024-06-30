@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Wrapper from "../Component/Wrapper";
 import axios from "axios";
 import InvalidPage from "../Component/InvalidPage";
-// import ImageSlider from "../Component/ImageSlider";
+import React from "react";
+import StarRating from "../Component/StarRating";
 
-const RecipeDetails = () => {
+const RecipeDetailsPage = () => {
   const { recipeName } = useParams();
 
   // Extract name and ID from the param
@@ -23,7 +23,7 @@ const RecipeDetails = () => {
     if (recipeName.includes("_") === false) return;
     if (isNaN(id) || !id || !itemName) return;
 
-    //if everything is right dfetch the data
+    //if everything is right fetch the data
     const fetchData = async () => {
       try {
         // console.log("Fetching item by ID:", id);
@@ -65,6 +65,7 @@ const RecipeDetails = () => {
   let matches;
   let urls = [];
   let instructions = [];
+  let RecipeIngredientParts = [];
   // Loop through all matches
   while ((matches = regex.exec(item.Images)) !== null) {
     urls.push(matches[1]);
@@ -72,92 +73,129 @@ const RecipeDetails = () => {
   while ((matches = regex.exec(item.RecipeInstructions)) !== null) {
     instructions.push(matches[1]);
   }
+  while ((matches = regex.exec(item.RecipeIngredientParts)) !== null) {
+    RecipeIngredientParts.push(matches[1]);
+  }
 
   return (
-    <Wrapper>
-      <div className="flex flex-col justify-center w-[100%]">
-        <h1>Recipe Details for: {item.Name}</h1>
-        <div className="">
-          {
-            // item.Images && <ImageSlider images={urls} />
-            urls.map((url, index) => (
-              <img
-                key={index} // Use index as key (unique for each URL)
-                src={url} // Use extracted URL
-                alt={`Recipe ${index + 1}`}
-                style={{
-                  width: "20%",
-                  height: "10%",
-                  marginBottom: "20px",
-                  aspectRatio: "1",
-                }} // Optional styling
-              />
-            ))
-          }
-        </div>
-        <div className="p-4">
-          <p>
-            <strong>Recipe ID:</strong> {item.RecipeId}
-          </p>
-          <p>
-            <strong>Cook Time:</strong> {item.CookTime} minutes
-          </p>
-          <p>
-            <strong>Prep Time:</strong> {item.PrepTime} minutes
-          </p>
-          <p>
-            <strong>Total Time:</strong> {item.TotalTime} minutes
-          </p>
-          <p>
-            <strong>Date Published:</strong>
-            {new Date(item.DatePublished).toLocaleString()}
-          </p>
-          <p>
-            <strong>Description:</strong> {item.Description}
-          </p>
-          <p>
-            <strong>Recipe Category:</strong> {item.RecipeCategory}
-          </p>
-          <p>
-            <strong>Keywords:</strong> {item.Keywords}
-          </p>
-          <p>
-            <strong>Calories:</strong> {item.Calories}
-          </p>
-          <p>
-            <strong>Fat Content:</strong> {item.FatContent} g
-          </p>
-          <p>
-            <strong>Saturated Fat Content:</strong> {item.SaturatedFatContent} g
-          </p>
-          <p>
-            <strong>Cholesterol Content:</strong> {item.CholesterolContent} mg
-          </p>
-          <p>
-            <strong>Sodium Content:</strong> {item.SodiumContent} mg
-          </p>
-          <p>
-            <strong>Carbohydrate Content:</strong> {item.CarbohydrateContent} g
-          </p>
-          <p>
-            <strong>Fiber Content:</strong> {item.FiberContent} g
-          </p>
-          <p>
-            <strong>Sugar Content:</strong> {item.SugarContent} g
-          </p>
-          <p>
-            <strong>Protein Content:</strong> {item.ProteinContent} g
-          </p>
-          <strong>Instructions:</strong>
-          <ol>
-            {item.RecipeInstructions &&
-              instructions.map((inst, index) => (
-                <li key={index}>{index + 1 + ")   " + inst}</li>
-              ))}
-          </ol>
-        </div>
+    <div className="max-w-4xl mx-auto p-8  rounded-lg shadow-lg">
+      {/* Recipe Overview */}
+      <section className="mb-8">
+        <h1 className="text-4xl font-bold flex items-center">
+          <span role="img" aria-label="document">
+            📄
+          </span>
+          {item.Name}
+        </h1>
+        <p className="text-xl mt-2">{item.Description}</p>
+        <p className="mt-1 text-sm">Category: {item.RecipeCategory}</p>
+        <p className="mt-1 text-sm">
+          Date Published:{new Date(item.DatePublished).toLocaleString()}
+        </p>
+      </section>
+      <div className="flex flex-row  flex-wrap gap-2">
+        {urls.map((url, index) => (
+          <img
+            key={index}
+            src={url}
+            alt={`Recipe ${index + 1}`}
+            style={{
+              width: "20%",
+              height: "10%",
+              marginBottom: "20px",
+              aspectRatio: "1",
+            }}
+          />
+        ))}
       </div>
-    </Wrapper>
+
+      {/* Time Details */}
+      <section className="mb-4 ">
+        <h2 className="text-2xl  font-semibold flex items-center">
+          <span role="img" aria-label="clock">
+            ⏱️
+          </span>
+          Time Details
+        </h2>
+        <div className="flex flex-row flex-wrap gap-4">
+          <p className="mt-1  pl-5">Prep Time: {item.PrepTime} minutes</p>
+          <p className="mt-1 pl-5">Cook Time: {item.CookTime} minutes</p>
+          <p className="mt-1 pl-5">Total Time:{item.TotalTime} minutes</p>
+        </div>
+      </section>
+      <div className="flex flex-row flex-wrap gap-10">
+        {/* Ingredients */}
+        <section className="mb-5">
+          <h2 className="text-2xl font-semibold flex items-center">
+            <span role="img" aria-label="spoon">
+              🥄
+            </span>
+            Ingredients
+          </h2>
+          <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
+            {RecipeIngredientParts.map((ingredient, index) => (
+              <li key={index}>{ingredient}</li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Nutritional Information */}
+        <section className="mb-5 pl-2">
+          <h2 className="text-2xl  font-semibold flex items-center">
+            <span role="img" aria-label="plate">
+              🍽️
+            </span>
+            Nutritional Information
+          </h2>
+          <p className="mt-1 pl-8">Calories: {item.Calories}</p>
+          <p className="mt-1 pl-8">Fat Content: {item.FatContent} g</p>
+          <p className="mt-1 pl-8">
+            Saturated Fat: {item.SaturatedFatContent} g
+          </p>
+          <p className="mt-1 pl-8">Cholesterol: {item.CholesterolContent} mg</p>
+          <p className="mt-1 pl-8">Sodium:{item.SodiumContent} mg</p>
+          <p className="mt-1 pl-8">
+            Carbohydrates: {item.CarbohydrateContent} g
+          </p>
+          <p className="mt-1 pl-8">Fiber: {item.FiberContent} g</p>
+          <p className="mt-1 pl-8">Sugar: {item.SugarContent} g</p>
+          <p className="mt-1 pl-8">Protein: {item.ProteinContent} g</p>
+        </section>
+      </div>
+
+      {/* Instructions */}
+      <section className="mb-8">
+        <h2 className="text-2xl  font-semibold flex items-center">
+          <span role="img" aria-label="clipboard">
+            📋
+          </span>
+          Instructions
+        </h2>
+        <ol className="list-decimal mt-1 list-outside pl-10  space-y-1">
+          {instructions.map((instruction, index) => (
+            <li key={index} className="">
+              {instruction}
+            </li>
+          ))}
+        </ol>
+      </section>
+      {/* Share Buttons and Ratings */}
+      <div className="flex justify-between items-center mt-6">
+        {/* Share Buttons */}
+        <div className="flex space-x-2">
+          <button className="bg-blue-300 py-1 px-3 rounded hover:bg-blue-500">
+            Share
+          </button>
+          <button className="bg-gray-400  py-1 px-3 rounded hover:bg-gray-300">
+            Print
+          </button>
+        </div>
+
+        {/* Ratings and Reviews */}
+        <StarRating />
+      </div>
+    </div>
   );
 };
-export default RecipeDetails;
+
+export default RecipeDetailsPage;

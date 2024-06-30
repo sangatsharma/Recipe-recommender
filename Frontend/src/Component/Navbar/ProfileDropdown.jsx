@@ -8,13 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../context/ThemeContext";
 
 const ProfileDropdown = ({ isMobile }) => {
-  const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const { setIsAuthenticated, isAuthenticated,userInfo } = useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
 
   const navigate = useNavigate();
   //get current location path
   const location = useLocation().pathname;
-  const User = { Name: "Chef" };
+  
   const isActive = location === "/" || location === "/home";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -82,7 +82,7 @@ const ProfileDropdown = ({ isMobile }) => {
                         isDarkMode ? "text-gray-100" : "text-gray-500"
                       } `}
                     >
-                      {User.Name}
+                      {userInfo.name}
                     </span>
                   </>
                 ) : (

@@ -23,7 +23,6 @@ const LoginPage = () => {
     window.location.reload();
     toast.success("Login successful!");
   };
-
   const googleOauth = () => {
     window.location.href = `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };

@@ -1,5 +1,6 @@
 // PostCard.js
 import React from 'react';
+import StarRating from './StarRating';
 
 const PostCard = ({ darkMode }) => {
   return (
@@ -24,12 +25,7 @@ const PostCard = ({ darkMode }) => {
       </div>
       <img className="rounded-lg mb-4 w-full h-[500px] m-auto" src="https://handletheheat.com/wp-content/uploads/2020/10/BAKERY-STYLE-CHOCOLATE-CHIP-COOKIES-9-637x637-1.jpg" alt="Cookies" />
       <div className="flex justify-between text-sm text-gray-500">
-        {/* <div className="flex space-x-4">
-          <span>6.2k</span>
-          <span>1.2k</span>
-          <span>1.1k</span>
-          <span>1.2k</span>
-        </div> */}
+      <StarRating />
       </div>
     </div>
   );
