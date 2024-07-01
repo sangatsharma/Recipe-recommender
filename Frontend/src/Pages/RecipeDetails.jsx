@@ -118,9 +118,9 @@ const RecipeDetailsPage = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-2 pb-6 rounded-lg shadow-lg relative">
+    <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg relative">
       <div
-        className={`${isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"} p-6 below-sm:p-0 `}
+        className={`${isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"} p-6 below-sm:p-2 `}
         ref={saveAsPdfRef}
       >
         {/* Recipe Overview */}
@@ -157,11 +157,11 @@ const RecipeDetailsPage = () => {
 
         {/* WaterMark */}
         <div
-          className={`absolute  w-[90%] flex justify-center m-auto p-4 ${
+          className={`absolute  w-[95%] flex justify-center m-auto ${
             showWaterMark ? "opacity-10" : "opacity-0"
           } `}
         >
-          <img src={logo} className="h-[450px] w-[450px] " />
+          <img src={logo} className="h-[450px] w-[450px]" />
         </div>
         <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4 relative">
           {/* Ingredients */}
