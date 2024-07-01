@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import { fetchItemById } from "../utils/auth";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import InvalidPage from "../Component/InvalidPage";
@@ -9,6 +9,8 @@ import StarRating from "../Component/StarRating";
 import Slider from "../Component/Slider";
 import { useThemeContext } from "../context/ThemeContext";
 import logo from "../assets/Images/Logo_SVG.svg";
+import ShareDropdown from "../Component/ShareDropdown";
+import { TfiDownload } from "react-icons/tfi";
 
 const RecipeDetailsPage = () => {
   const { isDarkMode } = useThemeContext();
@@ -47,6 +49,7 @@ const RecipeDetailsPage = () => {
   };
 
   const { recipeName } = useParams();
+  console.log("Recipe Name:", recipeName);
 
   // Extract name and ID from the param
   const paramParts = recipeName.split("_") ?? null;
@@ -78,34 +81,19 @@ const RecipeDetailsPage = () => {
     fetchData();
   }, [id, itemName, recipeName]);
 
-  //  function to fetch item by ID from a database
-  const fetchItemById = async (RecipeId, RecipeName) => {
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/recipe/filter`,
-        {
-          name: RecipeName,
-          id: RecipeId,
-        },
-        { withCredentials: true }
-      );
-      if (response.data.success == false) return response.data;
-      return response.data.body[0];
-    } catch (error) {
-      console.error("Error fetching item:", error);
-      throw error;
-    }
-  };
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
   // if (error) return <p>Error: {error}</p>;
   if (!item) return <p>Loading...</p>;
   if (item.success === false) return <InvalidPage />;
+
   const regex = /"([^"]+)"/g;
   let matches;
   let imageUrls = [];
   let instructions = [];
   let RecipeIngredientParts = [];
+  let tags = [];
+
   // Loop through all matches
   while ((matches = regex.exec(item.Images)) !== null) {
     imageUrls.push(matches[1]);
@@ -116,11 +104,16 @@ const RecipeDetailsPage = () => {
   while ((matches = regex.exec(item.RecipeIngredientParts)) !== null) {
     RecipeIngredientParts.push(matches[1]);
   }
+  while ((matches = regex.exec(item.Keywords)) !== null) {
+    tags.push(matches[1]);
+  }
 
   return (
-    <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg relative">
+    <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
       <div
-        className={`${isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"} p-6 below-sm:p-2 `}
+        className={`${
+          isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
+        } p-6 below-sm:p-2  relative`}
         ref={saveAsPdfRef}
       >
         {/* Recipe Overview */}
@@ -164,6 +157,7 @@ const RecipeDetailsPage = () => {
           <img src={logo} className="h-[450px] w-[450px]" />
         </div>
         <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4 relative">
+
           {/* Ingredients */}
           <section className="mb-5">
             <h2 className="text-2xl font-semibold flex items-center">
@@ -224,22 +218,21 @@ const RecipeDetailsPage = () => {
       </div>
 
       {/* Share Buttons and Ratings */}
-      <div className="flex justify-between items-center pl-8 below-sm:p-2 ">
+      <div className="pl-8 below-sm:pl-8 ">
+        {/* Ratings and Reviews */}
+        <StarRating />
+
         {/* Share Buttons */}
-        <div className="flex space-x-2">
-          <button className="bg-blue-300 py-1 px-3 rounded hover:bg-blue-500">
-            Share
-          </button>
+        <div className="flex  items-center space-x-2 mt-4">
+          <ShareDropdown  url={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}` } title={item.Name} text={item.Description} image={imageUrls[0]}   hashtags={[...tags]} />
           <button
-            className="bg-gray-400  py-1 px-3 rounded hover:bg-gray-300"
+            className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700"
             onClick={handleDownloadPdf}
           >
             Download
+            <i className="fas fa-download pl-2"></i>
           </button>
         </div>
-
-        {/* Ratings and Reviews */}
-        <StarRating />
       </div>
     </div>
   );

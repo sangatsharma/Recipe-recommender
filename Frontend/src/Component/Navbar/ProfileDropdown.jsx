@@ -8,13 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../context/ThemeContext";
 
 const ProfileDropdown = ({ isMobile }) => {
-  const { setIsAuthenticated, isAuthenticated,userInfo } = useContext(AuthContext);
+  const { setIsAuthenticated, isAuthenticated, userInfo } =
+    useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
 
   const navigate = useNavigate();
   //get current location path
   const location = useLocation().pathname;
-  
+
   const isActive = location === "/" || location === "/home";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -260,37 +261,40 @@ const ProfileDropdown = ({ isMobile }) => {
         </Link>
       </button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+        <div className="relative">
           {/* Arrow */}
-          <div className="absolute top-0 right-2 w-5 h-5 z-0  transform rotate-45 bg-white border-t border-l border-white"></div>
-          <ul className="py-1 relative z-10">
-            <li>
-              <Link
-                to="/profile"
-                onClick={handleToggle}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                <i className="fas fa-user mr-2"></i> Profile
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/settings"
-                onClick={handleToggle}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                <i className="fas fa-cog mr-2"></i> Settings
-              </Link>
-            </li>
-            <li>
-              <Link
-                onClick={Logout}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-              >
-                <i className="fas fa-sign-out-alt mr-2"></i> Logout
-              </Link>
-            </li>
-          </ul>
+          <div className="absolute top-0 right-3.5 w-5 h-5 z-0  transform rotate-45 bg-white border-t border-l border-white"></div>
+          {/* Dropdown content */}
+          <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+            <ul className="py-1 relative z-10">
+              <li>
+                <Link
+                  to="/profile"
+                  onClick={handleToggle}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <i className="fas fa-user mr-2"></i> Profile
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/settings"
+                  onClick={handleToggle}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <i className="fas fa-cog mr-2"></i> Settings
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={Logout}
+                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <i className="fas fa-sign-out-alt mr-2"></i> Logout
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       )}
     </div>

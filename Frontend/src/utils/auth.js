@@ -11,6 +11,27 @@ export const checkCookieStatus = async () => {
     console.error(err);
   }
 };
+
+ //  function to fetch item by ID from a database,export to RecipeDetails Page
+ export const fetchItemById = async (RecipeId, RecipeName) => {
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_SERVER_URL}/recipe/filter`,
+      {
+        name: RecipeName,
+        id: RecipeId,
+      },
+      { withCredentials: true }
+    );
+    if (response.data.success == false) return response.data;
+    return response.data.body[0];
+  } catch (error) {
+    console.error("Error fetching item:", error);
+    throw error;
+  }
+};
+
+
 export const handleLogout = async () => {
   try {
     const response = await axios.post(
