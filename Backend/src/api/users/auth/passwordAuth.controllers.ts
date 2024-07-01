@@ -196,7 +196,6 @@ export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
   // res.cookie("auth_token", "", cookieRes);
 
   let cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; SameSite=None; Domain=.recipe-recommender-backend.vercel.app;";
-  cookieRes = cookieRes + `Demo=${res.locals.user.oauth}`;
   if (!(res.locals.user.oauth)) {
     cookieRes = cookieRes + "Partitioned;";
   }

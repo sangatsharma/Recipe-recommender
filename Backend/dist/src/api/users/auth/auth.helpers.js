@@ -17,7 +17,7 @@ const handleToken = (userData, res) => {
         id: userData.id,
         name: userData.name,
         email: userData.email,
-        ouath: userData.password === null,
+        oauth: userData.password === null,
     };
     // Sign token
     const token = jsonwebtoken_1.default.sign(jwtToken, config_1.SECRET);
@@ -26,8 +26,8 @@ const handleToken = (userData, res) => {
         sameSite: "none",
         maxAge: (1000 * 60 * 60 * 24 * 7),
         path: "/",
-        domain: ".recipe-recommender-backend.vercel.app",
-        partitioned: !(jwtToken.ouath),
+        // domain: ".recipe-recommender-backend.vercel.app",
+        partitioned: !(jwtToken.oauth),
     };
     // Set cookie
     res.cookie("auth_token", token, cookieRes);
