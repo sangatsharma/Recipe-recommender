@@ -38,7 +38,7 @@ function App() {
         { path: "/recipes", element: <PrivateRoute element={Recipes} /> },
         {
           path: "/recipes/:recipeName",
-          element: <PrivateRoute element={RecipeDetails} />,
+          element: <RecipeDetails />,
         },
         { path: "/search", element: <Search /> },
         { path: "/contact", element: <PrivateRoute element={Contact} /> },
