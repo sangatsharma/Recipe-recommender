@@ -8,12 +8,13 @@ import React from "react";
 import StarRating from "../Component/StarRating";
 import Slider from "../Component/Slider";
 import { useThemeContext } from "../context/ThemeContext";
+import logo from "../assets/Images/Logo_SVG.svg";
 
 const RecipeDetailsPage = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
 
-  const handleDownloadPdf = () => {
+  const DownloadPdf = () => {
     const input = saveAsPdfRef.current;
     html2canvas(input, {
       scale: 1.5, // Higher scale for better resolution
@@ -23,6 +24,7 @@ const RecipeDetailsPage = () => {
       .then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF({
+          scale: 1.5, // Higher scale for better resolution
           orientation: "portrait",
           putOnlyUsedFonts: true,
           compress: false,
@@ -36,6 +38,13 @@ const RecipeDetailsPage = () => {
         console.error("Error generating PDF:", error);
       });
   };
+  const handleDownloadPdf = () => {
+    setShowWaterMark(true);
+    setTimeout(() => {
+      DownloadPdf();
+      setShowWaterMark(false);
+    }, 1000);
+  };
 
   const { recipeName } = useParams();
 
@@ -47,6 +56,7 @@ const RecipeDetailsPage = () => {
   const itemName = paramParts.join(" ") ?? null;
 
   const [item, setItem] = useState(null);
+  const [showWaterMark, setShowWaterMark] = useState(false);
 
   useEffect(() => {
     //Check if id and name is available in the URL
@@ -108,12 +118,11 @@ const RecipeDetailsPage = () => {
   }
 
   return (
-    <div
-      className={`max-w-4xl mx-auto p-2 pb-6 rounded-lg shadow-lg ${
-        isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
-      } `}
-    >
-      <div ref={saveAsPdfRef} className="p-2 ">
+    <div className="max-w-4xl mx-auto p-2 pb-6 rounded-lg shadow-lg relative">
+      <div
+        className={`${isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"} p-6 below-sm:p-0 `}
+        ref={saveAsPdfRef}
+      >
         {/* Recipe Overview */}
         <section className="mb-8">
           <h1 className="text-4xl  below-sm:text-2xl font-bold flex items-center">
@@ -127,7 +136,7 @@ const RecipeDetailsPage = () => {
             Date Published: {new Date(item.DatePublished).toLocaleString()}
           </p>
         </section>
-        <div className="flex flex-row  flex-wrap gap-2 pl-4 below-sm:pl-0 ">
+        <div className="m-auto">
           <Slider images={imageUrls} interval={3500} />
         </div>
 
@@ -145,7 +154,16 @@ const RecipeDetailsPage = () => {
             <p className="mt-1 pl-8">Total Time:{item.TotalTime} minutes</p>
           </div>
         </section>
-        <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4">
+
+        {/* WaterMark */}
+        <div
+          className={`absolute  w-[90%] flex justify-center m-auto p-4 ${
+            showWaterMark ? "opacity-10" : "opacity-0"
+          } `}
+        >
+          <img src={logo} className="h-[450px] w-[450px] " />
+        </div>
+        <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4 relative">
           {/* Ingredients */}
           <section className="mb-5">
             <h2 className="text-2xl font-semibold flex items-center">
@@ -204,8 +222,9 @@ const RecipeDetailsPage = () => {
           </ol>
         </section>
       </div>
+
       {/* Share Buttons and Ratings */}
-      <div className="flex justify-between items-center mt-6">
+      <div className="flex justify-between items-center pl-8 below-sm:p-2 ">
         {/* Share Buttons */}
         <div className="flex space-x-2">
           <button className="bg-blue-300 py-1 px-3 rounded hover:bg-blue-500">
