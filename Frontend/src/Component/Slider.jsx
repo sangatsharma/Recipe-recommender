@@ -10,7 +10,7 @@ const Slider = ({ images, interval = 4000 }) => {
 
     return () => clearInterval(slideInterval);
   }, [images.length, interval]);
-
+if(images.length === 0) return null;
   return (
     <div className="relative w-full h-96 overflow-hidden rounded-md">
       {images.map((image, index) => (
