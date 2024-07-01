@@ -17,7 +17,7 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 		id: userData.id,
 		name: userData.name,
 		email: userData.email,
-		ouath: userData.password === null,
+		oauth: userData.password === null,
 	};
 
 	// Sign token
@@ -28,8 +28,8 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 		sameSite: "none",
 		maxAge: (1000 * 60 * 60 * 24 * 7),
 		path: "/",
-		domain: ".recipe-recommender-backend.vercel.app",
-		partitioned: !(jwtToken.ouath),
+		// domain: ".recipe-recommender-backend.vercel.app",
+		partitioned: !(jwtToken.oauth),
 	} as CookieOptions;
 
 	// Set cookie
