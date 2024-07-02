@@ -2,13 +2,18 @@ import React, { useContext, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import PreferencesForm from "./PreferencesForm";
-import { formatDate } from "../../utils/dateFormat";
+
 import { AuthContext } from "../../context/AuthContext";
+import ImageCropper from "../../Component/ImageCropper";
 
 const EditProfile = ({ darkMode }) => {
   const { userInfo, loading } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
-  
+  const [profilePic, setProfilePic] = useState(
+    userInfo.profile_pic ||
+      "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+  );
+
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
@@ -45,42 +50,11 @@ const EditProfile = ({ darkMode }) => {
       {/*left side*/}
       <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
         <div className="flex flex-col items-center  p-4 ">
-          <div className="relative flex justify-center align-middle m-auto">
-            <img
-              src={userInfo.profile_pic || "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"}
-              alt="User Avatar"
-              className="rounded-full size-32 mb-2 border-1 border-gray-400 "
-              
-            />
-            {userInfo.verified ? (
-              <div
-                className="absolute top-1 right-3 w-6 h-6
-              rounded-full border-2 border-white bg-blue-500 m-auto flex justify-center items-center p-2"
-              >
-                <i className={`fas fa-check text-white`}></i>
-              </div>
-            ) : null}
-          </div>
-          <div className="text-center">
-          <strong className="text-[18px]">{userInfo.name}</strong>
-          <p className="mb-2 text-gray-400">
-            @{userInfo.name.split(" ")[0] + userInfo.id}
-          </p>
-          </div>
-
-          <button className="py-2 px-4 bg-orange-500 text-white rounded">
-            Upload New Photo
-          </button>
-          <p className="text-sm mt-4 text-center p-2 rounded-xl bg-[#dde0e296]">
-            Upload a new avatar. Larger image will be resized automatically.
-            <br />
-            <br />
-            Maximum upload size is <strong>1 MB.</strong>
-          </p>
-          <p className="text-sm mt-2 text-center">
-            Member Since:{" "}
-            <strong>{formatDate(new Date(userInfo.joinedOn))}</strong>
-          </p>
+          <ImageCropper
+            userInfo={userInfo}
+            profilePic={profilePic}
+            setProfilePic={setProfilePic}
+          />
         </div>
       </div>
 
