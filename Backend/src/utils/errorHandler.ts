@@ -5,6 +5,9 @@ export const errorHandler = (err: Error, _: Request, res: Response, __: NextFunc
   let message = "Unknown Error";
   console.log(err);
 
+  if (err.message === "No recipients defined") {
+    message = "Invalid email format";
+  }
   // TODO: Error message based on DB ERROR
   if (err.name === "CastError") {
     message = "Malformatted Id";

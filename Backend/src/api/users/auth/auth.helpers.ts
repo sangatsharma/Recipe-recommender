@@ -43,6 +43,7 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
 			"email": userData.email,
 			"followers": userData.followers,
 			"following": userData.following,
+			"profile_pic": userData.profile_pic,
 		}
 	});
 };
@@ -119,7 +120,7 @@ export const emailVerifyer = async (jwtQuery: string) => {
 
 // SEND VERIFICATION EMAIL
 export const verifyMailSender = async (email: string, operation: string, newPassword?: string) => {
-
+	console.log(email);
 	// If email is valid
 	if (email !== "") {
 

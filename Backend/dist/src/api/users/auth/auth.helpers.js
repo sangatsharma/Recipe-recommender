@@ -39,6 +39,7 @@ const handleToken = (userData, res) => {
             "email": userData.email,
             "followers": userData.followers,
             "following": userData.following,
+            "profile_pic": userData.profile_pic,
         }
     });
 };
@@ -99,6 +100,7 @@ const emailVerifyer = async (jwtQuery) => {
 exports.emailVerifyer = emailVerifyer;
 // SEND VERIFICATION EMAIL
 const verifyMailSender = async (email, operation, newPassword) => {
+    console.log(email);
     // If email is valid
     if (email !== "") {
         // Create payload with type of operation

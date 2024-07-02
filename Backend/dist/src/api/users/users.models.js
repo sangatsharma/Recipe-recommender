@@ -10,6 +10,7 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     name: (0, pg_core_1.text)("name").notNull(),
     email: (0, pg_core_1.text)("email").notNull().unique(),
     password: (0, pg_core_1.text)("password"),
+    profile_pic: (0, pg_core_1.text)("profile_pic"),
     verified: (0, pg_core_1.integer)("verified").notNull().default(0),
     joinedOn: (0, pg_core_1.timestamp)("joinedOn", {
         withTimezone: true
