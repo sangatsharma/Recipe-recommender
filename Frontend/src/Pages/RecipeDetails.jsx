@@ -9,7 +9,7 @@ import StarRating from "../Component/StarRating";
 import Slider from "../Component/Slider";
 import { useThemeContext } from "../context/ThemeContext";
 import logo from "../assets/Images/logoOrange.png";
-import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import {FaSquareXTwitter} from "react-icons/fa6";
 const RecipeDetails = () => {
@@ -161,7 +161,7 @@ const RecipeDetails = () => {
           name="twitter:description"
           content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
         />
-        <meta name="twitter:image" content={"https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"} />
+        <meta name="twitter:image" content={imageUrls[0]} />
       </Helmet>
       <div
         className={`${
