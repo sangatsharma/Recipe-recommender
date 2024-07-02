@@ -16,9 +16,12 @@ const passwordAuth_controllers_1 = require("./auth/passwordAuth.controllers");
 const googleAuth_controllers_1 = require("./auth/googleAuth.controllers");
 const users_controllers_1 = require("./users.controllers");
 const middleware_1 = require("../../utils/middleware");
+const multer_1 = __importDefault(require("multer"));
 const userRouter = express_1.default.Router();
+const storage = multer_1.default.memoryStorage();
+const upload = (0, multer_1.default)({ storage: storage });
 // AUTH
-userRouter.post("/auth/register", passwordAuth_controllers_1.userRegisterHandler);
+userRouter.post("/auth/register", upload.single("profile_pic"), passwordAuth_controllers_1.userRegisterHandler);
 userRouter.post("/auth/login", passwordAuth_controllers_1.userLoginHandler);
 userRouter.get("/auth/oauth", googleAuth_controllers_1.oAuthHandler);
 userRouter.get("/auth/osuccess", googleAuth_controllers_1.oAuth2Server);

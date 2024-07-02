@@ -42,6 +42,10 @@ const GOOGLE_TOKEN_INFO_URL: string = process.env.GOOGLE_TOKEN_INFO_UR as string
 const EMAIL_APP_PASS: string = process.env.EMAIL_APP_PASS as string;
 const EMAIL_ACCOUNT: string = process.env.EMAIL_ACCOUNT as string;
 
+const CLOUDINARY_CLOUD_NAME:string = process.env.CLOUDINARY_CLOUD_NAME as string;
+const CLOUDINARY_API_KEY:string = process.env.CLOUDINARY_API_KEY as string;
+const CLOUDINARY_API_SECRET:string = process.env.CLOUDINARY_API_SECRET as string;
+
 export {
   PORT,
   ENV,
@@ -60,4 +64,7 @@ export {
   GOOGLE_TOKEN_INFO_URL,
   EMAIL_APP_PASS,
   EMAIL_ACCOUNT,
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET
 };

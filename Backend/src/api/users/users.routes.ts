@@ -13,10 +13,15 @@ import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
 import { favouriteRecipeHandler, followUser, recipeFavouriteGetHandler, tmpDemo, userInfoHandler, validateToken } from "./users.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
+import multer from "multer";
+
 const userRouter = express.Router();
 
+const storage= multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 // AUTH
-userRouter.post("/auth/register", userRegisterHandler as RequestHandler);
+userRouter.post("/auth/register", upload.single("profile_pic"), userRegisterHandler as RequestHandler);
 userRouter.post("/auth/login", userLoginHandler as RequestHandler);
 userRouter.get("/auth/oauth", oAuthHandler as RequestHandler);
 userRouter.get("/auth/osuccess", oAuth2Server as RequestHandler);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EMAIL_ACCOUNT = exports.EMAIL_APP_PASS = exports.GOOGLE_TOKEN_INFO_URL = exports.GOOGLE_ACCESS_TOKEN_URL = exports.GOOGLE_OAUTH_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.DB_URL = exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.ENV = exports.PORT = void 0;
+exports.CLOUDINARY_API_SECRET = exports.CLOUDINARY_API_KEY = exports.CLOUDINARY_CLOUD_NAME = exports.EMAIL_ACCOUNT = exports.EMAIL_APP_PASS = exports.GOOGLE_TOKEN_INFO_URL = exports.GOOGLE_ACCESS_TOKEN_URL = exports.GOOGLE_OAUTH_URL = exports.GOOGLE_CLIENT_SECRET = exports.GOOGLE_CLIENT_ID = exports.DB_URL = exports.ENDPOINT_ID = exports.SECRET = exports.DB_PASSWORD = exports.DB_USERNAME = exports.DB_DATABASE = exports.DB_PORT = exports.DB_HOST = exports.ENV = exports.PORT = void 0;
 require("dotenv/config");
 const PORT = process.env.PORT;
 exports.PORT = PORT;
@@ -50,3 +50,9 @@ const EMAIL_APP_PASS = process.env.EMAIL_APP_PASS;
 exports.EMAIL_APP_PASS = EMAIL_APP_PASS;
 const EMAIL_ACCOUNT = process.env.EMAIL_ACCOUNT;
 exports.EMAIL_ACCOUNT = EMAIL_ACCOUNT;
+const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME;
+exports.CLOUDINARY_CLOUD_NAME = CLOUDINARY_CLOUD_NAME;
+const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY;
+exports.CLOUDINARY_API_KEY = CLOUDINARY_API_KEY;
+const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET;
+exports.CLOUDINARY_API_SECRET = CLOUDINARY_API_SECRET;

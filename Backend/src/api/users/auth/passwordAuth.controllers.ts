@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction, CookieOptions } from "express";
+import { Request, Response, NextFunction } from "express";
 import { emailVerifyer, handleToken, userRegisterHelper, verifyMailSender } from "./auth.helpers";
 import { JsonResponse, LoginForm, RegisterForm, UserDataDB } from "../users.types";
 import { userExists } from "./auth.helpers";
 import bcrypt from "bcrypt";
+import { handleUpload } from "@/utils/cloudinary";
 
 export const userRegisterHandler = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -28,8 +29,12 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
 
   try {
     // Register user
-    const userData = await userRegisterHelper(cleanedBody);
 
+    const b64 = Buffer.from(req.file?.buffer as Buffer).toString("base64");
+    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    const cldRes = await handleUpload(dataURI);
+    console.log(cldRes);
+    const userData = await userRegisterHelper(cleanedBody);
     // Generate token
     const userRes: JsonResponse = handleToken(userData.body, res);
     await verifyMailSender(userRes.body.email as string, "verifyAccount");
