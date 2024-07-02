@@ -290,7 +290,7 @@ const RecipeDetails = () => {
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center hover:bg-gray-100"
+              className="flex items-center hover:bg-gray-600"
               aria-label="Share on Facebook"
             >
               <FaFacebook className="pl-2 text-blue-500" size={30} />
