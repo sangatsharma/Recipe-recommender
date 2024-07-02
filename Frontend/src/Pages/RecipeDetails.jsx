@@ -8,30 +8,29 @@ import React from "react";
 import StarRating from "../Component/StarRating";
 import Slider from "../Component/Slider";
 import { useThemeContext } from "../context/ThemeContext";
-import logo from "../assets/Images/Logo_SVG.svg";
-import ShareDropdown from "../Component/ShareDropdown";
-import { TfiDownload } from "react-icons/tfi";
-
-const RecipeDetailsPage = () => {
+import logo from "../assets/Images/logoOrange.png";
+import { Helmet } from "react-helmet";
+import { FaFacebook, FaWhatsapp } from "react-icons/fa";
+import {FaSquareXTwitter} from "react-icons/fa6";
+const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
 
   const DownloadPdf = () => {
     const input = saveAsPdfRef.current;
     html2canvas(input, {
-      scale: 1.5, // Higher scale for better resolution
+      scale: 2, // Higher scale for better resolution
       useCORS: true, // Enable cross-origin images
-      logging: true, // Enable logging for debugging
     })
       .then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const pdf = new jsPDF({
-          scale: 1.5, // Higher scale for better resolution
           orientation: "portrait",
           putOnlyUsedFonts: true,
           compress: false,
+          floatPrecision: 1,
           unit: "px",
-          format: [canvas.width, canvas.height], // Use canvas dimensions
+          format: [canvas.width + 5, canvas.height + 5], // Use canvas dimensions
         });
         pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
         pdf.save(`${item.Name}.pdf`);
@@ -107,9 +106,63 @@ const RecipeDetailsPage = () => {
   while ((matches = regex.exec(item.Keywords)) !== null) {
     tags.push(matches[1]);
   }
+  // share using native share
+  const handleNativeShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: `Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`,
+          text: `A very tasty recipe: ${item.Name} from Cook It Yourself.`,
+          url: `https://recipe-recommender-five.vercel.app/recipes/${recipeName}`,
+        })
+        .then(() => console.log("Successfully shared"))
+        .catch((error) => console.error("Error sharing:", error));
+    } else {
+      alert("Web Share API is not supported in your browser.");
+    }
+  };
+  const encodedUrl = encodeURIComponent(
+    `https://recipe-recommender-five.vercel.app/recipes/${recipeName}`
+  );
+  const encodedText = encodeURIComponent(
+    `Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`
+  );
+  const encodedHashtags = encodeURIComponent(
+    "cookityourself,tastyrecipe,healthyfood,cooking"
+  );
 
   return (
     <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
+      {/* Open Graph tags */}
+      <Helmet>
+        <title>{item.Name} | Cook It Yourself</title>
+        <meta
+          property="og:title"
+          content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
+        />
+        <meta
+          property="og:description"
+          content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
+        />
+        <meta property="og:image" content={imageUrls[0]} />
+        <meta
+          property="og:url"
+          content={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}`}
+        />
+        <meta property="og:type" content="article" />
+
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
+        />
+        <meta
+          name="twitter:description"
+          content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
+        />
+        <meta name="twitter:image" content={imageUrls[0]} />
+      </Helmet>
       <div
         className={`${
           isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
@@ -150,14 +203,13 @@ const RecipeDetailsPage = () => {
 
         {/* WaterMark */}
         <div
-          className={`absolute  w-[95%] flex justify-center m-auto ${
+          className={`absolute  w-[95%] flex justify-center items-center m-auto ${
             showWaterMark ? "opacity-10" : "opacity-0"
           } `}
         >
           <img src={logo} className="h-[450px] w-[450px]" />
         </div>
         <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4 relative">
-
           {/* Ingredients */}
           <section className="mb-5">
             <h2 className="text-2xl font-semibold flex items-center">
@@ -200,42 +252,83 @@ const RecipeDetailsPage = () => {
         </div>
 
         {/* Instructions */}
-        <section className="mb-4">
+        <div className="mb-4">
           <h2 className="text-2xl  font-semibold flex items-center">
             <span role="img" aria-label="clipboard">
               📋
             </span>
             Cooking Guidelines:
           </h2>
-          <ol className="list-decimal mt-1 list-outside pl-10 leading-6  space-y-1">
+          <ol className="list-decimal mt-1 list-outside  pl-10 ">
             {instructions.map((instruction, index) => (
-              <li key={index} className="">
+              <li key={index} className="leading-5 mt-1 ">
                 {instruction}
               </li>
             ))}
           </ol>
-        </section>
+        </div>
       </div>
 
       {/* Share Buttons and Ratings */}
-      <div className="pl-8 below-sm:pl-8 ">
-        {/* Ratings and Reviews */}
-        <StarRating />
-
-        {/* Share Buttons */}
-        <div className="flex  items-center space-x-2 mt-4">
-          <ShareDropdown  url={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}` } title={item.Name} text={item.Description} image={imageUrls[0]}   hashtags={[...tags]} />
-          <button
-            className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700"
-            onClick={handleDownloadPdf}
-          >
-            Download
-            <i className="fas fa-download pl-2"></i>
-          </button>
+      <div className="px-8 flex-col gap-3 justify-between below-sm:pl-8 ">
+        <div className="items-center space-x-2 mb-4">
+          <StarRating />
+        </div>
+        <div className="flex flex-wrap gap-8 justify-between">
+          <div className="mt-2  flex flex-row gap-1" >
+            {/* Native Share */}
+            <button
+              className=" bg-blue-500 py-2 px-3  rounded  hover:bg-blue-700"
+              aria-label="Share via Native Share"
+              onClick={handleNativeShare}
+            >
+              Share
+              <i className="fas fa-share pl-2"></i>
+            </button>
+            {/* Facebook */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center hover:bg-gray-100"
+              aria-label="Share on Facebook"
+            >
+              <FaFacebook className="pl-2 text-blue-500" size={30} />
+            </a>
+            {/* Twitter */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}&hashtags=${encodedHashtags}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center  hover:bg-gray-100"
+              aria-label="Share on Twitter"
+            >
+              <FaSquareXTwitter  className="pl-2" size={30} />
+            </a>
+            {/* WhatsApp */}
+            <a
+              href={`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center  hover:bg-gray-100"
+              aria-label="Share on WhatsApp"
+            >
+              <FaWhatsapp className="pl-2 text-[#4ac958]" size={30}/>
+            </a>
+          </div>
+          <div>
+            <button
+              className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700"
+              onClick={handleDownloadPdf}
+            >
+              Download
+              <i className="fas fa-download pl-2"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default RecipeDetailsPage;
+export default RecipeDetails;
