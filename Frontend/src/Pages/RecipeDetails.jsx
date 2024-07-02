@@ -270,47 +270,47 @@ const RecipeDetails = () => {
       </div>
 
       {/* Share Buttons and Ratings */}
-      <div className="px-8 flex-col gap-3 justify-between below-sm:pl-8 ">
+      <div className="px-8 flex-col gap-2 justify-between below-sm:pl-8 ">
         <div className="items-center space-x-2 mb-4">
           <StarRating />
         </div>
         <div className="flex flex-wrap gap-8 justify-between">
-          <div className="mt-2  flex flex-row gap-1" >
+          <div className="mt-2  flex flex-row gap-3" >
             {/* Native Share */}
             <button
-              className=" bg-blue-500 py-2 px-3  rounded  hover:bg-blue-700"
+              className=" bg-blue-500 py-2 px-3  rounded  hover:bg-blue-700 hover:text-white"
               aria-label="Share via Native Share"
               onClick={handleNativeShare}
             >
               Share
-              <i className="fas fa-share pl-2"></i>
+              <i className="fas fa-share "></i>
             </button>
             {/* Facebook */}
             <a
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center hover:bg-gray-600"
+              className="flex items-center hover:border-blue-500 hover:border-b-2 rounded "
               aria-label="Share on Facebook"
             >
-              <FaFacebook className="pl-2 text-blue-500" size={30} />
+              <FaFacebook className=" text-blue-500" size={30} />
             </a>
             {/* Twitter */}
             <a
               href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}&hashtags=${encodedHashtags}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center  hover:bg-gray-100"
+              className="flex items-center   hover:border-gray-500 hover:border-b-2 rounded "
               aria-label="Share on Twitter"
             >
-              <FaSquareXTwitter  className="pl-2" size={30} />
+              <FaSquareXTwitter   size={30} />
             </a>
             {/* WhatsApp */}
             <a
               href={`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center  hover:bg-gray-100"
+              className="flex items-center   hover:border-[#4ac958] hover:border-b-2 rounded"
               aria-label="Share on WhatsApp"
             >
               <FaWhatsapp className="pl-2 text-[#4ac958]" size={30}/>
@@ -318,7 +318,7 @@ const RecipeDetails = () => {
           </div>
           <div>
             <button
-              className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700"
+              className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700  hover:text-white"
               onClick={handleDownloadPdf}
             >
               Download
