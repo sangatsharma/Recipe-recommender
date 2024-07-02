@@ -83,7 +83,7 @@ const RecipeDetails = () => {
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
   // if (error) return <p>Error: {error}</p>;
-  if (!item) return <p>Loading...</p>;
+  // if (!item) return <p>Loading...</p>;
   if (item.success === false) return <InvalidPage />;
 
   const regex = /"([^"]+)"/g;
