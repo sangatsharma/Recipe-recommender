@@ -144,7 +144,7 @@ const RecipeDetails = () => {
           property="og:description"
           content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
         />
-        <meta property="og:image" content={imageUrls[0]} />
+        <meta property="og:image" content={"https://as1.ftcdn.net/v2/jpg/02/48/92/96/1000_F_248929619_JkVBYroM1rSrshWJemrcjriggudHMUhV.jpg"} />
         <meta
           property="og:url"
           content={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}`}
