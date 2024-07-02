@@ -111,8 +111,8 @@ const RecipeDetails = () => {
     if (navigator.share) {
       navigator
         .share({
-          title: `Checkout this amazing recipe: ${itemName} from Cook It Yourself.`,
-          text: `A very tasty recipe: ${itemName} from Cook It Yourself.`,
+          title: `Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`,
+          text: `A very tasty recipe: ${item.Name} from Cook It Yourself.`,
           url: `https://recipe-recommender-five.vercel.app/recipes/${recipeName}`,
         })
         .then(() => console.log("Successfully shared"))
@@ -135,21 +135,20 @@ const RecipeDetails = () => {
     <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
       {/* Open Graph tags */}
       <Helmet>
+        <title>CIY-{item.Name}</title>
+        
         <meta
           property="og:title"
-          content={`Checkout this amazing recipe from Cook It Yourself.`}
+          content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
         />
         <meta
           property="og:description"
-          content="A tasty recipe from Cook It Yourself"
+          content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
         />
-        <meta
-          property="og:image"
-          content="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"
-        />
+        <meta property="og:image" content={imageUrls[0]} />
         <meta
           property="og:url"
-          content="https://recipe-recommender-five.vercel.app/recipes"
+          content={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}`}
         />
         <meta property="og:type" content="article" />
 
@@ -157,19 +156,13 @@ const RecipeDetails = () => {
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content={`Checkout this amazing recipe: ${itemName}, from Cook It Yourself.`}
+          content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
         />
         <meta
           name="twitter:description"
-          content={`Checkout this amazing recipe: ${itemName}, from Cook It Yourself.`}
+          content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
         />
-        <meta
-          name="twitter:image"
-          content={
-            imageUrls[0] ||
-            "https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"
-          }
-        />
+        <meta name="twitter:image" content={imageUrls[0]} />
       </Helmet>
 
       <div

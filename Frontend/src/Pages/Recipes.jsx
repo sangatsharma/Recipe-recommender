@@ -1,6 +1,9 @@
+import { Helmet } from "react-helmet";
 const Recipes=(props)=>{
     return(
-        <div>
+        <div> <Helmet>
+        <title>Recipes - CIY </title>
+        </Helmet>
             <h1>Recipes</h1>
         </div>
     )

@@ -1,4 +1,11 @@
+
+import { Helmet } from "react-helmet";
 const Settings = () => {
-    return <div>Settings</div>;
+    return(<>
+      <Helmet>
+  <title>User Settings - CIY </title>
+  </Helmet>
+     <div>Settings</div>
+    </>)
   };
   export default Settings;

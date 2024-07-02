@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard.jsx";
 import { useFavContext } from "../context/FavContext.jsx";
 import axios from "axios";
+import { Helmet } from "react-helmet";
+
 const BookmarkRecipes = () => {
   const { tickedItems, toggleTick } = useFavContext();
   const [Save, setSave] = useState([]);
@@ -43,6 +45,9 @@ const BookmarkRecipes = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+        <Helmet>
+  <title>Favorites Recipes - CIY </title>
+  </Helmet>
       <h1 className="text-3xl font-bold text-center mb-8">
         My Favorite Recipes
       </h1>

@@ -2,6 +2,7 @@ import React from "react";
 import ContactForm from "../Component/ContactForm";
 import { useThemeContext } from "../context/ThemeContext";
 import Weather from "./Weather";
+import { Helmet } from "react-helmet";
 
 const Contact = () => {
   const { isDarkMode } = useThemeContext();
@@ -17,6 +18,9 @@ const Contact = () => {
 
   return (
     <div className="w-auto p-4 flex flex-row  justify-center mt-2 gap-4  below-sm:flex-col-reverse">
+         <Helmet>
+         <title>Contact - CIY </title>
+         </Helmet>
       <div
         className={`w-1/2  below-sm:w-[100%] ${
           isDarkMode ? "bg-gray-800" : "bg-gray-50"

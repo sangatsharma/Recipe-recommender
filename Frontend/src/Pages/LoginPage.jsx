@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Helmet } from "react-helmet";
 
 const LoginPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
@@ -60,6 +61,9 @@ const LoginPage = () => {
   });
   return (
     <div className="bg-white shadow-lg rounded-lg flex flex-row flex-wrap overflow-hidden mt-[20px] below-sm:flex-col below-sm:w-[95%] w-[400px]">
+           <Helmet>
+         <title>Login - CIY </title>
+         </Helmet>
       <div className="below-sm:w-[100%] p-10 bg-slate-200 w-[100%]">
         {/* <img className="h-12 " src={logo} /> */}
         <p className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg py-4 ">
