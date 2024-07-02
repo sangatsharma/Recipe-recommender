@@ -135,7 +135,7 @@ const RecipeDetails = () => {
     <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
       {/* Open Graph tags */}
       <Helmet>
-        <title>{item.Name} | Cook It Yourself</title>
+        {/* <title>{item.Name} | Cook It Yourself</title> */}
         <meta
           property="og:title"
           content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
