@@ -9,9 +9,9 @@ import StarRating from "../Component/StarRating";
 import Slider from "../Component/Slider";
 import { useThemeContext } from "../context/ThemeContext";
 import logo from "../assets/Images/logoOrange.png";
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from "react-helmet-async";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
-import {FaSquareXTwitter} from "react-icons/fa6";
+import { FaSquareXTwitter } from "react-icons/fa6";
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
@@ -163,6 +163,7 @@ const RecipeDetails = () => {
         />
         <meta name="twitter:image" content={imageUrls[0]} />
       </Helmet>
+
       <div
         className={`${
           isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
@@ -275,7 +276,7 @@ const RecipeDetails = () => {
           <StarRating />
         </div>
         <div className="flex flex-wrap gap-8 justify-between">
-          <div className="mt-2  flex flex-row gap-3" >
+          <div className="mt-2  flex flex-row gap-3">
             {/* Native Share */}
             <button
               className=" bg-blue-500 py-2 px-3  rounded  hover:bg-blue-700 hover:text-white"
@@ -303,7 +304,7 @@ const RecipeDetails = () => {
               className="flex items-center   hover:border-gray-500 hover:border-b-2 rounded "
               aria-label="Share on Twitter"
             >
-              <FaSquareXTwitter   size={30} />
+              <FaSquareXTwitter size={30} />
             </a>
             {/* WhatsApp */}
             <a
@@ -313,7 +314,7 @@ const RecipeDetails = () => {
               className="flex items-center   hover:border-[#4ac958] hover:border-b-2 rounded"
               aria-label="Share on WhatsApp"
             >
-              <FaWhatsapp className="pl-2 text-[#4ac958]" size={30}/>
+              <FaWhatsapp className="pl-2 text-[#4ac958]" size={30} />
             </a>
           </div>
           <div>
