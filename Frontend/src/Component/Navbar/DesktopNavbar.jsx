@@ -56,7 +56,7 @@ const DesktopNavbar = () => {
       }`}
     >
       <Link to="/">
-        <div className="LogoWrapper">
+        <div className="LogoWrapper ">
           <img loading="lazy" src={logo} alt="Logo" />
           <p className="BrandName">Cook It Yourself</p>
         </div>

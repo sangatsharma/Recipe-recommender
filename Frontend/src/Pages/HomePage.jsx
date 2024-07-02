@@ -3,7 +3,7 @@ import TrendingFoods from "../Component/Homepage/TrendingFoodSection/TrendingFoo
 import banner1 from '../assets/Images/banner1.jpg';
 import banner2 from '../assets/Images/banner2.jpg';
 import banner3 from '../assets/Images/banner3.jpg';
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Homepage = () => {
   <Helmet>

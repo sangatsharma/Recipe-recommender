@@ -7,6 +7,7 @@ const Weather = () => {
   const [data, setData] = useState([]);
   const [weatherData, setWeatherData] = useState([]);
   const [loading, setLoading] = useState(true);
+  
   const [error, setError] = useState(null);
 
   useEffect(() => {

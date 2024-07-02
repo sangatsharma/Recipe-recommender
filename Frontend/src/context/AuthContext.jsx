@@ -14,6 +14,7 @@ const AuthProvider = ({ children }) => {
         const data = await checkCookieStatus();
         if (data && data.success) {
           setIsAuthenticated(true);
+          console.log(data);
           setUserInfo(data.body);
         } else {
           setIsAuthenticated(false);

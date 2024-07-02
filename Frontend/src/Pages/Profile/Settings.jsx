@@ -1,11 +1,15 @@
-
-import { Helmet } from "react-helmet";
+import EditProfile from "./EditProfile";
+import { useThemeContext } from "../../context/ThemeContext";
+import { Helmet } from "react-helmet-async";
 const Settings = () => {
-    return(<>
+  const { isDarkMode } = useThemeContext();
+  return (
+    <>
       <Helmet>
-  <title>User Settings - CIY </title>
-  </Helmet>
-     <div>Settings</div>
-    </>)
-  };
-  export default Settings;
+        <title>User Settings - CIY </title>
+      </Helmet>
+      <EditProfile darkMode={isDarkMode} />
+    </>
+  );
+};
+export default Settings;

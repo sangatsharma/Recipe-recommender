@@ -1,18 +1,16 @@
-import EditProfile from "./EditProfile";
 import {useThemeContext} from "../../context/ThemeContext";
-import {AuthContext} from "../../context/AuthContext";
-import { useContext } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Profile = () => {
-  const { userInfo } = useContext(AuthContext);
+
   const { isDarkMode } = useThemeContext();
   return (
   <>
     <Helmet>
   <title>Profile - CIY </title>
   </Helmet>
-  <EditProfile darkMode={isDarkMode}/>
+  <h1>Profile</h1>
+  
   </>);
 };
 export default Profile;

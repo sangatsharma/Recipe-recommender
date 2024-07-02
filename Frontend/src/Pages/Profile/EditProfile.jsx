@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/AuthContext";
 const EditProfile = ({ darkMode }) => {
   const { userInfo, loading } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
+  
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
@@ -44,11 +45,12 @@ const EditProfile = ({ darkMode }) => {
       {/*left side*/}
       <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
         <div className="flex flex-col items-center  p-4 ">
-          <div className="relative inline-block">
+          <div className="relative flex justify-center align-middle m-auto">
             <img
-              src="https://scontent.fpkr1-1.fna.fbcdn.net/v/t1.6435-1/123108473_1042706159510253_7233714013747441365_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=e4545e&_nc_ohc=GOlSoW344NAQ7kNvgG4LM0I&_nc_ht=scontent.fpkr1-1.fna&oh=00_AYC-bhW3uhMxbDO0iW6emfcaf-G8WxOzHxq1BwrCVB08Ew&oe=66A47335"
+              src={userInfo.profile_pic || "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"}
               alt="User Avatar"
-              className="rounded-full size-32 mb-2 border-1 border-gray-400"
+              className="rounded-full size-32 mb-2 border-1 border-gray-400 "
+              
             />
             {userInfo.verified ? (
               <div

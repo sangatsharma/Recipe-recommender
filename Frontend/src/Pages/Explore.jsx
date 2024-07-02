@@ -1,6 +1,6 @@
 import PostCard from "../Component/PostCard";
 import { useThemeContext } from "../context/ThemeContext";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Explore = (props) => {
   const { isDarkMode } = useThemeContext();

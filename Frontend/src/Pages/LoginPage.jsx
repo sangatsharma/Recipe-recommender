@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const LoginPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);

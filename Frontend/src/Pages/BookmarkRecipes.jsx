@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard.jsx";
 import { useFavContext } from "../context/FavContext.jsx";
 import axios from "axios";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const BookmarkRecipes = () => {
   const { tickedItems, toggleTick } = useFavContext();

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import Navbar from "../Component/Navbar/Navbar";
 import Wrapper from "../Component/Wrapper";
 import Footer from "../Component/Footer";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 const RootPageLayout = () => {
   return (
     <div className="root-page-layout">

@@ -2,7 +2,7 @@ import React from "react";
 import ContactForm from "../Component/ContactForm";
 import { useThemeContext } from "../context/ThemeContext";
 import Weather from "./Weather";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 
 const Contact = () => {
   const { isDarkMode } = useThemeContext();

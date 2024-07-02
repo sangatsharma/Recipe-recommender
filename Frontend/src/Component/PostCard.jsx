@@ -8,7 +8,7 @@ const PostCard = ({ darkMode }) => {
       <div className="flex items-center mb-4">
         <img
           className="w-12 h-12 rounded-full mr-4"
-          src="https://scontent.fpkr1-1.fna.fbcdn.net/v/t1.6435-1/123108473_1042706159510253_7233714013747441365_n.jpg?stp=cp0_dst-jpg_p40x40&_nc_cat=101&ccb=1-7&_nc_sid=e4545e&_nc_ohc=tZdBbg-Ok8gQ7kNvgGONH8S&_nc_ht=scontent.fpkr1-1.fna&oh=00_AYAq0yBvLRvaCOoIgu2bcKdgOj_v7fH-dUynKNKqKqw5HA&oe=66A1D035"
+          src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
           alt="Avatar"
         />
         <div>
