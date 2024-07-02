@@ -161,7 +161,7 @@ const RecipeDetails = () => {
           name="twitter:description"
           content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
         />
-        <meta name="twitter:image" content={imageUrls[0]} />
+        <meta name="twitter:image" content={"https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"} />
       </Helmet>
       <div
         className={`${
