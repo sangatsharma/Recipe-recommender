@@ -137,22 +137,19 @@ const RecipeDetails = () => {
       <Helmet>
         <meta
           property="og:title"
-          content={`Checkout this amazing recipe: ${itemName} from Cook It Yourself.`}
+          content={`Checkout this amazing recipe from Cook It Yourself.`}
         />
         <meta
           property="og:description"
-          content={`A tasty recipe: ${itemName} from Cook It Yourself.`}
+          content="A tasty recipe from Cook It Yourself"
         />
         <meta
           property="og:image"
-          content={
-            imageUrls[0] ||
-            "https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"
-          }
+          content="https://img.sndimg.com/food/image/upload/w_555,h_416,c_fit,fl_progressive,q_95/v1/img/recipes/87/24/2/55UGsokzSNSNl11QP510_Fish%20Poleko.jpg"
         />
         <meta
           property="og:url"
-          content={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}`}
+          content="https://recipe-recommender-five.vercel.app/recipes"
         />
         <meta property="og:type" content="article" />
 
