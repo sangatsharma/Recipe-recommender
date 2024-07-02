@@ -14,7 +14,7 @@ const recipeRouter = express.Router();
 // ROUTES
 recipeRouter.get("/", authenticateJWT, returnAllRecipies);
 recipeRouter.post("/", authenticateJWT, addNewRecipe);
-recipeRouter.post("/filter", authenticateJWT, filterRecipe);
+recipeRouter.post("/filter", filterRecipe);
 recipeRouter.get("/:id", authenticateJWT, recipeDetails as RequestHandler);
 recipeRouter.post("/review/add", authenticateJWT, recipeReviewAddHandler as RequestHandler);
 recipeRouter.post("/review/remove", authenticateJWT, recipeReviewRemoveHandler as RequestHandler);
