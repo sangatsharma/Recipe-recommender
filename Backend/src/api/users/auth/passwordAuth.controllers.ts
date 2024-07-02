@@ -21,20 +21,31 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
     });
   }
 
+  type CleanedBody = {
+    email: string;
+    password: string;
+    name: string;
+    profile_pic: string;
+  };
+
   const cleanedBody = {
     email: body.email,
     password: body.password,
     name: body.name
-  };
+  } as CleanedBody;
 
   try {
     // Register user
 
     const b64 = Buffer.from(req.file?.buffer as Buffer).toString("base64");
     const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
     const cldRes = await handleUpload(dataURI);
-    console.log(cldRes);
+    cleanedBody.profile_pic = cldRes.secure_url;
+
+    // TODO: Remove profile picture if user exists
     const userData = await userRegisterHelper(cleanedBody);
+
     // Generate token
     const userRes: JsonResponse = handleToken(userData.body, res);
     await verifyMailSender(userRes.body.email as string, "verifyAccount");

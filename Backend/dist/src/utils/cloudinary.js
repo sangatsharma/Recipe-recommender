@@ -15,4 +15,3 @@ const handleUpload = async (file) => {
     return result;
 };
 exports.handleUpload = handleUpload;
-// export const cloudinary = v2;

@@ -19,12 +19,13 @@ export type UserDataDB = {
   followers: number;
   following: number;
   verified: number,
+  profile_pic: string | null;
 };
 
 export type JsonResponse = {
   success: boolean;
   body: {
-    [message: string]: string | number | Date
+    [message: string]: string | number | Date | null;
   };
 };
 
