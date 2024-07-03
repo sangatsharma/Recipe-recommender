@@ -2,8 +2,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {toast } from "react-toastify";
-
+import { toast } from "react-toastify";
 
 const PreferencesForm = ({ darkMode }) => {
   // Define validation schema
@@ -14,7 +13,7 @@ const PreferencesForm = ({ darkMode }) => {
     favoriteCuisines: Yup.array().min(1, "Select at least one cuisine"),
     dislikedIngredients: Yup.string(),
     mealTypes: Yup.array().min(1, "Select at least one meal type"),
-    diseases: Yup.array()
+    diseases: Yup.array(),
   });
 
   // Initialize formik
@@ -35,14 +34,10 @@ const PreferencesForm = ({ darkMode }) => {
   });
 
   return (
-    <div className="pl-4 mt-3">
+    <div className="pl-3 pr-1 mt-3">
       <form onSubmit={formik.handleSubmit}>
         <div className="mb-4">
-          <label
-            htmlFor={`dietaryRestrictions" className=" text-sm font-medium mb-2 `}
-          >
-            Dietary Restrictions
-          </label>
+          <label htmlFor="dietaryRestrictions"> Dietary Restrictions</label>
           <select
             id="dietaryRestrictions"
             name="dietaryRestrictions"
@@ -181,12 +176,11 @@ const PreferencesForm = ({ darkMode }) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700"
+          className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700"
         >
           Save Preferences
         </button>
       </form>
-
     </div>
   );
 };

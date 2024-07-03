@@ -43,9 +43,7 @@ const EditProfile = ({ darkMode }) => {
 
   return (
     <div
-      className={`min-h-screen w-[60%] below-sm:w-[100%] p-6 below-sm:px-2 flex flex-row below-sm:flex-col gap-4 ${
-        darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
-      }`}
+      className={` w-[60%] below-sm:w-[90%] flex flex-row below-sm:flex-col gap-4  below-sm:gap-2 m-auto`}
     >
       {/*left side*/}
       <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
@@ -139,7 +137,7 @@ const EditProfile = ({ darkMode }) => {
               </div>
               <button
                 type="submit"
-                className="block w-full py-2 px-4 bg-blue-500 text-white rounded"
+                className="block w-full py-2 px-4 bg-blue-500  hover:bg-blue-700 text-white rounded"
               >
                 Update Info
               </button>

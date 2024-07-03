@@ -110,7 +110,7 @@ console.log("Cropped Image: ", croppedImage);
       )}
       {!imageSrc && (
         <button
-          className="py-2 px-4 bg-orange-500 text-white rounded "
+          className="py-2 px-4 bg-orange-500 text-white rounded hover:bg-orange-400"
           onClick={handleUploadClick}
         >
           Upload New Photo
