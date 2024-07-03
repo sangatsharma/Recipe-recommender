@@ -2,6 +2,8 @@ import React, { useState, useCallback, useRef } from "react";
 import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../utils/CropImage";
 import { formatDate } from "../utils/dateFormat";
+import { toast } from "react-toastify";
+import { loadModel } from "../utils/filterNsfw";
 
 const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const [imageSrc, setImageSrc] = useState(null);
@@ -15,13 +17,40 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
+  const validImageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/bmp",
+  ];
+
+  
 
   const onFileChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => setImageSrc(reader.result);
-      reader.readAsDataURL(file);
+    if (file && validImageTypes.includes(file.type)) {
+      const image = document.createElement("img");
+      image.src = URL.createObjectURL(file);
+      image.onload = async () => {
+        try {
+          const isNsfw = await loadModel(image);
+          if (isNsfw) {
+            toast.error("Image is not appropriate.");
+            fileInputRef.current.value = "";
+          } else {
+            const reader = new FileReader();
+            reader.onload = () => setImageSrc(reader.result);
+            reader.readAsDataURL(file);
+          }
+        } catch (error) {
+          console.error("Error loading NSFWJS model:", error);
+          toast.error("Failed to load NSFWJS model.");
+        }
+      };
+    } else {
+      toast.error("Invalid file type. Only images are allowed.");
+      fileInputRef.current.value = "";
     }
   };
 
@@ -40,10 +69,10 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
       const croppedImg = await getCroppedImg(imageSrc, croppedAreaPixels);
       setCroppedImage(croppedImg);
       setProfilePic(croppedImg);
+      toast.success("Image uploaded successfully.");
       setImageSrc(null);
+      fileInputRef.current.value = "";
     }
-console.log("Cropped Image: ", croppedImage);
-
     //todo upload image to server
   }, [imageSrc, croppedAreaPixels]);
 
