@@ -28,10 +28,13 @@ const userRegisterHandler = async (req, res, next) => {
     };
     try {
         // Register user
-        const b64 = Buffer.from(req.file?.buffer).toString("base64");
-        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-        const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-        cleanedBody.profile_pic = cldRes.secure_url;
+        // Create profile picture if provided
+        if (req.file) {
+            const b64 = Buffer.from(req.file?.buffer).toString("base64");
+            const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
+            cleanedBody.profile_pic = cldRes.secure_url;
+        }
         // TODO: Remove profile picture if user exists
         const userData = await (0, auth_helpers_1.userRegisterHelper)(cleanedBody);
         // Generate token
@@ -171,7 +174,7 @@ const logoutHandler = (req, res, _) => {
     //   partitioned: true,
     // } as CookieOptions;
     // res.cookie("auth_token", "", cookieRes);
-    let cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; SameSite=None; Domain=recipe-recommender-backend.vercel.app;";
+    let cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; SameSite=None; Domain=.recipe-recommender-backend.vercel.app;";
     if (!(res.locals.user.oauth)) {
         cookieRes = cookieRes + "Partitioned;";
     }

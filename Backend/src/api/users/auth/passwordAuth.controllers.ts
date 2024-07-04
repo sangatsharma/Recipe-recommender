@@ -37,11 +37,14 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
   try {
     // Register user
 
-    const b64 = Buffer.from(req.file?.buffer as Buffer).toString("base64");
-    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    // Create profile picture if provided
+    if (req.file) {
+      const b64 = Buffer.from(req.file?.buffer).toString("base64");
+      const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-    const cldRes = await handleUpload(dataURI);
-    cleanedBody.profile_pic = cldRes.secure_url;
+      const cldRes = await handleUpload(dataURI);
+      cleanedBody.profile_pic = cldRes.secure_url;
+    }
 
     // TODO: Remove profile picture if user exists
     const userData = await userRegisterHelper(cleanedBody);
@@ -211,7 +214,7 @@ export const logoutHandler = (req: Request, res: Response, _: NextFunction) => {
 
   // res.cookie("auth_token", "", cookieRes);
 
-  let cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; SameSite=None; Domain=recipe-recommender-backend.vercel.app;";
+  let cookieRes = "auth_token=; Path=/; Secure; Expires=Thu, 27 Jun 1970 13:52:54 GMT; SameSite=None; Domain=.recipe-recommender-backend.vercel.app;";
   if (!(res.locals.user.oauth)) {
     cookieRes = cookieRes + "Partitioned;";
   }

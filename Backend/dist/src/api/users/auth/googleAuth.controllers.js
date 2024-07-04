@@ -54,7 +54,7 @@ const oAuth2Server = async (req, res, next) => {
     const token_info_response = await fetch(`${process.env.GOOGLE_TOKEN_INFO_URL}?id_token=${id_token}`);
     // TODO: TYPE
     const token_info_response_json = await token_info_response.json();
-    const { name, email } = token_info_response_json;
+    const { name, email, picture } = token_info_response_json;
     // Check if user exists or not
     const userTmp = await (0, auth_helpers_1.userExists)(email);
     // If yes, create token and return
@@ -70,6 +70,7 @@ const oAuth2Server = async (req, res, next) => {
             email: email,
             name: name,
             verified: 1,
+            profile_pic: picture,
         };
         try {
             // Register user
