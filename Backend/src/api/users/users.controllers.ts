@@ -12,12 +12,13 @@ import {
 } from "@/utils/config";
 
 // DB
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
-import { recipeSchema } from "@/api/recipes/recipes.models";
+import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
 import { favouriteRecipes, followerSchema, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
+import { handleUpload } from "@/utils/cloudinary";
 
 
 /****************
@@ -246,6 +247,93 @@ export const recipeFavouriteGetHandler = async (req: Request, res: Response, nex
       success: true,
       length: favRec.length,
       body: favRec
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
+
+// DEMO: NOT COMPLETE
+export const recommendRecipies = async (req: Request, res: Response, next: NextFunction) => {
+  const userCookie = res.locals.user as { email: string };
+  try {
+    const userInfo = await userExists(userCookie.email);
+    if (!userInfo.success)
+      return res.json(userInfo);
+
+    let dbRes: RecipeSchemaType[] = [] as RecipeSchemaType[];
+    if (!(userInfo.body.mostViewed)) {
+      dbRes = (await db.select().from(recipeSchema).limit(10));
+    }
+    else {
+      let c = 6;
+
+      for (const a of userInfo.body.mostViewed?.split(" ") || []) {
+        const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
+        const dbResTmp = await db.execute(sql.raw(sqlQuery)) as RecipeSchemaType[];
+        // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
+        dbRes = dbRes.concat(dbResTmp);
+        c = Math.floor(c / 2);
+      }
+    }
+
+    return res.json({
+      "success": true,
+      "length": dbRes.length,
+      "data": dbRes
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
+
+/*
+  UPDATE USER INFO
+  USAGE:
+  {
+    fullName, username, bio, profile_pic
+  }
+*/
+export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
+  type UpdateUserInfoType = {
+    fullName: string,
+    username: string,
+    bio: string,
+  };
+
+  // Provide body
+  const body = req.body as UpdateUserInfoType;
+  const userInfo = res.locals.user as { email: string };
+
+  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string };
+
+  // if (body.username) updateData.username = body.username;
+  if (body.fullName) updateData.name = body.fullName;
+  if (body.bio) updateData.bio = body.bio;
+
+  // If profile picture provided
+  if (req.file) {
+    const b64 = Buffer.from(req.file?.buffer).toString("base64");
+    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+    const cldRes = await handleUpload(dataURI);
+    updateData.profile_pic = cldRes.secure_url;
+  }
+
+  try {
+    // Update DB
+    if (Object.keys(updateData).length !== 0)
+      await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
+
+    return res.json({
+      success: true,
+      body: {
+        message: "Successfully updated profile"
+      }
     });
   }
   catch (err) {

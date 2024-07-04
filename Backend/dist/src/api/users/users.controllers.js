@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -13,6 +13,7 @@ const db_1 = require("../../utils/db");
 const recipes_models_1 = require("../../api/recipes/recipes.models");
 const users_models_1 = require("../../api/users/users.models");
 const auth_helpers_1 = require("./auth/auth.helpers");
+const cloudinary_1 = require("../../utils/cloudinary");
 /****************
 * ROUTES
 ****************/
@@ -206,3 +207,75 @@ const recipeFavouriteGetHandler = async (req, res, next) => {
     }
 };
 exports.recipeFavouriteGetHandler = recipeFavouriteGetHandler;
+// DEMO: NOT COMPLETE
+const recommendRecipies = async (req, res, next) => {
+    const userCookie = res.locals.user;
+    try {
+        const userInfo = await (0, auth_helpers_1.userExists)(userCookie.email);
+        if (!userInfo.success)
+            return res.json(userInfo);
+        let dbRes = [];
+        if (!(userInfo.body.mostViewed)) {
+            dbRes = (await db_1.db.select().from(recipes_models_1.recipeSchema).limit(10));
+        }
+        else {
+            let c = 6;
+            for (const a of userInfo.body.mostViewed?.split(" ") || []) {
+                const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
+                const dbResTmp = await db_1.db.execute(drizzle_orm_1.sql.raw(sqlQuery));
+                // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
+                dbRes = dbRes.concat(dbResTmp);
+                c = Math.floor(c / 2);
+            }
+        }
+        return res.json({
+            "success": true,
+            "length": dbRes.length,
+            "data": dbRes
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.recommendRecipies = recommendRecipies;
+/*
+  UPDATE USER INFO
+  USAGE:
+  {
+    fullName, username, bio, profile_pic
+  }
+*/
+const updateUserInfo = async (req, res, next) => {
+    // Provide body
+    const body = req.body;
+    const userInfo = res.locals.user;
+    const updateData = {};
+    // if (body.username) updateData.username = body.username;
+    if (body.fullName)
+        updateData.name = body.fullName;
+    if (body.bio)
+        updateData.bio = body.bio;
+    // If profile picture provided
+    if (req.file) {
+        const b64 = Buffer.from(req.file?.buffer).toString("base64");
+        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+        const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
+        updateData.profile_pic = cldRes.secure_url;
+    }
+    try {
+        // Update DB
+        if (Object.keys(updateData).length !== 0)
+            await db_1.db.update(users_models_1.userSchema).set(updateData).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
+        return res.json({
+            success: true,
+            body: {
+                message: "Successfully updated profile"
+            }
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.updateUserInfo = updateUserInfo;

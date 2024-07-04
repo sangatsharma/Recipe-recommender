@@ -8,6 +8,7 @@ export const userSchema = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   password: text("password"),
+  bio: text("bio"),
   profile_pic: text("profile_pic"),
   verified: integer("verified").notNull().default(0),
   joinedOn: timestamp("joinedOn", {
@@ -15,6 +16,7 @@ export const userSchema = pgTable("users", {
   }).defaultNow().notNull(),
   followers: integer("followers").default(0).notNull(),
   following: integer("following").default(0).notNull(),
+  mostViewed: text("mostViewed"),
 });
 
 export const followerSchema = pgTable("followers", {

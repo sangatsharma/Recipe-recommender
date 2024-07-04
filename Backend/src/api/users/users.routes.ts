@@ -10,14 +10,14 @@ import express, { RequestHandler } from "express";
 // Types
 import { changePasswordHandler, logoutHandler, userLoginHandler, userRegisterHandler, verifyEmailHandler } from "./auth/passwordAuth.controllers";
 import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
-import { favouriteRecipeHandler, followUser, recipeFavouriteGetHandler, tmpDemo, userInfoHandler, validateToken } from "./users.controllers";
+import { favouriteRecipeHandler, followUser, recipeFavouriteGetHandler, recommendRecipies, tmpDemo, updateUserInfo, userInfoHandler, validateToken } from "./users.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 import multer from "multer";
 
 const userRouter = express.Router();
 
-const storage= multer.memoryStorage();
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // AUTH
@@ -35,5 +35,8 @@ userRouter.get("/recipes", authenticateJWT, tmpDemo);
 userRouter.get("/validate", authenticateJWT, validateToken);
 userRouter.post("/favourite", authenticateJWT, favouriteRecipeHandler as RequestHandler);
 userRouter.get("/favourite", authenticateJWT, recipeFavouriteGetHandler as RequestHandler);
+userRouter.post("/update", authenticateJWT, updateUserInfo as RequestHandler);
+
+userRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
 
 export default userRouter;

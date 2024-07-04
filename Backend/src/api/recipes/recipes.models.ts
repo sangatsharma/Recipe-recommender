@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, InferSelectModel } from "drizzle-orm";
 import { serial, text, pgTable, timestamp, integer, numeric } from "drizzle-orm/pg-core";
 import { userSchema } from "@/api/users/users.models";
 
@@ -33,6 +33,8 @@ export const recipeSchema = pgTable("recipes", {
   ProteinContent: numeric("ProteinContent"),
   RecipeInstructions: text("RecipeInstructions").notNull(),
 });
+
+export type RecipeSchemaType = InferSelectModel<typeof recipeSchema>;
 
 // One recipies can have multiple likes
 export const recipeReview = pgTable("recipeReview", {

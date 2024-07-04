@@ -34,4 +34,6 @@ userRouter.get("/recipes", middleware_1.authenticateJWT, users_controllers_1.tmp
 userRouter.get("/validate", middleware_1.authenticateJWT, users_controllers_1.validateToken);
 userRouter.post("/favourite", middleware_1.authenticateJWT, users_controllers_1.favouriteRecipeHandler);
 userRouter.get("/favourite", middleware_1.authenticateJWT, users_controllers_1.recipeFavouriteGetHandler);
+userRouter.post("/update", middleware_1.authenticateJWT, users_controllers_1.updateUserInfo);
+userRouter.post("/recommend", middleware_1.authenticateJWT, users_controllers_1.recommendRecipies);
 exports.default = userRouter;
