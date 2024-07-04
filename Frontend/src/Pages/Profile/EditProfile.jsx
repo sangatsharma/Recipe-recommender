@@ -5,6 +5,7 @@ import PreferencesForm from "./PreferencesForm";
 
 import { AuthContext } from "../../context/AuthContext";
 import ImageCropper from "../../Component/ImageCropper";
+import Loader from "../../Component/Loader/Loader";
 
 const EditProfile = ({ darkMode }) => {
   const { userInfo, loading } = useContext(AuthContext);
@@ -34,7 +35,8 @@ const EditProfile = ({ darkMode }) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state
+    console.log("loading");
+    return <Loader />;
   }
 
   if (!userInfo) {
