@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet-async";
 
 const LoginPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -39,6 +40,11 @@ const LoginPage = () => {
       password: Yup.string().required("* Enter your password."),
     }),
     onSubmit: async (values) => {
+      setIsButtonDisabled(true);
+      // Re-enable the button after 4 second  to allow the user to search again
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 4000);
       // Req to backend
       const res = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/user/auth/login`,
@@ -61,9 +67,9 @@ const LoginPage = () => {
   });
   return (
     <div className="bg-white shadow-lg rounded-lg flex flex-row flex-wrap overflow-hidden mt-[20px] below-sm:flex-col below-sm:w-[95%] w-[400px]">
-           <Helmet>
-         <title>Login - CIY </title>
-         </Helmet>
+      <Helmet>
+        <title>Login - CIY </title>
+      </Helmet>
       <div className="below-sm:w-[100%] p-10 bg-slate-200 w-[100%]">
         {/* <img className="h-12 " src={logo} /> */}
         <p className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg py-4 ">
@@ -130,6 +136,7 @@ const LoginPage = () => {
             <button
               className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-[8px] w-full"
               type="submit"
+              disabled={isButtonDisabled}
             >
               Login
             </button>

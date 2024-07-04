@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext,useState} from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -12,6 +12,7 @@ import { Helmet } from "react-helmet-async";
 
 const SignupPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,6 +61,11 @@ const SignupPage = () => {
     }),
     onSubmit: async (values) => {
       {
+        setIsButtonDisabled(true);
+        // Re-enable the button after 4 second  to allow the user to search again
+        setTimeout(() => {
+          setIsButtonDisabled(false);
+        }, 4000);
         values["name"] = values["userName"];
 
         // Send creds to backend
@@ -195,6 +201,7 @@ const SignupPage = () => {
             <button
               className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
               type="submit"
+              disabled={isButtonDisabled}
             >
               Sign Up
             </button>
