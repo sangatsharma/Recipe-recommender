@@ -1,14 +1,13 @@
 const Skeleton = () => {
   return (
-    <div className="animate-pulse flex flex-col items-center gap-4 w-60">
-      <div>
-        <div className="w-48 h-6 bg-slate-400 rounded-md"></div>
-        <div className="w-28 h-4 bg-slate-400 mx-auto mt-3 rounded-md"></div>
+    <div className="flex flex-col  w-[80%] min-h-screen animate-pulse rounded-xl p-4 gap-4">
+      <div className="flex flex-col gap-2">
+        <div className="bg-neutral-400/50 w-full h-10 animate-pulse rounded-md"></div>
+        <div className="bg-neutral-400/50 w-4/5 h-10 animate-pulse rounded-md"></div>
+        <div className="bg-neutral-400/50 w-full h-10 animate-pulse rounded-md"></div>
+        <div className="bg-neutral-400/50 w-2/4 h-10 animate-pulse rounded-md"></div>
       </div>
-      <div className="h-7 bg-slate-400 w-full rounded-md"></div>
-      <div className="h-7 bg-slate-400 w-full rounded-md"></div>
-      <div className="h-7 bg-slate-400 w-full rounded-md"></div>
-      <div className="h-7 bg-slate-400 w-1/2 rounded-md"></div>
+      <div className="bg-neutral-400/50 w-full h-64 animate-pulse rounded-md"></div>
     </div>
   );
 };

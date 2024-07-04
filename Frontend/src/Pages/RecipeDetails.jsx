@@ -12,6 +12,7 @@ import logo from "../assets/Images/logoOrange.png";
 import { Helmet } from "react-helmet-async";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
+import Skeleton from "../Component/Loader/Skeleton";
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
@@ -83,7 +84,7 @@ const RecipeDetails = () => {
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
   // if (error) return <p>Error: {error}</p>;
-  if (!item) return <p>Loading...</p>;
+  if (!item) return <Skeleton/>;
   if (item.success === false) return <InvalidPage />;
 
   const regex = /"([^"]+)"/g;

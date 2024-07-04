@@ -7,9 +7,8 @@ import { Helmet } from "react-helmet-async";
 const Contact = () => {
   const { isDarkMode } = useThemeContext();
   const handleReportProblem = (e) => {
-    const recipientEmail = "reciperecommenderapp@gmail.com";
-
     // Example email content
+    const recipientEmail = "reciperecommenderapp@gmail.com";
     const subject = "Report a Problem.";
     const body = "I found a bug in the app. Here are the details: \n\n\n-";
     const mailtoUrl = `mailto:${recipientEmail}?subject=${subject}&body=${body}`;
@@ -17,10 +16,10 @@ const Contact = () => {
   };
 
   return (
-    <div className="w-auto p-4 flex flex-row  justify-center mt-2 gap-4  below-sm:flex-col-reverse">
-         <Helmet>
-         <title>Contact - CIY </title>
-         </Helmet>
+    <div className="w-auto p-3 flex gap-4  below-sm:flex-col-reverse">
+      <Helmet>
+        <title>Contact - CIY </title>
+      </Helmet>
       <div
         className={`w-1/2  below-sm:w-[100%] ${
           isDarkMode ? "bg-gray-800" : "bg-gray-50"

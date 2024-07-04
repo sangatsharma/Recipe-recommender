@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "../../Component/Loader/Skeleton";
+import PostCard from "../../Component/PostCard";
 
 const Profile = () => {
   const { isDarkMode } = useThemeContext();
@@ -13,7 +14,7 @@ const Profile = () => {
     return <Skeleton />;
   }
   return (
-    <div className="w-[80%] mx-auto p-8 ">
+    <div className="w-[80%] mx-auto p-8 flex-col ">
       <Helmet>
         <title>Profile - CIY </title>
       </Helmet>
@@ -82,13 +83,13 @@ const Profile = () => {
 
       {/* Content */}
       {activeTab === "posts" && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <img
+        <div className=" flex flex-row flex-wrap gap-2 justify-center w-full">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <PostCard
               key={index}
-              src={`https://via.placeholder.com/150?text=Post+${index + 1}`} // Replace with actual image URLs
-              alt={`Post ${index + 1}`}
-              className="rounded-lg object-cover w-full h-full"
+              darkMode={isDarkMode}
+              user={userInfo}
+              recipeId={1}
             />
           ))}
         </div>
