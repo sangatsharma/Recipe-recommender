@@ -89,7 +89,6 @@ const Profile = () => {
               key={index}
               darkMode={isDarkMode}
               user={userInfo}
-              recipeId={1}
             />
           ))}
         </div>

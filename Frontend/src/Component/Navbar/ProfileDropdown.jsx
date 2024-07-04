@@ -7,8 +7,8 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../context/ThemeContext";
 
-const ProfileDropdown = ({ isMobile }) => {
-  const { setIsAuthenticated, isAuthenticated, userInfo } =
+const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
+  const { setIsAuthenticated, isAuthenticated, userInfo, loading } =
     useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
 
@@ -18,7 +18,6 @@ const ProfileDropdown = ({ isMobile }) => {
 
   const isActive = location === "/" || location === "/home";
 
-  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleToggle = () => {
@@ -33,8 +32,9 @@ const ProfileDropdown = ({ isMobile }) => {
     if (isLogout.success) {
       setIsAuthenticated(false);
       handleToggle();
-      toast.success(isLogout.body.message);
+      window.location.reload();
       navigate("/");
+      toast.success(isLogout.body.message);
     }
   };
 
@@ -70,7 +70,12 @@ const ProfileDropdown = ({ isMobile }) => {
             <div className="flex items-center space-x-4 p-2 mb-4">
               <img
                 loading="lazy"
-                src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+                src={
+                  isAuthenticated
+                    ? userInfo.profile_pic ||
+                      "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+                    : "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+                }
                 alt="Profile"
                 className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
               />
@@ -101,7 +106,14 @@ const ProfileDropdown = ({ isMobile }) => {
           >
             <button
               className={isActive ? "activePage" : ""}
-              onClick={isActive ? handleScrollToTop : () => navigate("/home")}
+              onClick={
+                isActive
+                  ? handleScrollToTop
+                  : () => {
+                      navigate("/home");
+                      handleScrollToTop();
+                    }
+              }
             >
               <i
                 className={`fas fa-home text-2xl pr-2 ${
@@ -115,7 +127,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/recipes"
                   ? handleScrollToTop
-                  : () => navigate("/recipes")
+                  : () => {
+                      navigate("/recipes");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -132,7 +147,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/explore"
                   ? handleScrollToTop
-                  : () => navigate("/explore")
+                  : () => {
+                      navigate("/explore");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -149,7 +167,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/search"
                   ? handleScrollToTop
-                  : () => navigate("/search")
+                  : () => {
+                      navigate("/search");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -164,7 +185,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/contact"
                   ? handleScrollToTop
-                  : () => navigate("/contact")
+                  : () => {
+                      navigate("/contact");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -182,7 +206,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/bookmarks"
                   ? handleScrollToTop
-                  : () => navigate("/bookmarks")
+                  : () => {
+                      navigate("/bookmarks");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -199,7 +226,10 @@ const ProfileDropdown = ({ isMobile }) => {
               onClick={
                 location === "/settings"
                   ? handleScrollToTop
-                  : () => navigate("/settings")
+                  : () => {
+                      navigate("/settings");
+                      handleScrollToTop();
+                    }
               }
             >
               <i
@@ -254,7 +284,12 @@ const ProfileDropdown = ({ isMobile }) => {
         <Link to={isAuthenticated ? `${location}` : "/login"}>
           <img
             loading="lazy"
-            src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+            src={
+              isAuthenticated
+                ? userInfo.profile_pic ||
+                  "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+                : "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+            }
             alt="Profile"
             className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
           />

@@ -49,8 +49,6 @@ const RecipeDetails = () => {
   };
 
   const { recipeName } = useParams();
-  console.log("Recipe Name:", recipeName);
-
   // Extract name and ID from the param
   const paramParts = recipeName.split("_") ?? null;
   const id = paramParts.pop() ?? null;
@@ -79,7 +77,7 @@ const RecipeDetails = () => {
     };
 
     fetchData();
-  }, [id, itemName, recipeName]);
+  }, [recipeName]);
 
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
@@ -286,7 +284,7 @@ const RecipeDetails = () => {
               onClick={handleNativeShare}
             >
               Share
-              <i className="fas fa-share "></i>
+              <i className="fas fa-share pl-2"></i>
             </button>
             {/* Facebook */}
             <a

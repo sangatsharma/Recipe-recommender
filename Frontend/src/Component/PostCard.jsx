@@ -28,23 +28,22 @@ const PostCard = ({
       <div className="flex items-center mb-4">
         <img
           className="w-12 h-12 rounded-full mr-4"
-          src="https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+          src={
+            user.profile_pic ||
+            "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+          }
           alt="Avatar"
         />
         <div>
           <div className="font-bold text-lg">{user.name}</div>
           <div className="text-sm text-gray-500">
-            @{user.name.split(" ")[0]+user.id}
+            @{user.name.split(" ")[0] + user.id}
           </div>
         </div>
       </div>
       <div className="w-[100%]">
-        <h2 className="text-2xl font-bold mb-2">
-       {recipeDetails.Name}
-        </h2>
-        <p className="mb-4">
-        {recipeDetails.Description}
-        </p>
+        <h2 className="text-2xl font-bold mb-2">{recipeDetails.Name}</h2>
+        <p className="mb-4">{recipeDetails.Description}</p>
       </div>
       <img
         className="rounded-lg mb-4 w-full h-[500px] m-auto"
