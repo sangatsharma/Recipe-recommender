@@ -48,4 +48,5 @@ export type AccessTokenData = {
 export type TokenInfoResponse = {
   name: string;
   email: string;
+  picture: string;
 };

@@ -69,8 +69,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
 
   // TODO: TYPE
   const token_info_response_json: TokenInfoResponse = await token_info_response.json() as TokenInfoResponse;
-
-  const { name, email } = token_info_response_json;
+  const { name, email, picture } = token_info_response_json;
 
   // Check if user exists or not
   const userTmp = await userExists(email);
@@ -90,6 +89,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       email: email,
       name: name,
       verified: 1,
+      profile_pic: picture,
     };
 
     try {
