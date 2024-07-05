@@ -286,7 +286,7 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
             loading="lazy"
             src={
               isAuthenticated
-                ? userInfo.profile_pic ||
+                ? userInfo.profile_pic ??
                   "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
                 : "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
             }

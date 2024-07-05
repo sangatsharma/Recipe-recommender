@@ -154,5 +154,6 @@ nav > button:hover {
 
 .sidebar.closed {
   opacity: 0;
+  display: none;
   transform: translateX(100%); /* Slide out of view */
 }
