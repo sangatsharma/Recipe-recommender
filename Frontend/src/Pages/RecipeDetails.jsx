@@ -31,7 +31,7 @@ const RecipeDetails = () => {
           compress: false,
           floatPrecision: 1,
           unit: "px",
-          format: [canvas.width + 5, canvas.height + 5], // Use canvas dimensions
+          format: [canvas.width , canvas.height ], // Use canvas dimensions
         });
         pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
         pdf.save(`${item.Name}.pdf`);
