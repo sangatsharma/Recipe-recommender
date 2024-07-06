@@ -18,6 +18,7 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     }).defaultNow().notNull(),
     followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
+    posts: (0, pg_core_1.integer)("posts").default(0).notNull(),
     mostViewed: (0, pg_core_1.text)("mostViewed"),
 });
 // User Preferences

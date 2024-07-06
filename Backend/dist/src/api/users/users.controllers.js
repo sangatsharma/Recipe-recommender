@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -318,3 +318,43 @@ const getUserPreferences = async (req, res, next) => {
     }
 };
 exports.getUserPreferences = getUserPreferences;
+// Return users complete profile
+const userProfile = async (req, res, next) => {
+    const id = Number(req.params.id);
+    try {
+        // Get followers info
+        const followers = await db_1.db.select({
+            name: users_models_1.userSchema.name,
+            email: users_models_1.userSchema.email,
+        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
+        // Get following info
+        const following = await db_1.db.select({
+            name: users_models_1.userSchema.name,
+            email: users_models_1.userSchema.email,
+        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
+        // Get all recipes uploaded by user
+        const posts = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.AuthorId, id));
+        // Return info
+        return res.json({
+            success: true,
+            body: {
+                followers: {
+                    length: followers.length,
+                    followers: followers
+                },
+                following: {
+                    length: following.length,
+                    following: following
+                },
+                posts: {
+                    length: posts.length,
+                    posts: posts,
+                }
+            }
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.userProfile = userProfile;

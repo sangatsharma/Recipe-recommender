@@ -400,3 +400,48 @@ export const getUserPreferences = async (req: Request, res: Response, next: Next
     next(err);
   }
 };
+
+
+// Return users complete profile
+export const userProfile = async (req: Request, res: Response, next: NextFunction) => {
+  const id = Number(req.params.id);
+
+  try {
+    // Get followers info
+    const followers = await db.select({
+      name: userSchema.name,
+      email: userSchema.email,
+    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
+
+    // Get following info
+    const following = await db.select({
+      name: userSchema.name,
+      email: userSchema.email,
+    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
+
+    // Get all recipes uploaded by user
+    const posts = await db.select().from(recipeSchema).where(eq(recipeSchema.AuthorId, id));
+
+    // Return info
+    return res.json({
+      success: true,
+      body: {
+        followers: {
+          length: followers.length,
+          followers: followers
+        },
+        following: {
+          length: following.length,
+          following: following
+        },
+        posts: {
+          length: posts.length,
+          posts: posts,
+        }
+      }
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};

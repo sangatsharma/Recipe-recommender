@@ -38,4 +38,5 @@ userRouter.post("/update", middleware_1.authenticateJWT, users_controllers_1.upd
 userRouter.post("/recommend", middleware_1.authenticateJWT, users_controllers_1.recommendRecipies);
 userRouter.post("/pref", middleware_1.authenticateJWT, users_controllers_1.updateUserPreferences);
 userRouter.get("/pref", middleware_1.authenticateJWT, users_controllers_1.getUserPreferences);
+userRouter.get("/profile/:id", users_controllers_1.userProfile);
 exports.default = userRouter;
