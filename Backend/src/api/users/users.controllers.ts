@@ -12,7 +12,7 @@ import {
 } from "@/utils/config";
 
 // DB
-import { and, eq, sql } from "drizzle-orm";
+import { and, arrayOverlaps, eq, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
@@ -200,19 +200,27 @@ export const favouriteRecipeHandler = async (req: Request, res: Response, next: 
     }
 
     // Check if item is aready favourited
-    const alreadyFav = await db.select().from(favouriteRecipes).where(and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id)));
+    // const alreadyFav = await db.select().from(favouriteRecipes).where(and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id)));
+    const alreadyFav = await db.select().from(userSchema).where(arrayOverlaps(userSchema.favourite, [body.recipeId]));
 
     // If no then add
     if (alreadyFav.length === 0) {
-      await db.insert(favouriteRecipes).values({
-        userId: userCookie.id,
-        recipeId: recipeDB[0].RecipeId,
-      });
+      // await db.insert(favouriteRecipes).values({
+      //   userId: userCookie.id,
+      //   recipeId: recipeDB[0].RecipeId,
+      // });
+      await db.update(userSchema).set({
+        favourite: sql`array_append(${userSchema.favourite}, ${body.recipeId} )`,
+      }).where(eq(userSchema.id, userCookie.id));
     }
 
     // Else, remove
     else {
-      await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
+      console.log(10101);
+      // await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
+      await db.update(userSchema).set({
+        favourite: sql`array_remove(${userSchema.favourite}, ${body.recipeId})`
+      });
     }
 
     // Return response

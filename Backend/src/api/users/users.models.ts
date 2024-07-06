@@ -18,6 +18,7 @@ export const userSchema = pgTable("users", {
   following: integer("following").default(0).notNull(),
   posts: integer("posts").default(0).notNull(),
   mostViewed: text("mostViewed"),
+  favourite: integer("favourite").array().notNull().default(sql`'{}'::integer[]`),
 });
 
 // User Preferences

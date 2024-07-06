@@ -161,17 +161,25 @@ const favouriteRecipeHandler = async (req, res, next) => {
             });
         }
         // Check if item is aready favourited
-        const alreadyFav = await db_1.db.select().from(users_models_1.favouriteRecipes).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.recipeId, body.recipeId), (0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id)));
+        // const alreadyFav = await db.select().from(favouriteRecipes).where(and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id)));
+        const alreadyFav = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.arrayOverlaps)(users_models_1.userSchema.favourite, [body.recipeId]));
         // If no then add
         if (alreadyFav.length === 0) {
-            await db_1.db.insert(users_models_1.favouriteRecipes).values({
-                userId: userCookie.id,
-                recipeId: recipeDB[0].RecipeId,
-            });
+            // await db.insert(favouriteRecipes).values({
+            //   userId: userCookie.id,
+            //   recipeId: recipeDB[0].RecipeId,
+            // });
+            await db_1.db.update(users_models_1.userSchema).set({
+                favourite: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.favourite}, ${body.recipeId} )`,
+            }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, userCookie.id));
         }
         // Else, remove
         else {
-            await db_1.db.delete(users_models_1.favouriteRecipes).where(((0, drizzle_orm_1.and)((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.recipeId, body.recipeId), (0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id))));
+            console.log(10101);
+            // await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
+            await db_1.db.update(users_models_1.userSchema).set({
+                favourite: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.favourite}, ${body.recipeId})`
+            });
         }
         // Return response
         return res.json({

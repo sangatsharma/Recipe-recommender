@@ -20,6 +20,7 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
     posts: (0, pg_core_1.integer)("posts").default(0).notNull(),
     mostViewed: (0, pg_core_1.text)("mostViewed"),
+    favourite: (0, pg_core_1.integer)("favourite").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
 });
 // User Preferences
 exports.userPref = (0, pg_core_1.pgTable)("userPref", {
