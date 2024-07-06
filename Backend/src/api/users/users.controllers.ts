@@ -12,7 +12,7 @@ import {
 } from "@/utils/config";
 
 // DB
-import { and, arrayOverlaps, eq, sql } from "drizzle-orm";
+import { and, arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
@@ -216,7 +216,6 @@ export const favouriteRecipeHandler = async (req: Request, res: Response, next: 
 
     // Else, remove
     else {
-      console.log(10101);
       // await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
       await db.update(userSchema).set({
         favourite: sql`array_remove(${userSchema.favourite}, ${body.recipeId})`
@@ -248,7 +247,8 @@ export const recipeFavouriteGetHandler = async (req: Request, res: Response, nex
   try {
 
     // Fetch all for the user
-    const favRec = await db.select().from(favouriteRecipes).where(eq(favouriteRecipes.userId, userCookie.id));
+    const userInfo = await db.select().from(userSchema).where(eq(userSchema.id, userCookie.id));
+    const favRec = await db.select().from(recipeSchema).where(inArray(recipeSchema.RecipeId, userInfo[0].favourite));
 
     // Return response
     return res.json({

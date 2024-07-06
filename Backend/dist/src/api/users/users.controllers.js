@@ -175,7 +175,6 @@ const favouriteRecipeHandler = async (req, res, next) => {
         }
         // Else, remove
         else {
-            console.log(10101);
             // await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
             await db_1.db.update(users_models_1.userSchema).set({
                 favourite: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.favourite}, ${body.recipeId})`
@@ -202,7 +201,8 @@ const recipeFavouriteGetHandler = async (req, res, next) => {
     const userCookie = res.locals.user;
     try {
         // Fetch all for the user
-        const favRec = await db_1.db.select().from(users_models_1.favouriteRecipes).where((0, drizzle_orm_1.eq)(users_models_1.favouriteRecipes.userId, userCookie.id));
+        const userInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, userCookie.id));
+        const favRec = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.inArray)(recipes_models_1.recipeSchema.RecipeId, userInfo[0].favourite));
         // Return response
         return res.json({
             success: true,
