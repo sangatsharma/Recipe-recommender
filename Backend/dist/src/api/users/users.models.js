@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userSchema = void 0;
+exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userPref = exports.userSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
@@ -10,6 +10,7 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     name: (0, pg_core_1.text)("name").notNull(),
     email: (0, pg_core_1.text)("email").notNull().unique(),
     password: (0, pg_core_1.text)("password"),
+    bio: (0, pg_core_1.text)("bio"),
     profile_pic: (0, pg_core_1.text)("profile_pic"),
     verified: (0, pg_core_1.integer)("verified").notNull().default(0),
     joinedOn: (0, pg_core_1.timestamp)("joinedOn", {
@@ -17,6 +18,19 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     }).defaultNow().notNull(),
     followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
+    posts: (0, pg_core_1.integer)("posts").default(0).notNull(),
+    mostViewed: (0, pg_core_1.text)("mostViewed"),
+    favourite: (0, pg_core_1.integer)("favourite").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
+});
+// User Preferences
+exports.userPref = (0, pg_core_1.pgTable)("userPref", {
+    id: (0, pg_core_1.serial)("id").primaryKey().notNull(),
+    userId: (0, pg_core_1.integer)("userId").references(() => exports.userSchema.id, { onDelete: "cascade" }),
+    dietaryRestrictions: (0, pg_core_1.text)("dietaryRestriction"),
+    favCuisines: (0, pg_core_1.text)("favCuisines"),
+    disliked: (0, pg_core_1.text)("disliked"),
+    preferredMeal: (0, pg_core_1.text)("preferredMeal"),
+    diseases: (0, pg_core_1.text)("diseases")
 });
 exports.followerSchema = (0, pg_core_1.pgTable)("followers", {
     id: (0, pg_core_1.serial)("id").primaryKey(),

@@ -53,6 +53,9 @@ const userRegisterHelper = async (body) => {
         body["password"] = passwordHash;
     }
     const userData = (await db_1.db.insert(users_models_1.userSchema).values(body).returning())[0];
+    await db_1.db.insert(users_models_1.userPref).values({
+        userId: userData.id,
+    });
     return { success: true, body: userData };
 };
 exports.userRegisterHelper = userRegisterHelper;
