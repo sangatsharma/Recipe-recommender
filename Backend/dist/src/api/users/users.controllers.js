@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -279,3 +279,42 @@ const updateUserInfo = async (req, res, next) => {
     }
 };
 exports.updateUserInfo = updateUserInfo;
+const updateUserPreferences = async (req, res, next) => {
+    // Get user info from cookie
+    const cookieInfo = res.locals.user;
+    const body = req.body;
+    body.userId = cookieInfo.id;
+    try {
+        const userPrefRes = await db_1.db.update(users_models_1.userPref).set(body).where((0, drizzle_orm_1.eq)(users_models_1.userPref.userId, Number(cookieInfo.id))).returning();
+        if (userPrefRes.length === 0) {
+            const userPrefRes = await db_1.db.insert(users_models_1.userPref).values(body).returning();
+            return res.json({
+                success: true,
+                body: userPrefRes[0]
+            });
+        }
+        return res.json({
+            success: true,
+            body: userPrefRes[0]
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.updateUserPreferences = updateUserPreferences;
+// Return userPrefs
+const getUserPreferences = async (req, res, next) => {
+    const cookieInfo = res.locals.user;
+    try {
+        const userPrefRes = await db_1.db.select().from(users_models_1.userPref).where((0, drizzle_orm_1.eq)(users_models_1.userPref.userId, Number(cookieInfo.id)));
+        return res.json({
+            success: true,
+            body: userPrefRes[0]
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.getUserPreferences = getUserPreferences;

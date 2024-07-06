@@ -16,7 +16,7 @@ import { and, eq, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
-import { favouriteRecipes, followerSchema, userSchema } from "@/api/users/users.models";
+import { favouriteRecipes, followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 import { handleUpload } from "@/utils/cloudinary";
 
@@ -334,6 +334,66 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
       body: {
         message: "Successfully updated profile"
       }
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
+
+export const updateUserPreferences = async (req: Request, res: Response, next: NextFunction) => {
+
+  // Get user info from cookie
+  const cookieInfo = res.locals.user as { id: number };
+
+  type UpdateUserPreferencesType = {
+    userId: number,
+    dietaryRestrictions: string,
+    favCuisines: string,
+    disliked: string,
+    preferredMeal: string,
+    diseases: string,
+  };
+
+  const body = req.body as UpdateUserPreferencesType;
+  body.userId = cookieInfo.id;
+
+  try {
+    const userPrefRes = await db.update(userPref).set(body).where(eq(userPref.userId, Number(cookieInfo.id))).returning();
+
+    if (userPrefRes.length === 0) {
+      const userPrefRes = await db.insert(userPref).values(body).returning();
+
+      return res.json({
+        success: true,
+        body: userPrefRes[0]
+      });
+    }
+
+    return res.json({
+      success: true,
+      body: userPrefRes[0]
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+
+
+};
+
+
+// Return userPrefs
+export const getUserPreferences = async (req: Request, res: Response, next: NextFunction) => {
+  const cookieInfo = res.locals.user as { id: string };
+
+  try {
+    const userPrefRes = await db.select().from(userPref).where(eq(userPref.userId, Number(cookieInfo.id)));
+
+    return res.json({
+      success: true,
+      body: userPrefRes[0]
     });
   }
   catch (err) {

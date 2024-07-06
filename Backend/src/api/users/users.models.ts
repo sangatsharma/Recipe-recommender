@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import { serial, text, pgTable, timestamp, integer } from "drizzle-orm/pg-core";
 import { recipeSchema } from "../recipes/recipes.models";
 
@@ -17,6 +17,17 @@ export const userSchema = pgTable("users", {
   followers: integer("followers").default(0).notNull(),
   following: integer("following").default(0).notNull(),
   mostViewed: text("mostViewed"),
+});
+
+// User Preferences
+export const userPref = pgTable("userPref", {
+  id: serial("id").primaryKey().notNull(),
+  userId: integer("userId").references(() => userSchema.id, { onDelete: "cascade" }),
+  dietaryRestrictions: text("dietaryRestriction"),
+  favCuisines: text("favCuisines"),
+  disliked: text("disliked"),
+  preferredMeal: text("preferredMeal"),
+  diseases: text("diseases")
 });
 
 export const followerSchema = pgTable("followers", {

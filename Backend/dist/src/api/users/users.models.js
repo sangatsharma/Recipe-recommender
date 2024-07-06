@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userSchema = void 0;
+exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userPref = exports.userSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
@@ -19,6 +19,16 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
     mostViewed: (0, pg_core_1.text)("mostViewed"),
+});
+// User Preferences
+exports.userPref = (0, pg_core_1.pgTable)("userPref", {
+    id: (0, pg_core_1.serial)("id").primaryKey().notNull(),
+    userId: (0, pg_core_1.integer)("userId").references(() => exports.userSchema.id, { onDelete: "cascade" }),
+    dietaryRestrictions: (0, pg_core_1.text)("dietaryRestriction"),
+    favCuisines: (0, pg_core_1.text)("favCuisines"),
+    disliked: (0, pg_core_1.text)("disliked"),
+    preferredMeal: (0, pg_core_1.text)("preferredMeal"),
+    diseases: (0, pg_core_1.text)("diseases")
 });
 exports.followerSchema = (0, pg_core_1.pgTable)("followers", {
     id: (0, pg_core_1.serial)("id").primaryKey(),
