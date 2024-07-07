@@ -266,13 +266,11 @@ const updateUserInfo = async (req, res, next) => {
         updateData.bio = body.bio;
     if (body.birthday)
         updateData.birthday = body.birthday;
-    let data;
     // If profile picture provided
     if (req.file) {
         const b64 = Buffer.from(req.file?.buffer).toString("base64");
         const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
         const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-        data = cldRes;
         updateData.profile_pic = cldRes.secure_url;
     }
     try {
@@ -282,8 +280,6 @@ const updateUserInfo = async (req, res, next) => {
         return res.json({
             success: true,
             body: {
-                d: body,
-                demo: data,
                 message: "Successfully updated profile"
             }
         });

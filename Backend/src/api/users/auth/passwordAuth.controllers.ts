@@ -38,13 +38,13 @@ export const userRegisterHandler = async (req: Request, res: Response, next: Nex
     // Register user
 
     // Create profile picture if provided
-    if (req.file) {
-      const b64 = Buffer.from(req.file?.buffer).toString("base64");
-      const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    // if (req.file) {
+    //   const b64 = Buffer.from(req.file?.buffer).toString("base64");
+    //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-      const cldRes = await handleUpload(dataURI);
-      cleanedBody.profile_pic = cldRes.secure_url;
-    }
+    //   const cldRes = await handleUpload(dataURI);
+    //   cleanedBody.profile_pic = cldRes.secure_url;
+    // }
 
     // TODO: Remove profile picture if user exists
     const userData = await userRegisterHelper(cleanedBody);

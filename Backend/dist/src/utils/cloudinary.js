@@ -10,7 +10,7 @@ cloudinary_1.v2.config({
 });
 const handleUpload = async (file) => {
     const result = await cloudinary_1.v2.uploader.upload(file, {
-        resource_type: "auto",
+        resource_type: "image",
         transformation: { crop: "thumb", width: 600, height: 600 }
     });
     return result;
