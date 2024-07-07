@@ -369,13 +369,6 @@ export const updateUserPreferences = async (req: Request, res: Response, next: N
 
   try {
 
-    if (req.file) {
-      const b64 = Buffer.from(req.file?.buffer).toString("base64");
-      const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-
-      const cldRes = await handleUpload(dataURI);
-      await db.update(userSchema).set({ profile_pic: cldRes.secure_url }).where(eq(userSchema.id, cookieInfo.id));
-    }
     const userPrefRes = await db.update(userPref).set(body).where(eq(userPref.userId, Number(cookieInfo.id))).returning();
 
     if (userPrefRes.length === 0) {
