@@ -7,7 +7,7 @@ import { EMAIL_ACCOUNT, EMAIL_APP_PASS, SECRET } from "@/utils/config";
 import { RegisterForm, UserDataDB } from "../users.types";
 import { db } from "@/utils/db";
 import { eq } from "drizzle-orm";
-import { passwordResetSchema, userSchema } from "../users.models";
+import { passwordResetSchema, userPref, userSchema } from "../users.models";
 
 import bcrypt from "bcrypt";
 
@@ -60,6 +60,9 @@ export const userRegisterHelper = async (body: RegisterForm) => {
 	}
 
 	const userData: UserDataDB = (await db.insert(userSchema).values(body).returning())[0];
+	await db.insert(userPref).values({
+		userId: userData.id,
+	});
 	return { success: true, body: userData };
 };
 
