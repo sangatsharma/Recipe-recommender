@@ -1,10 +1,10 @@
-// src/components/PreferencesForm.js
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import axios from "axios";
 
-const PreferencesForm = ({ darkMode }) => {
+const PreferencesForm = ({ userInfo, setUserInfo }) => {
   // Define validation schema
   const validationSchema = Yup.object({
     dietaryRestrictions: Yup.string().required(
@@ -19,17 +19,33 @@ const PreferencesForm = ({ darkMode }) => {
   // Initialize formik
   const formik = useFormik({
     initialValues: {
-      dietaryRestrictions: "",
-      favoriteCuisines: [],
-      dislikedIngredients: "",
-      mealTypes: [],
-      diseases: [],
+      dietaryRestrictions: userInfo?.preferences?.dietaryRestrictions || "",
+      favoriteCuisines: userInfo?.preferences?.favCuisines || [],
+      dislikedIngredients: userInfo?.preferences?.disliked || "",
+      mealTypes: userInfo?.preferences?.preferredMeal || [],
+      diseases: userInfo?.preferences?.diseases?.split(",") || [],
     },
     validationSchema,
-    onSubmit: (values) => {
-      // Simulate form submission
-      console.log("Form Submitted", values);
-      toast.success("Preferences saved successfully!");
+    onSubmit: async (values) => {
+      console.log(values);
+      //send data to server
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/user/pref`,
+          values,
+          { withCredentials: true }
+        );
+        console.log(response.data);
+        if (response.status === 200) {
+          setUserInfo((prevValues) => ({
+            ...prevValues,
+            preferences: values,
+          }));
+          toast.success(response.data.body.message);
+        }
+      } catch (err) {
+        console.error(err);
+      }
     },
   });
 
@@ -43,9 +59,7 @@ const PreferencesForm = ({ darkMode }) => {
             name="dietaryRestrictions"
             onChange={formik.handleChange}
             value={formik.values.dietaryRestrictions}
-            className={` w-full p-2 border rounded-md ${
-              darkMode ? "text-white" : "text-black"
-            }`}
+            className={` w-full p-2 border rounded-md text-black`}
           >
             <option value="" label="Select" />
             <option value="none" label="None" />
@@ -62,7 +76,9 @@ const PreferencesForm = ({ darkMode }) => {
         </div>
 
         <div className="mb-3">
-          <label className="block text-sm font-medium">Favorite Cuisines</label>
+          <label className="block text-sm font-medium">
+            Favorite Cuisines <span className="text-red-500">*</span>
+          </label>
           <div
             role="group"
             aria-labelledby="checkbox-group"
@@ -75,6 +91,7 @@ const PreferencesForm = ({ darkMode }) => {
                   name="favoriteCuisines"
                   value={cuisine}
                   onChange={formik.handleChange}
+                  checked={formik.values.favoriteCuisines.includes(cuisine)}
                   className="form-checkbox text-blue-600 ml-2"
                 />
                 <span className="ml-1">{cuisine}</span>
@@ -102,9 +119,7 @@ const PreferencesForm = ({ darkMode }) => {
             placeholder="Enter disliked ingredients separated by commas"
             onChange={formik.handleChange}
             value={formik.values.dislikedIngredients}
-            className={`block w-full p-2 border rounded-md ${
-              darkMode ? "text-white" : "text-black"
-            } placeholder:text-[12px]`}
+            className={`block w-full p-2 border rounded-md text-black  placeholder:text-[12px]`}
           />
           {formik.errors.dislikedIngredients &&
           formik.touched.dislikedIngredients ? (
@@ -116,12 +131,9 @@ const PreferencesForm = ({ darkMode }) => {
 
         <div className="mb-2">
           <label className="block text-sm font-medium">
-            Preferred Meal Types
+            Preferred Meal Types <span className="text-red-500">*</span>
           </label>
-          <div
-            role="group"
-            aria-labelledby="checkbox-group"
-          >
+          <div role="group" aria-labelledby="checkbox-group">
             {["Breakfast", "Lunch", "Dinner", "Snack"].map((meal) => (
               <label key={meal} className="inline-flex items-center">
                 <input
@@ -129,6 +141,7 @@ const PreferencesForm = ({ darkMode }) => {
                   name="mealTypes"
                   value={meal}
                   onChange={formik.handleChange}
+                  checked={formik.values.mealTypes.includes(meal)}
                   className="form-checkbox text-blue-600 ml-2"
                 />
                 <span className="ml-1">{meal}</span>
@@ -144,13 +157,10 @@ const PreferencesForm = ({ darkMode }) => {
 
         <div className="mb-6">
           <label className="block text-sm font-medium ">
-            Food-Related Diseases <span className="text-red-500">*</span>
+            Food-Related Diseases
           </label>
-         
-          <div
-            role="group"
-            aria-labelledby="checkbox-group"
-          >
+
+          <div role="group" aria-labelledby="checkbox-group">
             {["Diabetes", "Hypertension", "Celiac Disease", "Nut Allergy"].map(
               (disease) => (
                 <label key={disease} className="inline-flex items-center">
@@ -159,6 +169,7 @@ const PreferencesForm = ({ darkMode }) => {
                     name="diseases"
                     value={disease}
                     onChange={formik.handleChange}
+                    checked={formik.values.diseases.includes(disease)}
                     className="form-checkbox text-blue-600 ml-2"
                   />
                   <span className="ml-1">{disease}</span>

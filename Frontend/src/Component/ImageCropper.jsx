@@ -80,7 +80,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
 
       try {
         const formData = new FormData();
-        formData.append("image", croppedFile);
+        formData.append("profile_pic", croppedFile);
 
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/user/update`,
@@ -92,6 +92,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
             withCredentials: true,
           }
         );
+        console.log(response);
 
         if (response.status === 200) {
           toast.success(response.data.body.message);

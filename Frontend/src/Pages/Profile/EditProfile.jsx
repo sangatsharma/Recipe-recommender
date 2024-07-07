@@ -9,9 +9,11 @@ import ImageCropper from "../../Component/ImageCropper";
 import Loader from "../../Component/Loader/Loader";
 import { formatDate } from "../../utils/dateFormat";
 import { getCity } from "../../utils/weather";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const EditProfile = () => {
-  const { userInfo, loading } = useContext(AuthContext);
+  const { userInfo, loading, setUserInfo } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
   const [profilePic, setProfilePic] = useState(
     userInfo?.profile_pic ||
@@ -21,6 +23,9 @@ const EditProfile = () => {
   useEffect(() => {
     getCity().then((city) => setCity(city));
   }, []);
+  if (!loading) {
+    console.log("userInfo", userInfo);
+  }
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
@@ -37,8 +42,31 @@ const EditProfile = () => {
       bio: Yup.string(),
       city: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      //send data to server
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/user/update`,
+          values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        if (response.status === 200) {
+          toast.success(response.data.body.message);
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        toast.error("Failed to update profile.");
+      }
+      console.log("updated values", { ...userInfo, ...values });
+      setUserInfo((prevValues) => ({
+        ...prevValues,
+      }));
     },
   });
 
@@ -173,7 +201,9 @@ const EditProfile = () => {
             </form>
           )}
           {/* User Preferences */}
-          {currentPage === "userPreferences" && <PreferencesForm />}
+          {currentPage === "userPreferences" && (
+            <PreferencesForm userInfo={userInfo} setUserInfo={setUserInfo} />
+          )}
         </div>
       </div>
     </div>

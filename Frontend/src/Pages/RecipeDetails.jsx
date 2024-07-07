@@ -28,7 +28,7 @@ const RecipeDetails = () => {
         const pdf = new jsPDF({
           orientation: "portrait",
           putOnlyUsedFonts: true,
-          compress: false,
+          compress: true,
           floatPrecision: 1,
           unit: "px",
           format: [canvas.width , canvas.height ], // Use canvas dimensions
