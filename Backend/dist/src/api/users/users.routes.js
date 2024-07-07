@@ -34,9 +34,9 @@ userRouter.get("/recipes", middleware_1.authenticateJWT, users_controllers_1.tmp
 userRouter.get("/validate", middleware_1.authenticateJWT, users_controllers_1.validateToken);
 userRouter.post("/favourite", middleware_1.authenticateJWT, users_controllers_1.favouriteRecipeHandler);
 userRouter.get("/favourite", middleware_1.authenticateJWT, users_controllers_1.recipeFavouriteGetHandler);
-userRouter.post("/update", middleware_1.authenticateJWT, users_controllers_1.updateUserInfo);
+userRouter.post("/update", upload.single("profile_pic"), middleware_1.authenticateJWT, users_controllers_1.updateUserInfo);
 userRouter.post("/recommend", middleware_1.authenticateJWT, users_controllers_1.recommendRecipies);
-userRouter.post("/pref", upload.single("profile_pic"), middleware_1.authenticateJWT, users_controllers_1.updateUserPreferences);
+userRouter.post("/pref", middleware_1.authenticateJWT, users_controllers_1.updateUserPreferences);
 userRouter.get("/pref", middleware_1.authenticateJWT, users_controllers_1.getUserPreferences);
 userRouter.get("/profile/:id", users_controllers_1.userProfile);
 exports.default = userRouter;
