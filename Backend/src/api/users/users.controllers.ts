@@ -19,6 +19,7 @@ import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
 import { favouriteRecipes, followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 import { handleUpload } from "@/utils/cloudinary";
+import { PgDate } from "drizzle-orm/pg-core";
 
 
 /****************
@@ -311,17 +312,19 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     fullName: string,
     username: string,
     bio: string,
+    birthday: string,
   };
 
   // Provide body
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
 
-  const updateData = {} as { name?: string, username?: string, bio?: string, image: string };
+  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string };
 
   // if (body.username) updateData.username = body.username;
   if (body.fullName) updateData.name = body.fullName;
   if (body.bio) updateData.bio = body.bio;
+  if (body.birthday) updateData.birthday = body.birthday;
 
   // If profile picture provided
   if (req.file) {
@@ -329,7 +332,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
     const cldRes = await handleUpload(dataURI);
-    updateData.image = cldRes.secure_url;
+    updateData.profile_pic = cldRes.secure_url;
   }
 
   try {

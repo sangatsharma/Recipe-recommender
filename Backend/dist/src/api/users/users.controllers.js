@@ -264,12 +264,14 @@ const updateUserInfo = async (req, res, next) => {
         updateData.name = body.fullName;
     if (body.bio)
         updateData.bio = body.bio;
+    if (body.birthday)
+        updateData.birthday = body.birthday;
     // If profile picture provided
     if (req.file) {
         const b64 = Buffer.from(req.file?.buffer).toString("base64");
         const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
         const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-        updateData.image = cldRes.secure_url;
+        updateData.profile_pic = cldRes.secure_url;
     }
     try {
         // Update DB
