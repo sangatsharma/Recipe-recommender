@@ -317,7 +317,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
 
-  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string };
+  const updateData = {} as { name?: string, username?: string, bio?: string, image: string };
 
   // if (body.username) updateData.username = body.username;
   if (body.fullName) updateData.name = body.fullName;
@@ -329,7 +329,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
     const cldRes = await handleUpload(dataURI);
-    updateData.profile_pic = cldRes.secure_url;
+    updateData.image = cldRes.secure_url;
   }
 
   try {

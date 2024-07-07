@@ -269,7 +269,7 @@ const updateUserInfo = async (req, res, next) => {
         const b64 = Buffer.from(req.file?.buffer).toString("base64");
         const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
         const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-        updateData.profile_pic = cldRes.secure_url;
+        updateData.image = cldRes.secure_url;
     }
     try {
         // Update DB
