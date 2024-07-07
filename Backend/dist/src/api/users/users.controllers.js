@@ -293,6 +293,12 @@ const updateUserPreferences = async (req, res, next) => {
     const body = req.body;
     body.userId = cookieInfo.id;
     try {
+        if (req.file) {
+            const b64 = Buffer.from(req.file?.buffer).toString("base64");
+            const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
+            await db_1.db.update(users_models_1.userSchema).set({ profile_pic: cldRes.secure_url }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, cookieInfo.id));
+        }
         const userPrefRes = await db_1.db.update(users_models_1.userPref).set(body).where((0, drizzle_orm_1.eq)(users_models_1.userPref.userId, Number(cookieInfo.id))).returning();
         if (userPrefRes.length === 0) {
             const userPrefRes = await db_1.db.insert(users_models_1.userPref).values(body).returning();

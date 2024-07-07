@@ -39,7 +39,7 @@ userRouter.post("/update", authenticateJWT, updateUserInfo as RequestHandler);
 
 userRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
 
-userRouter.post("/pref", authenticateJWT, updateUserPreferences as RequestHandler);
+userRouter.post("/pref", upload.single("profile_pic"), authenticateJWT, updateUserPreferences as RequestHandler);
 userRouter.get("/pref", authenticateJWT, getUserPreferences as RequestHandler);
 
 userRouter.get("/profile/:id", userProfile as RequestHandler);
