@@ -326,12 +326,14 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   if (body.bio) updateData.bio = body.bio;
   if (body.birthday) updateData.birthday = body.birthday;
 
+  let data;
   // If profile picture provided
   if (req.file) {
     const b64 = Buffer.from(req.file?.buffer).toString("base64");
     const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
     const cldRes = await handleUpload(dataURI);
+    data = cldRes;
     updateData.profile_pic = cldRes.secure_url;
   }
 
@@ -343,6 +345,8 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     return res.json({
       success: true,
       body: {
+        d: body,
+        demo: data,
         message: "Successfully updated profile"
       }
     });
