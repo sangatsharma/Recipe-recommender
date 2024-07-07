@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { serial, text, pgTable, timestamp, integer } from "drizzle-orm/pg-core";
 import { recipeSchema } from "../recipes/recipes.models";
+import { date } from "drizzle-orm/pg-core";
 
 // Schema for user
 export const userSchema = pgTable("users", {
@@ -14,6 +15,7 @@ export const userSchema = pgTable("users", {
   joinedOn: timestamp("joinedOn", {
     withTimezone: true
   }).defaultNow().notNull(),
+  birthday: date("birthday"),
   followers: integer("followers").default(0).notNull(),
   following: integer("following").default(0).notNull(),
   posts: integer("posts").default(0).notNull(),

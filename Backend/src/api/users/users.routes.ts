@@ -35,7 +35,7 @@ userRouter.get("/recipes", authenticateJWT, tmpDemo);
 userRouter.get("/validate", authenticateJWT, validateToken);
 userRouter.post("/favourite", authenticateJWT, favouriteRecipeHandler as RequestHandler);
 userRouter.get("/favourite", authenticateJWT, recipeFavouriteGetHandler as RequestHandler);
-userRouter.post("/update", authenticateJWT, updateUserInfo as RequestHandler);
+userRouter.post("/update", upload.single("profile_pic"), authenticateJWT, updateUserInfo as RequestHandler);
 
 userRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
 
