@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard.jsx";
 import { useFavContext } from "../context/FavContext.jsx";
-
 import { Helmet } from "react-helmet-async";
 
 const BookmarkRecipes = () => {
   const { tickedItems, toggleTick, Save } = useFavContext();
+  const [untickItems, setUntickItems] = useState([]);
   const handleClick = (id) => {
+    setUntickItems([...untickItems, id]);
     toggleTick(id);
   };
 
@@ -29,20 +30,38 @@ const BookmarkRecipes = () => {
               urls.push(matches[1]);
             }
             return (
-              <ItemsCard
+              <div
                 key={item.RecipeId}
-                id={item.RecipeId}
-                src={urls[0]}
-                name={item.Name}
-                RecipeCategory={item.RecipeCategory}
-                rating={item.AggregatedRating}
-                cooktime={item.CookTime}
-                toggleTick={handleClick}
-                isFavorite={tickedItems.has(item.RecipeId)}
-              ></ItemsCard>
+                style={{
+                  opacity: untickItems.includes(item.RecipeId) ? 0 : 1,
+                  transform: untickItems.includes(item.RecipeId)
+                    ? "scale(0)"
+                    : "",
+                  transition: "opacity 0.5s ease, transform 0.5s ease",
+                }}
+              >
+                <ItemsCard
+                  id={item.RecipeId}
+                  src={urls[0]}
+                  name={item.Name}
+                  RecipeCategory={item.RecipeCategory}
+                  rating={item.AggregatedRating}
+                  cooktime={item.CookTime}
+                  toggleTick={handleClick}
+                  isFavorite={tickedItems.has(item.RecipeId)}
+                ></ItemsCard>
+              </div>
             );
           })}
-        {tickedItems.size === 0 && <p>Not saved yet.</p>}
+        <p
+          className={`${
+            tickedItems.size > 0
+              ? "opacity-0 scale-0 "
+              : "opacity-1 scale-125 transition-transform duration-6000  "
+          }`}
+        >
+          Not saved yet.
+        </p>
       </div>
     </div>
   );

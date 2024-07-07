@@ -1,6 +1,7 @@
 import "./ItemsCard.css";
 import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../../context/ThemeContext";
+import { useState } from "react";
 
 const ItemsCard = ({
   id,
@@ -13,6 +14,7 @@ const ItemsCard = ({
   RecipeCategory,
 }) => {
   const { isDarkMode } = useThemeContext();
+  const [isScaling, setIsScaling] = useState(false);
   const navigate = useNavigate();
 
   // Create a URL-friendly name
@@ -54,12 +56,24 @@ const ItemsCard = ({
                                 : "text-gray-500 bg-gray-200 opacity-0"
                             }
                              group-hover:opacity-100 hover:shadow-lg hover:scale-110 focus:outline-none`}
-          onClick={() => toggleTick(id)}
+          onClick={() => {
+            setIsScaling(true);
+            setTimeout(() => {
+              setIsScaling(false);
+            }, 200);
+            toggleTick(id);
+          }}
         >
           {isFavorite ? (
-            <i className="fas fa-heart"></i>
+            <i
+              className={`fas fa-heart ${
+                isScaling ? "transform scale-150 transition-transform duration-200" : "transition-transform duration-200"
+              }`}
+            ></i>
           ) : (
-            <i className="far fa-heart"></i>
+            <i className={` ${
+              isScaling ? "transform scale-0 transition-transform duration-100" : "transition-transform duration-200"
+            } far fa-heart`}></i>
           )}
         </button>
       </div>
@@ -75,10 +89,15 @@ const ItemsCard = ({
             </p>
             <p id="RecipeRating">{rating || 4.6} </p>
             <i className="fas fa-star text-[12px] text-[#e68338]"></i>
-            
           </div>
           <div className="w-auto">
-            <p className={`${isDarkMode?"text-gray-300":"text-gray-500"} text-[14px] `}>{RecipeCategory}</p>
+            <p
+              className={`${
+                isDarkMode ? "text-gray-300" : "text-gray-500"
+              } text-[14px] `}
+            >
+              {RecipeCategory}
+            </p>
           </div>
         </div>
       </div>

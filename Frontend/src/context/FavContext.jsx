@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useCallback,
+} from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -18,8 +24,10 @@ export const FavItemsProvider = ({ children }) => {
         { withCredentials: true }
       );
       setSave(favItems.data.body);
-      const favItemsId = favItems.data.body.map((item) => item.RecipeId);
-      setTickedItems(new Set(favItemsId));
+      if (favItems.data.body.length > 0) {
+        const favItemsId = favItems.data.body.map((item) => item.RecipeId);
+        setTickedItems(new Set(favItemsId));
+      }
     } catch (error) {
       console.error("Error fetching items:", error);
     } finally {
