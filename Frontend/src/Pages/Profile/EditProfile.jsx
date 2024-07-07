@@ -1,33 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import PreferencesForm from "./PreferencesForm";
-
 import { AuthContext } from "../../context/AuthContext";
 import ImageCropper from "../../Component/ImageCropper";
 import Loader from "../../Component/Loader/Loader";
+import { formatDate } from "../../utils/dateFormat";
+import { getCity } from "../../utils/weather";
 
-const EditProfile = ({ darkMode }) => {
+const EditProfile = () => {
   const { userInfo, loading } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
   const [profilePic, setProfilePic] = useState(
-    userInfo.profile_pic ||
+    userInfo?.profile_pic ||
       "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
   );
-
+  const [city, setCity] = useState("");
+  useEffect(() => {
+    getCity().then((city) => setCity(city));
+  }, []);
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
-      username: userInfo ? `${userInfo.name.split(" ")[0]}${userInfo.id}` : "",
+      DOB: userInfo?.DOB || "",
       email: userInfo?.email || "",
       bio: "",
+      city: userInfo?.city || city,
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
       fullName: Yup.string().required("Required"),
-      username: Yup.string().required("Required"),
+      DOB: Yup.string().required("Required").nullable(),
       email: Yup.string().email("Invalid email address").required("Required"),
       bio: Yup.string(),
+      city: Yup.string().required("Required"),
     }),
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
@@ -45,11 +53,11 @@ const EditProfile = ({ darkMode }) => {
 
   return (
     <div
-      className={` w-[60%] below-sm:w-[90%] flex flex-row below-sm:flex-col gap-4  below-sm:gap-2 m-auto`}
+      className={`w-[60%] below-sm:w-[90%] flex flex-row below-sm:flex-col gap-4 below-sm:gap-2 m-auto`}
     >
-      {/*left side*/}
+      {/* Left side */}
       <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
-        <div className="flex flex-col items-center  p-4 ">
+        <div className="flex flex-col items-center p-4">
           <ImageCropper
             userInfo={userInfo}
             profilePic={profilePic}
@@ -58,13 +66,13 @@ const EditProfile = ({ darkMode }) => {
         </div>
       </div>
 
-      {/*right side*/}
+      {/* Right side */}
       <div className="flex w-[50%] below-sm:w-[100%] flex-col">
         <h1 className="text-2xl">Edit Profile</h1>
 
         <div className="flex flex-row w-full gap-16 mt-4 ml-8">
           <h2
-            className={` ${
+            className={`${
               currentPage === "userInfo" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userInfo")}
@@ -72,7 +80,7 @@ const EditProfile = ({ darkMode }) => {
             Info
           </h2>
           <h2
-            className={` ${
+            className={`${
               currentPage === "userPreferences" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userPreferences")}
@@ -82,7 +90,7 @@ const EditProfile = ({ darkMode }) => {
         </div>
 
         <div className="pl-4 mt-3">
-          {/* user Info*/}
+          {/* User Info */}
           {currentPage === "userInfo" && (
             <form onSubmit={formik.handleSubmit} className="p-4">
               <div className="mb-4">
@@ -98,32 +106,51 @@ const EditProfile = ({ darkMode }) => {
                   <div className="text-red-600">{formik.errors.fullName}</div>
                 ) : null}
               </div>
-              <div className="mb-4">
-                <label className="block">Username</label>
-                <input
-                  autoComplete="username"
-                  type="text"
-                  name="username"
-                  {...formik.getFieldProps("username")}
-                  className="w-full p-2 border rounded  text-black"
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div className="text-red-600">{formik.errors.username}</div>
-                ) : null}
-              </div>
+
               <div className="mb-4">
                 <label className="block">Email Address</label>
                 <input
                   autoComplete="Email"
                   type="email"
                   name="email"
+                  disabled
                   {...formik.getFieldProps("email")}
-                  className="w-full p-2 border rounded  text-black"
+                  className="w-full p-2 border rounded text-black"
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-600">{formik.errors.email}</div>
                 ) : null}
               </div>
+              <div className="mb-4">
+                <label>Birthday:</label>
+                <br />
+                <DatePicker
+                  placeholderText="Select a date"
+                  selected={formik.values.DOB}
+                  onChange={(date) =>
+                    formik.setFieldValue("DOB", formatDate(date))
+                  }
+                  dateFormat="yyyy/MM/dd"
+                  className="w-full p-2 border rounded text-black"
+                />
+                {formik.touched.DOB && formik.errors.DOB ? (
+                  <div className="text-red-600">{formik.errors.DOB}</div>
+                ) : null}
+              </div>
+              <div className="mb-4">
+                <label className="block">City</label>
+                <input
+                  autoComplete="City"
+                  type="text"
+                  name="city"
+                  {...formik.getFieldProps("city")}
+                  className="w-full p-2 border rounded text-black"
+                />
+                {formik.touched.city && formik.errors.city ? (
+                  <div className="text-red-600">{formik.errors.city}</div>
+                ) : null}
+              </div>
+
               <div className="mb-4">
                 <label className="block">Add bio</label>
                 <input
@@ -131,7 +158,7 @@ const EditProfile = ({ darkMode }) => {
                   type="text"
                   name="bio"
                   {...formik.getFieldProps("bio")}
-                  className="w-full p-2 border rounded  text-black"
+                  className="w-full p-2 border rounded text-black"
                 />
                 {formik.touched.bio && formik.errors.bio ? (
                   <div className="text-red-600">{formik.errors.bio}</div>
@@ -139,13 +166,13 @@ const EditProfile = ({ darkMode }) => {
               </div>
               <button
                 type="submit"
-                className="block w-full py-2 px-4 bg-blue-500  hover:bg-blue-700 text-white rounded"
+                className="block w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded"
               >
                 Update Info
               </button>
             </form>
           )}
-          {/* user Preferences*/}
+          {/* User Preferences */}
           {currentPage === "userPreferences" && <PreferencesForm />}
         </div>
       </div>

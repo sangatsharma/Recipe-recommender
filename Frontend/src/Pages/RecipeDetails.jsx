@@ -175,11 +175,11 @@ const RecipeDetails = () => {
           <h1 className="text-4xl  below-sm:text-2xl font-bold flex items-center">
             {item.Name}
           </h1>
-          <p className="text-xl below-sm:text-[14px] leading-snug mt-2">
+          <p className="text-xl below-sm:text-[14px] leading-snug mt-2 pl-2">
             {item.Description}
           </p>
-          <p className="mt-4 text-sm ">Category: {item.RecipeCategory}</p>
-          <p className="mt-1 text-sm ">
+          <p className="mt-4 text-sm pl-2 ">Category: {item.RecipeCategory}</p>
+          <p className="mt-1 text-sm pl-2">
             Date Published: {new Date(item.DatePublished).toLocaleString()}
           </p>
         </section>
@@ -262,7 +262,7 @@ const RecipeDetails = () => {
           </h2>
           <ol className="list-decimal mt-1 list-outside  pl-10 ">
             {instructions.map((instruction, index) => (
-              <li key={index} className="leading-5 mt-1 ">
+              <li key={index} className="leading-6 mt-2 ">
                 {instruction}
               </li>
             ))}

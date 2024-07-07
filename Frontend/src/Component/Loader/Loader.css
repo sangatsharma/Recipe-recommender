@@ -8,10 +8,10 @@
   border-radius: 50%;
   border-top: 2px solid #ff7936;
   border-right: 2px solid transparent;
-  animation: spinner8217 0.8s linear infinite;
+  animation: spinner 0.8s linear infinite;
 }
 
-@keyframes spinner8217 {
+@keyframes spinner {
   to {
     transform: rotate(360deg);
   }

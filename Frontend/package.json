@@ -12,11 +12,13 @@
   "dependencies": {
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
+    "date-fns": "^3.6.0",
     "formik": "^2.4.6",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "nsfwjs": "^4.1.0",
     "react": "^18.2.0",
+    "react-datepicker": "^7.2.0",
     "react-dom": "^18.2.0",
     "react-easy-crop": "^5.0.7",
     "react-helmet-async": "^2.0.5",

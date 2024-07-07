@@ -104,7 +104,7 @@ const PreferencesForm = ({ darkMode }) => {
             value={formik.values.dislikedIngredients}
             className={`block w-full p-2 border rounded-md ${
               darkMode ? "text-white" : "text-black"
-            } placeholder:text-[11px]`}
+            } placeholder:text-[12px]`}
           />
           {formik.errors.dislikedIngredients &&
           formik.touched.dislikedIngredients ? (
@@ -114,14 +114,13 @@ const PreferencesForm = ({ darkMode }) => {
           ) : null}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">
+        <div className="mb-2">
+          <label className="block text-sm font-medium">
             Preferred Meal Types
           </label>
           <div
             role="group"
             aria-labelledby="checkbox-group"
-            className="space-y-2"
           >
             {["Breakfast", "Lunch", "Dinner", "Snack"].map((meal) => (
               <label key={meal} className="inline-flex items-center">
@@ -137,20 +136,20 @@ const PreferencesForm = ({ darkMode }) => {
             ))}
           </div>
           {formik.errors.mealTypes && formik.touched.mealTypes ? (
-            <div className="text-red-500 text-sm mt-2">
+            <div className="text-red-500 text-sm ">
               {formik.errors.mealTypes}
             </div>
           ) : null}
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">
-            Food-Related Diseases
+          <label className="block text-sm font-medium ">
+            Food-Related Diseases <span className="text-red-500">*</span>
           </label>
+         
           <div
             role="group"
             aria-labelledby="checkbox-group"
-            className="space-y-2"
           >
             {["Diabetes", "Hypertension", "Celiac Disease", "Nut Allergy"].map(
               (disease) => (

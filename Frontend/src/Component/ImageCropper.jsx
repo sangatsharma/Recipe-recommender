@@ -4,13 +4,15 @@ import { getCroppedImg } from "../utils/CropImage";
 import { formatDate } from "../utils/dateFormat";
 import { toast } from "react-toastify";
 import { loadModel } from "../utils/filterNsfw";
+import Loader from "./Loader/Loader";
+import axios from "axios";
 
 const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const [imageSrc, setImageSrc] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1.2);
-  const [croppedImage, setCroppedImage] = useState(null);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   //input from hidden input file
   const fileInputRef = useRef(null);
@@ -25,11 +27,10 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     "image/bmp",
   ];
 
-  
-
   const onFileChange = (e) => {
     const file = e.target.files[0];
     if (file && validImageTypes.includes(file.type)) {
+      setLoading(true);
       const image = document.createElement("img");
       image.src = URL.createObjectURL(file);
       image.onload = async () => {
@@ -46,6 +47,8 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
         } catch (error) {
           console.error("Error loading NSFWJS model:", error);
           toast.error("Failed to load NSFWJS model.");
+        } finally {
+          setLoading(false);
         }
       };
     } else {
@@ -58,27 +61,50 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     async (_, croppedAreaPixels) => {
       setCroppedAreaPixels(croppedAreaPixels);
       const croppedImg = await getCroppedImg(imageSrc, croppedAreaPixels);
-      setCroppedImage(croppedImg);
       setProfilePic(croppedImg);
     },
     [imageSrc]
   );
 
-  const handleConfirmCrop = useCallback(async () => {
+  const handleConfirmCrop = async () => {
     if (imageSrc && croppedAreaPixels) {
       const croppedImg = await getCroppedImg(imageSrc, croppedAreaPixels);
-      setCroppedImage(croppedImg);
+      console.log(croppedImg);
+      // Convert Blob to File
+      const croppedFile = new File([croppedImg], "cropped_image.jpg", {
+        type: "image/jpeg",
+      });
       setProfilePic(croppedImg);
-      toast.success("Image uploaded successfully.");
       setImageSrc(null);
       fileInputRef.current.value = "";
+
+      try {
+        const formData = new FormData();
+        formData.append("image", croppedFile);
+
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/user/update`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          toast.success(response.data.body.message);
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        toast.error("Failed to update profile.");
+      }
     }
-    //todo upload image to server
-  }, [imageSrc, croppedAreaPixels]);
+  };
 
   const handleCancelCrop = () => {
     setImageSrc(null);
-    setCroppedImage(null);
     setProfilePic(
       userInfo.profile_pic ||
         "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
@@ -108,6 +134,11 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
           @{userInfo.name.split(" ")[0] + userInfo.id}
         </p>
       </div>
+      {loading && (
+        <div className="flex  justify-center h-16 m-4 pr-14">
+          <Loader />
+        </div>
+      )}
       {imageSrc && (
         <div className="relative w-full h-64 mb-4">
           <Cropper
@@ -118,6 +149,9 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
             onCropChange={setCrop}
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
+            cropShape="round"
+            
+
           />
         </div>
       )}
@@ -159,7 +193,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
         Maximum upload size is <strong>1 MB.</strong>
       </p>
       <p className="text-sm mt-2 text-center">
-        Member Since: <strong>{formatDate(new Date(userInfo.joinedOn))}</strong>
+        Member Since: <strong>{formatDate(userInfo.joinedOn)}</strong>
       </p>
     </>
   );
