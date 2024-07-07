@@ -18,7 +18,7 @@ import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
 import { favouriteRecipes, followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
-import { handleUpload } from "@/utils/cloudinary";
+import { handleUpload, uploadToCloudinary } from "@/utils/cloudinary";
 import { PgDate } from "drizzle-orm/pg-core";
 
 
@@ -328,11 +328,13 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 
   // If profile picture provided
   if (req.file) {
-    const b64 = Buffer.from(req.file?.buffer).toString("base64");
-    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    // const b64 = Buffer.from(req.file?.buffer).toString("base64");
+    // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-    const cldRes = await handleUpload(dataURI);
-    updateData.profile_pic = cldRes.secure_url;
+    // const cldRes = await handleUpload(dataURI);
+    // updateData.profile_pic = cldRes.secure_url;
+    const url = await uploadToCloudinary(req?.file.buffer) as string;
+    updateData.profile_pic = url;
   }
 
   try {
