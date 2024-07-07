@@ -20,18 +20,17 @@ const EditProfile = () => {
       "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
   );
   const [city, setCity] = useState("");
+
   useEffect(() => {
     getCity().then((city) => setCity(city));
   }, []);
-  if (!loading) {
-    console.log("userInfo", userInfo);
-  }
+
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
       DOB: userInfo?.DOB || "",
       email: userInfo?.email || "",
-      bio: "",
+      bio:userInfo?.bio || "",
       city: userInfo?.city || city,
     },
     enableReinitialize: true,
