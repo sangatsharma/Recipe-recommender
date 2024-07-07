@@ -4,6 +4,7 @@ exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema =
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
+const pg_core_2 = require("drizzle-orm/pg-core");
 // Schema for user
 exports.userSchema = (0, pg_core_1.pgTable)("users", {
     id: (0, pg_core_1.serial)("id").primaryKey().notNull(),
@@ -16,6 +17,7 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     joinedOn: (0, pg_core_1.timestamp)("joinedOn", {
         withTimezone: true
     }).defaultNow().notNull(),
+    birthday: (0, pg_core_2.date)("birthday"),
     followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
     posts: (0, pg_core_1.integer)("posts").default(0).notNull(),

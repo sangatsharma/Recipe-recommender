@@ -264,6 +264,8 @@ const updateUserInfo = async (req, res, next) => {
         updateData.name = body.fullName;
     if (body.bio)
         updateData.bio = body.bio;
+    if (body.birthday)
+        updateData.birthday = body.birthday;
     // If profile picture provided
     if (req.file) {
         const b64 = Buffer.from(req.file?.buffer).toString("base64");
