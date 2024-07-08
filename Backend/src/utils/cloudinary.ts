@@ -9,7 +9,7 @@ cloudinary.config({
 
 export const uploadToCloudinary = async (file: Buffer) => {
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream({}, (err, res) => {
+    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
       if (err) reject(err);
       else resolve(res?.secure_url);
     }).end(file);
