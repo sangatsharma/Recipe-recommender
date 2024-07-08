@@ -74,6 +74,8 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
       const croppedFile = new File([croppedImg], "cropped_image.jpg", {
         type: "image/jpeg",
       });
+
+      console.log(croppedFile);
       setProfilePic(croppedImg);
       setImageSrc(null);
       fileInputRef.current.value = "";
