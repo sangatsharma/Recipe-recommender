@@ -10,9 +10,9 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
     dietaryRestrictions: Yup.string().required(
       "Dietary restriction is required"
     ),
-    favoriteCuisines: Yup.array().min(1, "Select at least one cuisine"),
-    dislikedIngredients: Yup.string(),
-    mealTypes: Yup.array().min(1, "Select at least one meal type"),
+    favCuisines: Yup.array().min(1, "Select at least one cuisine"),
+    disliked: Yup.string(),
+    preferredMeal: Yup.array().min(1, "Select at least one meal type"),
     diseases: Yup.array(),
   });
 
@@ -20,10 +20,19 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
   const formik = useFormik({
     initialValues: {
       dietaryRestrictions: userInfo?.preferences?.dietaryRestrictions || "",
-      favoriteCuisines: userInfo?.preferences?.favCuisines || [],
-      dislikedIngredients: userInfo?.preferences?.disliked || "",
-      mealTypes: userInfo?.preferences?.preferredMeal || [],
-      diseases: userInfo?.preferences?.diseases?.split(",") || [],
+      favCuisines:
+        typeof userInfo?.preferences?.favCuisines === "string"
+          ? userInfo.preferences.favCuisines.split(",")
+          : [],
+      disliked: userInfo?.preferences?.disliked || "",
+      preferredMeal:
+        typeof userInfo?.preferences?.preferredMeal === "string"
+          ? userInfo.preferences.preferredMeal.split(",")
+          : [],
+      diseases:
+        typeof userInfo?.preferences?.diseases === "string"
+          ? userInfo.preferences.diseases.split(",")
+          : [],
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -88,43 +97,43 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
               <label key={cuisine} className="inline-flex items-center">
                 <input
                   type="checkbox"
-                  name="favoriteCuisines"
+                  name="favCuisines"
                   value={cuisine}
                   onChange={formik.handleChange}
-                  checked={formik.values.favoriteCuisines.includes(cuisine)}
+                  checked={formik.values.favCuisines.includes(cuisine)}
                   className="form-checkbox text-blue-600 ml-2"
                 />
                 <span className="ml-1">{cuisine}</span>
               </label>
             ))}
           </div>
-          {formik.errors.favoriteCuisines && formik.touched.favoriteCuisines ? (
+          {formik.errors.favCuisines && formik.touched.favCuisines ? (
             <div className="text-red-500 text-sm mt-2">
-              {formik.errors.favoriteCuisines}
+              {formik.errors.favCuisines}
             </div>
           ) : null}
         </div>
 
         <div className="mb-4">
           <label
-            htmlFor="dislikedIngredients"
+            htmlFor="disliked"
             className="block text-sm font-medium mb-2"
           >
             Disliked Ingredients
           </label>
           <input
-            id="dislikedIngredients"
-            name="dislikedIngredients"
+            id="disliked"
+            name="disliked"
             type="text"
             placeholder="Enter disliked ingredients separated by commas"
             onChange={formik.handleChange}
-            value={formik.values.dislikedIngredients}
+            value={formik.values.disliked}
             className={`block w-full p-2 border rounded-md text-black  placeholder:text-[12px]`}
           />
-          {formik.errors.dislikedIngredients &&
-          formik.touched.dislikedIngredients ? (
+          {formik.errors.disliked &&
+          formik.touched.disliked ? (
             <div className="text-red-500 text-sm mt-2">
-              {formik.errors.dislikedIngredients}
+              {formik.errors.disliked}
             </div>
           ) : null}
         </div>
@@ -138,19 +147,19 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
               <label key={meal} className="inline-flex items-center">
                 <input
                   type="checkbox"
-                  name="mealTypes"
+                  name="preferredMeal"
                   value={meal}
                   onChange={formik.handleChange}
-                  checked={formik.values.mealTypes.includes(meal)}
+                  checked={formik.values.preferredMeal.includes(meal)}
                   className="form-checkbox text-blue-600 ml-2"
                 />
                 <span className="ml-1">{meal}</span>
               </label>
             ))}
           </div>
-          {formik.errors.mealTypes && formik.touched.mealTypes ? (
+          {formik.errors.preferredMeal && formik.touched.preferredMeal ? (
             <div className="text-red-500 text-sm ">
-              {formik.errors.mealTypes}
+              {formik.errors.preferredMeal}
             </div>
           ) : null}
         </div>

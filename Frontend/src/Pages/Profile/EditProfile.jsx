@@ -24,11 +24,10 @@ const EditProfile = () => {
   useEffect(() => {
     getCity().then((city) => setCity(city));
   }, []);
-
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
-      DOB: userInfo?.DOB || "",
+      birthday: userInfo?.birthday || "",
       email: userInfo?.email || "",
       bio:userInfo?.bio || "",
       city: userInfo?.city || city,
@@ -36,7 +35,7 @@ const EditProfile = () => {
     enableReinitialize: true,
     validationSchema: Yup.object({
       fullName: Yup.string().required("Required"),
-      DOB: Yup.string().required("Required").nullable(),
+      birthday: Yup.string().required("Required").nullable(),
       email: Yup.string().email("Invalid email address").required("Required"),
       bio: Yup.string(),
       city: Yup.string().required("Required"),
@@ -153,15 +152,15 @@ const EditProfile = () => {
                 <br />
                 <DatePicker
                   placeholderText="Select a date"
-                  selected={formik.values.DOB}
+                  selected={formik.values.birthday}
                   onChange={(date) =>
-                    formik.setFieldValue("DOB", formatDate(date))
+                    formik.setFieldValue("birthday", formatDate(date))
                   }
                   dateFormat="yyyy/MM/dd"
                   className="w-full p-2 border rounded text-black"
                 />
-                {formik.touched.DOB && formik.errors.DOB ? (
-                  <div className="text-red-600">{formik.errors.DOB}</div>
+                {formik.touched.birthday && formik.errors.birthday ? (
+                  <div className="text-red-600">{formik.errors.birthday}</div>
                 ) : null}
               </div>
               <div className="mb-4">
