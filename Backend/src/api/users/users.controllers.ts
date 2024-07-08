@@ -313,20 +313,20 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     username: string,
     bio: string,
     birthday: string,
+    city: string,
   };
 
   // Provide body
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
-  console.log(req.file);
 
-  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string };
+  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string, city?: string };
 
   // if (body.username) updateData.username = body.username;
   if (body.fullName) updateData.name = body.fullName;
   if (body.bio) updateData.bio = body.bio;
   if (body.birthday) updateData.birthday = body.birthday;
-
+  if (body.city) updateData.city = body.city;
 
   try {
     // If profile picture provided
@@ -340,7 +340,6 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
       updateData.profile_pic = url;
     }
     // Update DB
-    console.log(updateData);
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 

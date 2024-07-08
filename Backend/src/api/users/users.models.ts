@@ -16,6 +16,7 @@ export const userSchema = pgTable("users", {
     withTimezone: true
   }).defaultNow().notNull(),
   birthday: date("birthday"),
+  city: text("city"),
   followers: integer("followers").default(0).notNull(),
   following: integer("following").default(0).notNull(),
   posts: integer("posts").default(0).notNull(),
