@@ -75,14 +75,13 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
         type: "image/jpeg",
       });
 
-      console.log(croppedFile);
       setProfilePic(croppedImg);
       setImageSrc(null);
       fileInputRef.current.value = "";
 
       try {
         const formData = new FormData();
-        formData.append("profile_pic", croppedFile.stream());
+        formData.append("profile_pic", croppedFile);
 
         const response = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/user/update`,
