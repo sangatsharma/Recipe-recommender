@@ -326,7 +326,6 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   if (body.bio) updateData.bio = body.bio;
   if (body.birthday) updateData.birthday = body.birthday;
 
-  let a;
   // If profile picture provided
   if (req.file) {
     // const b64 = Buffer.from(req.file?.buffer).toString("base64");
@@ -334,20 +333,19 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 
     // const cldRes = await handleUpload(dataURI);
     // updateData.profile_pic = cldRes.secure_url;
-    a = req.file.buffer;
-    const url = await uploadToCloudinary(req?.file.buffer) as string;
+    const url = await uploadToCloudinary(req.file.buffer) as string;
     updateData.profile_pic = url;
   }
 
   try {
     // Update DB
+    console.log(updateData);
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 
     return res.json({
       success: true,
       body: {
-        a: a,
         message: "Successfully updated profile"
       }
     });
