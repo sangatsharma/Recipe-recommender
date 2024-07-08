@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { loadModel } from "../utils/filterNsfw";
 import Loader from "./Loader/Loader";
 import axios from "axios";
+import { createFileFromBlobUrl } from "../utils/CropImage";
 
 const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const [imageSrc, setImageSrc] = useState(null);
@@ -69,38 +70,41 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const handleConfirmCrop = async () => {
     if (imageSrc && croppedAreaPixels) {
       const croppedImg = await getCroppedImg(imageSrc, croppedAreaPixels);
-      console.log(croppedImg);
-      // Convert Blob to File
-      const croppedFile = new File([croppedImg], "cropped_image.jpg", {
-        type: "image/jpeg",
-      });
       setProfilePic(croppedImg);
       setImageSrc(null);
       fileInputRef.current.value = "";
+      console.log(croppedImg);
 
-      try {
-        const formData = new FormData();
-        formData.append("profile_pic", croppedFile);
+      const fileName = "cropped_image.jpg";
+      const mimeType = "image/jpeg";
 
-        const response = await axios.post(
-          `${import.meta.env.VITE_SERVER_URL}/user/update`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true,
+      createFileFromBlobUrl(croppedImg, fileName, mimeType).then(
+        async (file) => {
+          try {
+            const formData = new FormData();
+            formData.append("profile_pic", file);
+
+            const response = await axios.post(
+              `${import.meta.env.VITE_SERVER_URL}/user/update`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true,
+              }
+            );
+            console.log(response);
+
+            if (response.status === 200) {
+              toast.success(response.data.body.message);
+            }
+          } catch (error) {
+            console.error("Error updating profile:", error);
+            toast.error("Failed to update profile.");
           }
-        );
-        console.log(response);
-
-        if (response.status === 200) {
-          toast.success(response.data.body.message);
         }
-      } catch (error) {
-        console.error("Error updating profile:", error);
-        toast.error("Failed to update profile.");
-      }
+      );
     }
   };
 
@@ -151,8 +155,6 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
             onZoomChange={setZoom}
             onCropComplete={onCropComplete}
             cropShape="round"
-            
-
           />
         </div>
       )}
