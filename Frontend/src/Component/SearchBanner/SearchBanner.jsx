@@ -2,15 +2,17 @@ import "./SearchBanner.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { rankFoodItems } from "../../utils/filterItems";
-import {toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 const SearchBanner = ({
   setFoodItems,
   setSearchPerformed,
   search,
   setSearch,
+  activeFilter,
 }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [prevSearch, setPrevSearch] = useState("");
 
   // Function to fetch the items from the backend
   const fetchAndProcessItems = async (search) => {
@@ -38,6 +40,9 @@ const SearchBanner = ({
       toast.error("Please enter a search term.");
       return;
     }
+    if (search === prevSearch) {
+      return;
+    }
     // Disable the button to prevent rapid presses
     setFoodItems([]);
     setIsButtonDisabled(true);
@@ -47,6 +52,8 @@ const SearchBanner = ({
     }, 5000);
     console.log(search);
     setSearchPerformed(true);
+    console.log(activeFilter);
+    setPrevSearch(search);
     fetchAndProcessItems(search);
   };
 

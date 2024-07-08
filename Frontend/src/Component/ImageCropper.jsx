@@ -174,7 +174,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
           </button>
         </div>
       )}
-      {!imageSrc && (
+      {!loading && !imageSrc && (
         <button
           className="py-2 px-4 bg-orange-500 text-white rounded hover:bg-orange-400"
           onClick={handleUploadClick}
