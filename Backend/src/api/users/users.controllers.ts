@@ -18,7 +18,7 @@ import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
 import { favouriteRecipes, followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
-import { handleUpload } from "@/utils/cloudinary";
+import { handleUpload, uploadToCloudinary } from "@/utils/cloudinary";
 import { PgDate } from "drizzle-orm/pg-core";
 
 
@@ -318,6 +318,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   // Provide body
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
+  console.log(req.file);
 
   const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string };
 
@@ -328,15 +329,18 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 
   // If profile picture provided
   if (req.file) {
-    const b64 = Buffer.from(req.file?.buffer).toString("base64");
-    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    // const b64 = Buffer.from(req.file?.buffer).toString("base64");
+    // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-    const cldRes = await handleUpload(dataURI);
-    updateData.profile_pic = cldRes.secure_url;
+    // const cldRes = await handleUpload(dataURI);
+    // updateData.profile_pic = cldRes.secure_url;
+    const url = await uploadToCloudinary(req.file.buffer) as string;
+    updateData.profile_pic = url;
   }
 
   try {
     // Update DB
+    console.log(updateData);
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 

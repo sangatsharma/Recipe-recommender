@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUpload = void 0;
+exports.handleUpload = exports.uploadToCloudinary = void 0;
 const cloudinary_1 = require("cloudinary");
 const config_1 = require("./config");
 cloudinary_1.v2.config({
@@ -8,6 +8,17 @@ cloudinary_1.v2.config({
     api_key: config_1.CLOUDINARY_API_KEY,
     api_secret: config_1.CLOUDINARY_API_SECRET
 });
+const uploadToCloudinary = async (file) => {
+    return new Promise((resolve, reject) => {
+        cloudinary_1.v2.uploader.upload_stream({}, (err, res) => {
+            if (err)
+                reject(err);
+            else
+                resolve(res?.secure_url);
+        }).end(file);
+    });
+};
+exports.uploadToCloudinary = uploadToCloudinary;
 const handleUpload = async (file) => {
     const result = await cloudinary_1.v2.uploader.upload(file, {
         resource_type: "auto",
