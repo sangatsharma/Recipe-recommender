@@ -36,7 +36,6 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log(values);
       //send data to server
       try {
         const response = await axios.post(
@@ -44,13 +43,12 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
           values,
           { withCredentials: true }
         );
-        console.log(response.data);
         if (response.status === 200) {
+          toast.success("Preferences updated successfully");
           setUserInfo((prevValues) => ({
             ...prevValues,
             preferences: values,
           }));
-          toast.success(response.data.body.message);
         }
       } catch (err) {
         console.error(err);
@@ -115,10 +113,7 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
         </div>
 
         <div className="mb-4">
-          <label
-            htmlFor="disliked"
-            className="block text-sm font-medium mb-2"
-          >
+          <label htmlFor="disliked" className="block text-sm font-medium mb-2">
             Disliked Ingredients
           </label>
           <input
@@ -130,8 +125,7 @@ const PreferencesForm = ({ userInfo, setUserInfo }) => {
             value={formik.values.disliked}
             className={`block w-full p-2 border rounded-md text-black  placeholder:text-[12px]`}
           />
-          {formik.errors.disliked &&
-          formik.touched.disliked ? (
+          {formik.errors.disliked && formik.touched.disliked ? (
             <div className="text-red-500 text-sm mt-2">
               {formik.errors.disliked}
             </div>
