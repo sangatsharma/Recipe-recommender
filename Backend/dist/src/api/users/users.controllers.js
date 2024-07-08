@@ -258,6 +258,7 @@ const updateUserInfo = async (req, res, next) => {
     // Provide body
     const body = req.body;
     const userInfo = res.locals.user;
+    console.log(req.file);
     const updateData = {};
     // if (body.username) updateData.username = body.username;
     if (body.fullName)

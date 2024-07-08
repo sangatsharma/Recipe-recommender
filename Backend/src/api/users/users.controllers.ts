@@ -318,6 +318,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   // Provide body
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
+  console.log(req.file);
 
   const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string };
 
