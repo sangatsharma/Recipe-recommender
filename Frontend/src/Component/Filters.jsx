@@ -51,8 +51,8 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
         } w-auto rounded `}
       >
         <div className="flex flex-row justify-center items-center gap-2 below-sm:gap-0  m-auto">
-          <div
-            className={`p-2 below-sm:y-1  flex align-middle rounded cursor-pointer justify-between ${
+          <button
+            className={`p-2  flex align-middle rounded cursor-pointer justify-between ${
               isDarkMode ? "hover:bg-gray-700 " : "hover:bg-gray-300 "
             } ${
               activeFilter.includes("Recipes")
@@ -77,10 +77,10 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
             ) : (
               <i className="fa-solid fa-angle-down pt-1 pl-2"></i>
             )}
-          </div>
+          </button>
 
-          <div
-            className={` p-2  below-sm:py-1  flex gap-2 below-sm:gap-1 rounded cursor-pointer ${
+          <button
+            className={`p-2 flex gap-2 below-sm:gap-1 rounded cursor-pointer ${
               isDarkMode ? "hover:bg-gray-700 " : "hover:bg-gray-300 "
             }  ${
               activeFilter.includes("Ingredients")
@@ -91,11 +91,11 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
             }`}
             onClick={() => handleFilterClick(["Ingredients"])}
           >
-            <i className="fa-solid fa-seedling below-sm:text-[18px] text-2xl"></i>
+            <i className="fa-solid fa-seedling below-sm:text-[19px] below-sm:pt-1"></i>
             Ingredients
-          </div>
-          <div
-            className={` p-2 below-sm:py-1 flex gap-2 below-sm:gap-1 rounded cursor-pointer ${
+          </button>
+          <button
+            className={` p-2  flex gap-2 below-sm:gap-1 rounded cursor-pointer ${
               isDarkMode ? "hover:bg-gray-700 " : "hover:bg-gray-300 "
             } ${
               activeFilter.includes("Post")
@@ -108,10 +108,10 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
           >
             <BsPostcardFill className="below-sm:size-[22px] below-sm:pt-1 size-6 pd-1" />{" "}
             Post
-          </div>
+          </button>
 
-          <div
-            className={` p-2 below-sm:py-1 flex gap-2 below-sm:gap-1 rounded cursor-pointer  ${
+          <button
+            className={` p-2 flex gap-2 below-sm:gap-1 rounded cursor-pointer  ${
               isDarkMode ? "hover:bg-gray-700 " : "hover:bg-gray-300 "
             } ${
               activeFilter.includes("People")
@@ -124,7 +124,7 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
           >
             <FaUserFriends className="below-sm:size-[20px] below-sm:pt-1 size-6" />{" "}
             People
-          </div>
+          </button>
         </div>
       </div>
       <div
@@ -134,7 +134,7 @@ const Filters = ({ activeFilter, setActiveFilter }) => {
       >
         {Object.keys(filterOptions).map((filter, index) => (
           <div
-            className={`${
+            className={`mt-1 ${
               activeFilter.includes("Recipes") && toggleRecipeContent
                 ? "visible"
                 : "hidden"
