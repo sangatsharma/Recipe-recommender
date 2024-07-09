@@ -226,6 +226,7 @@ const updateUserInfo = async (req, res, next) => {
     // Provide body
     const body = req.body;
     const userInfo = res.locals.user;
+    console.log(req.file);
     const updateData = {};
     // if (body.username) updateData.username = body.username;
     if (body.fullName)
@@ -234,24 +235,23 @@ const updateUserInfo = async (req, res, next) => {
         updateData.bio = body.bio;
     if (body.birthday)
         updateData.birthday = body.birthday;
-    let data;
-    // If profile picture provided
-    if (req.file) {
-        const b64 = Buffer.from(req.file?.buffer).toString("base64");
-        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-        const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-        data = cldRes;
-        updateData.profile_pic = cldRes.secure_url;
-    }
     try {
+        // If profile picture provided
+        if (req.file) {
+            // const b64 = Buffer.from(req.file?.buffer).toString("base64");
+            // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            // const cldRes = await handleUpload(dataURI);
+            // updateData.profile_pic = cldRes.secure_url;
+            const url = await (0, cloudinary_1.uploadToCloudinary)(req.file.buffer);
+            updateData.profile_pic = url;
+        }
         // Update DB
+        console.log(updateData);
         if (Object.keys(updateData).length !== 0)
             await db_1.db.update(users_models_1.userSchema).set(updateData).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
         return res.json({
             success: true,
             body: {
-                d: body,
-                demo: data,
                 message: "Successfully updated profile"
             }
         });

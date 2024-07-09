@@ -1,34 +1,76 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import PreferencesForm from "./PreferencesForm";
-import { formatDate } from "../../utils/dateFormat";
 import { AuthContext } from "../../context/AuthContext";
+import ImageCropper from "../../Component/ImageCropper";
+import Loader from "../../Component/Loader/Loader";
+import { formatDate } from "../../utils/dateFormat";
+import { getCity } from "../../utils/weather";
+import { toast } from "react-toastify";
+import axios from "axios";
 
-const EditProfile = ({ darkMode }) => {
-  const { userInfo, loading } = useContext(AuthContext);
+const EditProfile = () => {
+  const { userInfo, loading, setUserInfo } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState("userInfo");
+  const [profilePic, setProfilePic] = useState(
+    userInfo?.profile_pic ||
+      "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+  );
+  const [city, setCity] = useState("");
+
+  useEffect(() => {
+    getCity().then((city) => setCity(city));
+  }, []);
   const formik = useFormik({
     initialValues: {
       fullName: userInfo?.name || "",
-      username: userInfo ? `${userInfo.name.split(" ")[0]}${userInfo.id}` : "",
+      birthday: userInfo?.birthday || "",
       email: userInfo?.email || "",
-      bio: "",
+      bio:userInfo?.bio || "",
+      city: userInfo?.city || city,
     },
     enableReinitialize: true,
     validationSchema: Yup.object({
       fullName: Yup.string().required("Required"),
-      username: Yup.string().required("Required"),
+      birthday: Yup.string().required("Required").nullable(),
       email: Yup.string().email("Invalid email address").required("Required"),
       bio: Yup.string(),
+      city: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async (values) => {
+      //send data to server
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_SERVER_URL}/user/update`,
+          values,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        if (response.status === 200) {
+          toast.success(response.data.body.message);
+        }
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        toast.error("Failed to update profile.");
+      }
+      console.log("updated values", { ...userInfo, ...values });
+      setUserInfo((prevValues) => ({
+        ...prevValues,
+      }));
     },
   });
 
   if (loading) {
-    return <div>Loading...</div>; // Show loading state
+    console.log("loading");
+    return <Loader />;
   }
 
   if (!userInfo) {
@@ -37,58 +79,26 @@ const EditProfile = ({ darkMode }) => {
 
   return (
     <div
-      className={`min-h-screen w-[60%] below-sm:w-[100%] p-6 below-sm:px-2 flex flex-row below-sm:flex-col gap-4 ${
-        darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-black"
-      }`}
+      className={`w-[60%] below-sm:w-[90%] flex flex-row below-sm:flex-col gap-4 below-sm:gap-2 m-auto`}
     >
-      {/*left side*/}
+      {/* Left side */}
       <div className="w-[40%] below-sm:w-[100%] below-sm:mt-2 mt-10">
-        <div className="flex flex-col items-center  p-4 ">
-          <div className="relative inline-block">
-            <img
-              src="https://scontent.fpkr1-1.fna.fbcdn.net/v/t1.6435-1/123108473_1042706159510253_7233714013747441365_n.jpg?stp=dst-jpg_s200x200&_nc_cat=101&ccb=1-7&_nc_sid=e4545e&_nc_ohc=GOlSoW344NAQ7kNvgG4LM0I&_nc_ht=scontent.fpkr1-1.fna&oh=00_AYC-bhW3uhMxbDO0iW6emfcaf-G8WxOzHxq1BwrCVB08Ew&oe=66A47335"
-              alt="User Avatar"
-              className="rounded-full size-32 mb-2 border-1 border-gray-400"
-            />
-            {userInfo.verified ? (
-              <div
-                className="absolute top-1 right-3 w-6 h-6
-              rounded-full border-2 border-white bg-blue-500 m-auto flex justify-center items-center p-2"
-              >
-                <i className={`fas fa-check text-white`}></i>
-              </div>
-            ) : null}
-          </div>
-          <div className="text-center">
-          <strong className="text-[18px]">{userInfo.name}</strong>
-          <p className="mb-2 text-gray-400">
-            @{userInfo.name.split(" ")[0] + userInfo.id}
-          </p>
-          </div>
-
-          <button className="py-2 px-4 bg-orange-500 text-white rounded">
-            Upload New Photo
-          </button>
-          <p className="text-sm mt-4 text-center p-2 rounded-xl bg-[#dde0e296]">
-            Upload a new avatar. Larger image will be resized automatically.
-            <br />
-            <br />
-            Maximum upload size is <strong>1 MB.</strong>
-          </p>
-          <p className="text-sm mt-2 text-center">
-            Member Since:{" "}
-            <strong>{formatDate(new Date(userInfo.joinedOn))}</strong>
-          </p>
+        <div className="flex flex-col items-center p-4">
+          <ImageCropper
+            userInfo={userInfo}
+            profilePic={profilePic}
+            setProfilePic={setProfilePic}
+          />
         </div>
       </div>
 
-      {/*right side*/}
+      {/* Right side */}
       <div className="flex w-[50%] below-sm:w-[100%] flex-col">
         <h1 className="text-2xl">Edit Profile</h1>
 
         <div className="flex flex-row w-full gap-16 mt-4 ml-8">
           <h2
-            className={` ${
+            className={`${
               currentPage === "userInfo" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userInfo")}
@@ -96,7 +106,7 @@ const EditProfile = ({ darkMode }) => {
             Info
           </h2>
           <h2
-            className={` ${
+            className={`${
               currentPage === "userPreferences" ? "border-b-4 text-2xl" : ""
             } border-orange-300 cursor-pointer`}
             onClick={() => setCurrentPage("userPreferences")}
@@ -106,7 +116,7 @@ const EditProfile = ({ darkMode }) => {
         </div>
 
         <div className="pl-4 mt-3">
-          {/* user Info*/}
+          {/* User Info */}
           {currentPage === "userInfo" && (
             <form onSubmit={formik.handleSubmit} className="p-4">
               <div className="mb-4">
@@ -122,32 +132,51 @@ const EditProfile = ({ darkMode }) => {
                   <div className="text-red-600">{formik.errors.fullName}</div>
                 ) : null}
               </div>
-              <div className="mb-4">
-                <label className="block">Username</label>
-                <input
-                  autoComplete="username"
-                  type="text"
-                  name="username"
-                  {...formik.getFieldProps("username")}
-                  className="w-full p-2 border rounded  text-black"
-                />
-                {formik.touched.username && formik.errors.username ? (
-                  <div className="text-red-600">{formik.errors.username}</div>
-                ) : null}
-              </div>
+
               <div className="mb-4">
                 <label className="block">Email Address</label>
                 <input
                   autoComplete="Email"
                   type="email"
                   name="email"
+                  disabled
                   {...formik.getFieldProps("email")}
-                  className="w-full p-2 border rounded  text-black"
+                  className="w-full p-2 border rounded text-black"
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="text-red-600">{formik.errors.email}</div>
                 ) : null}
               </div>
+              <div className="mb-4">
+                <label>Birthday:</label>
+                <br />
+                <DatePicker
+                  placeholderText="Select a date"
+                  selected={formik.values.birthday}
+                  onChange={(date) =>
+                    formik.setFieldValue("birthday", formatDate(date))
+                  }
+                  dateFormat="yyyy/MM/dd"
+                  className="w-full p-2 border rounded text-black"
+                />
+                {formik.touched.birthday && formik.errors.birthday ? (
+                  <div className="text-red-600">{formik.errors.birthday}</div>
+                ) : null}
+              </div>
+              <div className="mb-4">
+                <label className="block">City</label>
+                <input
+                  autoComplete="City"
+                  type="text"
+                  name="city"
+                  {...formik.getFieldProps("city")}
+                  className="w-full p-2 border rounded text-black"
+                />
+                {formik.touched.city && formik.errors.city ? (
+                  <div className="text-red-600">{formik.errors.city}</div>
+                ) : null}
+              </div>
+
               <div className="mb-4">
                 <label className="block">Add bio</label>
                 <input
@@ -155,7 +184,7 @@ const EditProfile = ({ darkMode }) => {
                   type="text"
                   name="bio"
                   {...formik.getFieldProps("bio")}
-                  className="w-full p-2 border rounded  text-black"
+                  className="w-full p-2 border rounded text-black"
                 />
                 {formik.touched.bio && formik.errors.bio ? (
                   <div className="text-red-600">{formik.errors.bio}</div>
@@ -163,14 +192,16 @@ const EditProfile = ({ darkMode }) => {
               </div>
               <button
                 type="submit"
-                className="block w-full py-2 px-4 bg-blue-500 text-white rounded"
+                className="block w-full py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white rounded"
               >
                 Update Info
               </button>
             </form>
           )}
-          {/* user Preferences*/}
-          {currentPage === "userPreferences" && <PreferencesForm />}
+          {/* User Preferences */}
+          {currentPage === "userPreferences" && (
+            <PreferencesForm userInfo={userInfo} setUserInfo={setUserInfo} />
+          )}
         </div>
       </div>
     </div>

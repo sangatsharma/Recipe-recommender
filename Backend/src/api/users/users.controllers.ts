@@ -15,10 +15,10 @@ import {
 import { arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
-import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
+import { recipeSchema } from "@/api/recipes/recipes.models";
 import { followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
-import { handleUpload } from "@/utils/cloudinary";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 
 
 /****************
@@ -278,31 +278,32 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     username: string,
     bio: string,
     birthday: string,
+    city: string,
   };
 
   // Provide body
   const body = req.body as UpdateUserInfoType;
   const userInfo = res.locals.user as { email: string };
 
-  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string };
+  const updateData = {} as { name?: string, username?: string, bio?: string, profile_pic: string, birthday?: string, city?: string };
 
   // if (body.username) updateData.username = body.username;
   if (body.fullName) updateData.name = body.fullName;
   if (body.bio) updateData.bio = body.bio;
   if (body.birthday) updateData.birthday = body.birthday;
-
-  let data;
-  // If profile picture provided
-  if (req.file) {
-    const b64 = Buffer.from(req.file?.buffer).toString("base64");
-    const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-
-    const cldRes = await handleUpload(dataURI);
-    data = cldRes;
-    updateData.profile_pic = cldRes.secure_url;
-  }
+  if (body.city) updateData.city = body.city;
 
   try {
+    // If profile picture provided
+    if (req.file) {
+      // const b64 = Buffer.from(req.file?.buffer).toString("base64");
+      // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+      // const cldRes = await handleUpload(dataURI);
+      // updateData.profile_pic = cldRes.secure_url;
+      const url = await uploadToCloudinary(req.file.buffer) as string;
+      updateData.profile_pic = url;
+    }
     // Update DB
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
@@ -310,8 +311,6 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     return res.json({
       success: true,
       body: {
-        d: body,
-        demo: data,
         message: "Successfully updated profile"
       }
     });

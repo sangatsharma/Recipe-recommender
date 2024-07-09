@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext,useState} from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,9 +7,12 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import { Helmet } from "react-helmet-async";
+
 
 const SignupPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     if (isAuthenticated) {
@@ -18,8 +21,7 @@ const SignupPage = () => {
   }, [isAuthenticated]);
 
   const googleOauth = () => {
-    window.location.href =
-      `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
+    window.location.href = `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };
   const handleSignup = () => {
     setIsAuthenticated(true);
@@ -59,6 +61,11 @@ const SignupPage = () => {
     }),
     onSubmit: async (values) => {
       {
+        setIsButtonDisabled(true);
+        // Re-enable the button after 4 second  to allow the user to search again
+        setTimeout(() => {
+          setIsButtonDisabled(false);
+        }, 4000);
         values["name"] = values["userName"];
 
         // Send creds to backend
@@ -87,13 +94,16 @@ const SignupPage = () => {
 
   return (
     <div className="bg-white shadow-lg rounded-lg flex flex-row below-sm:flex-col overflow-hidden w-3/4 below-sm:w-[400px]">
+
+<Helmet>
+         <title>Sign Up - CIY </title>
+         </Helmet>
       {/* Left Side with Form */}
       <div className="w-1/2 below-sm:w-[100%] px-10 pt-2 pb-1 bg-slate-200">
         <div className="flex flex-row justify-center mb-4">
           <p className="text-2xl below-sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg pb-4 ">
-          Sign Up
-        </p>
-          
+            Sign Up
+          </p>
         </div>
         <form onSubmit={formik.handleSubmit}>
           <label
@@ -191,6 +201,7 @@ const SignupPage = () => {
             <button
               className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
               type="submit"
+              disabled={isButtonDisabled}
             >
               Sign Up
             </button>

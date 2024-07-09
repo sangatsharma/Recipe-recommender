@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Helmet } from "react-helmet";
+
 import { FaFacebookF, FaTwitter, FaWhatsapp, FaShareAlt } from "react-icons/fa";
 
 const ShareDropdown = ({ url, title, text, image, hashtags }) => {
@@ -43,21 +43,7 @@ const ShareDropdown = ({ url, title, text, image, hashtags }) => {
 
   return (
     <>
-      <Helmet>
-        {/* Open Graph tags */}
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={text} />
-        <meta property="og:image" content={image} />
-        <meta property="og:url" content={url} />
-        <meta property="og:type" content="article" />
-
-        {/* Twitter Card tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={text} />
-        <meta name="twitter:image" content={image} />
-      </Helmet>
-
+      
       <div className="relative inline-block" ref={dropdownRef}>
         <button
           className="px-4 py-2 text-white bg-blue-600 rounded-md focus:outline-none flex  items-center hover:bg-blue-800"

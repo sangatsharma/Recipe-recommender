@@ -7,6 +7,15 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET
 });
 
+export const uploadToCloudinary = async (file: Buffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+      if (err) reject(err);
+      else resolve(res?.secure_url);
+    }).end(file);
+  });
+};
+
 export const handleUpload = async (file: string) => {
   const result = await cloudinary.uploader.upload(file, {
     resource_type: "auto",

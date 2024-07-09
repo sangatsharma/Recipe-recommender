@@ -2,6 +2,7 @@ import SearchBanner from "../Component/SearchBanner/SearchBanner";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard";
 import { useState } from "react";
 import { useFavContext } from "../context/FavContext";
+import { Helmet } from "react-helmet-async";
 
 const Search = () => {
   const { tickedItems, toggleTick } = useFavContext();
@@ -12,6 +13,9 @@ const Search = () => {
 
   return (
     <>
+     <Helmet>
+         <title>Search - CIY </title>
+         </Helmet>
       <SearchBanner
         setFoodItems={setFoodItems}
         setSearchPerformed={setSearchPerformed}

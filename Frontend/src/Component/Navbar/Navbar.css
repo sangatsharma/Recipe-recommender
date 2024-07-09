@@ -11,7 +11,6 @@ header {
   justify-content: space-between;
   transition: top 0.5s ease;
   padding: 4px 10px;
-  margin-bottom: 8px;
   border-bottom: 1px solid rgba(229, 232, 235, 1);
   flex-wrap: wrap;
 }
@@ -34,14 +33,13 @@ header.show {
   display: flex;
   align-items: center;
   transition: box-shadow 0.25s ease-in-out;
-  padding: 2px;
   cursor: pointer;
 }
 .LogoWrapper:hover {
   box-shadow: inset 0 0 0 1000px rgba(111, 109, 109, 0.1);
 }
 .LogoWrapper > img {
-  width: 60px;
+  width: 50px;
 }
 .BrandName {
   font-size: 20px;
@@ -96,7 +94,7 @@ nav > button::after {
   background: #ed802b;
   position: absolute;
   left: 0;
-  bottom: -4px;
+  bottom: -2px;
   transition: 0.2s ease-in-out;
 }
 nav > button:hover::after {
@@ -156,5 +154,6 @@ nav > button:hover {
 
 .sidebar.closed {
   opacity: 0;
+  display: none;
   transform: translateX(100%); /* Slide out of view */
 }

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
+import Loader from "../Component/Loader/Loader";
 
 const Weather = () => {
   const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
   const [data, setData] = useState([]);
   const [weatherData, setWeatherData] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Weather = () => {
         await fetchWeather(latitude, longitude);
       } catch (err) {
         setError(err);
-      } 
+      }
     };
 
     const fetchWeather = async (lat, long) => {
@@ -41,7 +42,7 @@ const Weather = () => {
     fetchData();
   }, []); // Empty dependency array means this effect runs once when the component mounts
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (error) return <p>Error: {error.message}</p>;
   return (
     <div className="flex flex-col ">

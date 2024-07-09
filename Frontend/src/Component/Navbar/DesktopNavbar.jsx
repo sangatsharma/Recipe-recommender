@@ -8,6 +8,7 @@ import NotificationButton from "./NotificationButton";
 import ThemeToggle from "./ThemeToggle";
 import { useThemeContext } from "../../context/ThemeContext";
 
+
 const DesktopNavbar = () => {
   const { isAuthenticated } = useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
@@ -15,48 +16,45 @@ const DesktopNavbar = () => {
 
   const location = useLocation().pathname;
   const isActive = location === "/" || location === "/home";
-  const [isIdle, setIsIdle] = useState(false);
-  const idleTimeout = 3000; // 3 seconds of idle time
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  const controlNavbar = () => {
+    if (typeof window !== "undefined") {
+      if (window.scrollY > lastScrollY) {
+        if (isOpen) {
+          setIsOpen(false);
+        }
+        setShowNavbar(false);
+      } else {
+        setShowNavbar(true);
+      }
+      setLastScrollY(window.scrollY);
+    }
+  };
 
   useEffect(() => {
-    let idleTimer;
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", controlNavbar);
+      return () => {
+        window.removeEventListener("scroll", controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
 
-    const resetIdleTimer = () => {
-      setIsIdle(false);
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => setIsIdle(true), idleTimeout);
-    };
-
-    // Event listeners to detect user activity
-    window.addEventListener("mousemove", resetIdleTimer);
-    window.addEventListener("keydown", resetIdleTimer);
-    window.addEventListener("scroll", resetIdleTimer);
-    window.addEventListener("touchstart", resetIdleTimer);
-
-    // Initial timer setup
-    idleTimer = setTimeout(() => setIsIdle(true), idleTimeout);
-
-    // Cleanup event listeners and timeout
-    return () => {
-      clearTimeout(idleTimer);
-      window.removeEventListener("mousemove", resetIdleTimer);
-      window.removeEventListener("keydown", resetIdleTimer);
-      window.removeEventListener("scroll", resetIdleTimer);
-      window.removeEventListener("touchstart", resetIdleTimer);
-    };
-  }, []);
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <header
-      className={`${isIdle ? "hide" : "show"} ${
+      className={`${showNavbar ? "translate-y-0" : "-translate-y-full"} ${
         isDarkMode ? "dark-mode" : "light-mode"
       }`}
     >
       <Link to="/">
-        <div className="LogoWrapper">
+        <div className="LogoWrapper ">
           <img loading="lazy" src={logo} alt="Logo" />
           <p className="BrandName">Cook It Yourself</p>
         </div>
@@ -110,7 +108,6 @@ const DesktopNavbar = () => {
         </button>
       </nav>
       <div className="Profile">
-     
         {isAuthenticated && (
           <>
             <Link to="/bookmarks">
@@ -120,7 +117,6 @@ const DesktopNavbar = () => {
             </Link>
             <NotificationButton />
           </>
-          
         )}
         <ThemeToggle />
         {!isAuthenticated && (
@@ -131,7 +127,11 @@ const DesktopNavbar = () => {
             Sign Up
           </button>
         )}
-        <ProfileDropdown isMobile={false} />
+        <ProfileDropdown
+          isMobile={false}
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+        />
       </div>
     </header>
   );
