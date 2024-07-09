@@ -18,10 +18,11 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
         withTimezone: true
     }).defaultNow().notNull(),
     birthday: (0, pg_core_2.date)("birthday"),
+    city: (0, pg_core_1.text)("city"),
     followers: (0, pg_core_1.integer)("followers").default(0).notNull(),
     following: (0, pg_core_1.integer)("following").default(0).notNull(),
     posts: (0, pg_core_1.integer)("posts").default(0).notNull(),
-    mostViewed: (0, pg_core_1.text)("mostViewed"),
+    visitHistory: (0, pg_core_1.text)("visitHistory").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
     favourite: (0, pg_core_1.integer)("favourite").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
 });
 // User Preferences

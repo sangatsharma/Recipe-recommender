@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
 const users_models_1 = require("../users/users.models");
+const auth_helpers_1 = require("../users/auth/auth.helpers");
 /*
   FETCH ALL RECIPIES
 */
@@ -116,6 +117,8 @@ const recipeDetails = async (req, res, next) => {
                 },
             });
         }
+        await db_1.db.update(users_models_1.userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1)] });
+        console.log(recipeDB);
         // If found
         return res.send({
             success: true,
@@ -239,3 +242,36 @@ const recipeReviewGet = async (req, res, next) => {
     }
 };
 exports.recipeReviewGet = recipeReviewGet;
+// DEMO: NOT COMPLETE
+const recommendRecipies = async (req, res, next) => {
+    const userCookie = res.locals.user;
+    try {
+        const userInfo = await (0, auth_helpers_1.userExists)(userCookie.email);
+        if (!userInfo.success)
+            return res.json(userInfo);
+        let dbRes = [];
+        if (userInfo.body.visitHistory.length === 0) {
+            dbRes = (await db_1.db.select().from(recipes_models_1.recipeSchema).limit(10));
+        }
+        else {
+            // let c = 6;
+            // for (const a of userInfo.body.mostViewed?.split(" ") || []) {
+            //   const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
+            //   const dbResTmp = await db.execute(sql.raw(sqlQuery)) as RecipeSchemaType[];
+            //   // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
+            //   dbRes = dbRes.concat(dbResTmp);
+            //   c = Math.floor(c / 2);
+            const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${userInfo.body.visitHistory[0]}%' LIMIT 10`;
+            dbRes = await db_1.db.execute(drizzle_orm_1.sql.raw(sqlQuery));
+        }
+        return res.json({
+            "success": true,
+            "length": dbRes.length,
+            "data": dbRes
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.recommendRecipies = recommendRecipies;

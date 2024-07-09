@@ -10,7 +10,7 @@ import express, { RequestHandler } from "express";
 // Types
 import { changePasswordHandler, logoutHandler, userLoginHandler, userRegisterHandler, verifyEmailHandler } from "./auth/passwordAuth.controllers";
 import { oAuth2Server, oAuthHandler } from "./auth/googleAuth.controllers";
-import { favouriteRecipeHandler, followUser, getUserPreferences, recipeFavouriteGetHandler, recommendRecipies, tmpDemo, updateUserInfo, updateUserPreferences, userInfoHandler, userProfile, validateToken } from "./users.controllers";
+import { favouriteRecipeHandler, followUser, getUserPreferences, recipeFavouriteGetHandler, tmpDemo, updateUserInfo, updateUserPreferences, userInfoHandler, userProfile, validateToken } from "./users.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 import multer from "multer";
@@ -37,7 +37,6 @@ userRouter.post("/favourite", authenticateJWT, favouriteRecipeHandler as Request
 userRouter.get("/favourite", authenticateJWT, recipeFavouriteGetHandler as RequestHandler);
 userRouter.post("/update", upload.single("profile_pic"), authenticateJWT, updateUserInfo as RequestHandler);
 
-userRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
 
 userRouter.post("/pref", authenticateJWT, updateUserPreferences as RequestHandler);
 userRouter.get("/pref", authenticateJWT, getUserPreferences as RequestHandler);

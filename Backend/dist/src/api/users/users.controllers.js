@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recommendRecipies = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -215,38 +215,6 @@ const recipeFavouriteGetHandler = async (req, res, next) => {
     }
 };
 exports.recipeFavouriteGetHandler = recipeFavouriteGetHandler;
-// DEMO: NOT COMPLETE
-const recommendRecipies = async (req, res, next) => {
-    const userCookie = res.locals.user;
-    try {
-        const userInfo = await (0, auth_helpers_1.userExists)(userCookie.email);
-        if (!userInfo.success)
-            return res.json(userInfo);
-        let dbRes = [];
-        if (!(userInfo.body.mostViewed)) {
-            dbRes = (await db_1.db.select().from(recipes_models_1.recipeSchema).limit(10));
-        }
-        else {
-            let c = 6;
-            for (const a of userInfo.body.mostViewed?.split(" ") || []) {
-                const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
-                const dbResTmp = await db_1.db.execute(drizzle_orm_1.sql.raw(sqlQuery));
-                // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
-                dbRes = dbRes.concat(dbResTmp);
-                c = Math.floor(c / 2);
-            }
-        }
-        return res.json({
-            "success": true,
-            "length": dbRes.length,
-            "data": dbRes
-        });
-    }
-    catch (err) {
-        next(err);
-    }
-};
-exports.recommendRecipies = recommendRecipies;
 /*
   UPDATE USER INFO
   USAGE:

@@ -20,7 +20,7 @@ export const userSchema = pgTable("users", {
   followers: integer("followers").default(0).notNull(),
   following: integer("following").default(0).notNull(),
   posts: integer("posts").default(0).notNull(),
-  mostViewed: text("mostViewed"),
+  visitHistory: text("visitHistory").array().notNull().default(sql`'{}'::integer[]`),
   favourite: integer("favourite").array().notNull().default(sql`'{}'::integer[]`),
 });
 
