@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
-import { recipeReview, recipeSchema } from "./recipes.models";
-import { SQL, eq, lte, and, ilike } from "drizzle-orm";
+import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
+import { SQL, eq, lte, and, ilike, sql } from "drizzle-orm";
 import { userSchema } from "../users/users.models";
+import { userExists } from "../users/auth/auth.helpers";
 
 /*
   FETCH ALL RECIPIES
@@ -130,6 +131,9 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
         },
       });
     }
+
+    await db.update(userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1) as string] });
+    console.log(recipeDB);
 
     // If found
     return res.send({
@@ -265,6 +269,43 @@ export const recipeReviewGet = async (req: Request, res: Response, next: NextFun
       success: true,
       length: resData.length,
       body: resData
+    });
+  }
+  catch (err) {
+    next(err);
+  }
+};
+
+// DEMO: NOT COMPLETE
+export const recommendRecipies = async (req: Request, res: Response, next: NextFunction) => {
+  const userCookie = res.locals.user as { email: string };
+  try {
+    const userInfo = await userExists(userCookie.email);
+    if (!userInfo.success)
+      return res.json(userInfo);
+
+    let dbRes: RecipeSchemaType[] = [] as RecipeSchemaType[];
+    if (userInfo.body.visitHistory.length === 0) {
+      dbRes = (await db.select().from(recipeSchema).limit(10));
+    }
+    else {
+      // let c = 6;
+
+      // for (const a of userInfo.body.mostViewed?.split(" ") || []) {
+      //   const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
+      //   const dbResTmp = await db.execute(sql.raw(sqlQuery)) as RecipeSchemaType[];
+      //   // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
+      //   dbRes = dbRes.concat(dbResTmp);
+      //   c = Math.floor(c / 2);
+
+      const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${userInfo.body.visitHistory[0]}%' LIMIT 10`;
+      dbRes = await db.execute(sql.raw(sqlQuery)) as RecipeSchemaType[];
+    }
+
+    return res.json({
+      "success": true,
+      "length": dbRes.length,
+      "data": dbRes
     });
   }
   catch (err) {

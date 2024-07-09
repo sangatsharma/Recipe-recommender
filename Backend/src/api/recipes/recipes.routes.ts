@@ -6,7 +6,7 @@
     -> "/filter" with POST  = search specific
 */
 import express, { RequestHandler } from "express";
-import { addNewRecipe, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, returnAllRecipies } from "./recipes.controllers";
+import { addNewRecipe, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, recommendRecipies, returnAllRecipies } from "./recipes.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 const recipeRouter = express.Router();
@@ -19,5 +19,7 @@ recipeRouter.get("/:id", authenticateJWT, recipeDetails as RequestHandler);
 recipeRouter.post("/review/add", authenticateJWT, recipeReviewAddHandler as RequestHandler);
 recipeRouter.post("/review/remove", authenticateJWT, recipeReviewRemoveHandler as RequestHandler);
 recipeRouter.get("/review/:id", authenticateJWT, recipeReviewGet as RequestHandler);
+
+recipeRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
 
 export default recipeRouter;

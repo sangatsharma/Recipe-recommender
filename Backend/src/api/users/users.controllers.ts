@@ -12,14 +12,13 @@ import {
 } from "@/utils/config";
 
 // DB
-import { and, arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
+import { arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { RecipeSchemaType, recipeSchema } from "@/api/recipes/recipes.models";
-import { favouriteRecipes, followerSchema, userPref, userSchema } from "@/api/users/users.models";
+import { followerSchema, userPref, userSchema } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 import { handleUpload } from "@/utils/cloudinary";
-import { PgDate } from "drizzle-orm/pg-core";
 
 
 /****************
@@ -264,40 +263,6 @@ export const recipeFavouriteGetHandler = async (req: Request, res: Response, nex
 };
 
 
-// DEMO: NOT COMPLETE
-export const recommendRecipies = async (req: Request, res: Response, next: NextFunction) => {
-  const userCookie = res.locals.user as { email: string };
-  try {
-    const userInfo = await userExists(userCookie.email);
-    if (!userInfo.success)
-      return res.json(userInfo);
-
-    let dbRes: RecipeSchemaType[] = [] as RecipeSchemaType[];
-    if (!(userInfo.body.mostViewed)) {
-      dbRes = (await db.select().from(recipeSchema).limit(10));
-    }
-    else {
-      let c = 6;
-
-      for (const a of userInfo.body.mostViewed?.split(" ") || []) {
-        const sqlQuery = `SELECT * FROM recipes where "Keywords" like '%${a}%'`;
-        const dbResTmp = await db.execute(sql.raw(sqlQuery)) as RecipeSchemaType[];
-        // const dbResTmp = (await db.select().from(recipeSchema).where(ilike(recipeSchema.Keywords, "%" + '"Meat"' + "%")));
-        dbRes = dbRes.concat(dbResTmp);
-        c = Math.floor(c / 2);
-      }
-    }
-
-    return res.json({
-      "success": true,
-      "length": dbRes.length,
-      "data": dbRes
-    });
-  }
-  catch (err) {
-    next(err);
-  }
-};
 
 
 /*
