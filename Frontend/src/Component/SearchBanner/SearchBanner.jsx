@@ -2,6 +2,7 @@ import "./SearchBanner.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { rankFoodItems } from "../../utils/filterItems";
+import Filters from "../Filters";
 import { toast } from "react-toastify";
 
 const SearchBanner = ({
@@ -9,10 +10,10 @@ const SearchBanner = ({
   setSearchPerformed,
   search,
   setSearch,
-  activeFilter,
 }) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [prevSearch, setPrevSearch] = useState("");
+  const [activeFilter, setActiveFilter] = useState(["Recipes"]);
 
   // Function to fetch the items from the backend
   const fetchAndProcessItems = async (search) => {
@@ -89,9 +90,14 @@ const SearchBanner = ({
           >
             Search
           </button>
-        </div>
+        </div>  
       </div>
-      {/* {props.content} */}
+      <div className="flex flex-row w-full justify-center ">
+          <Filters
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+          />
+        </div>
     </>
   );
 };
