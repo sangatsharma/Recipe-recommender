@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useThemeContext } from "../context/ThemeContext";
 
 const PeopleCard = ({ userInfo }) => {
+  const { isDarkMode } = useThemeContext();
   const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
     // Check if the user is following this user
@@ -8,7 +10,11 @@ const PeopleCard = ({ userInfo }) => {
   }, []);
 
   return (
-    <div className="flex flex-row justify-between w-[60%]  space-x-3 mb-2 border-2 rounded-md px-4 py-2">
+    <div
+      className={`flex flex-row justify-between w-[40%] below-sm:w-full  space-x-3 mb-2 border-1 rounded-md px-4 py-2  ${
+        isDarkMode ? "bg-[#302e2e]" : "bg-[#dbeafe]"
+      }`}
+    >
       <div className="flex flex-row justify-start">
         <img
           src={
@@ -19,12 +25,12 @@ const PeopleCard = ({ userInfo }) => {
           className="w-24 h-24 rounded-full object-cover"
         />
         <div>
-          <h1 className="text-xl font-bold mt-2">{userInfo.name}</h1>
-          <p className="text-gray-500 text-sm">{`@${
+          <h1 className="text-xl font-bold mt-2 pl-2">{userInfo.name}</h1>
+          <p className="text-gray-500 text-sm pl-3">{`@${
             userInfo.name.split(" ")[0]
           }${userInfo.id}`}</p>
           <p className="mt-2 opacity-50">
-            <i className="fa-sharp fa-solid fa-location-dot pr-2 "></i>
+            <i className="fa-sharp fa-solid fa-location-dot px-2 "></i>
             {userInfo.city}
           </p>
         </div>
