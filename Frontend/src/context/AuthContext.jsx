@@ -12,7 +12,6 @@ const AuthProvider = ({ children }) => {
     const verifyToken = async () => {
       try {
         const data = await checkCookieStatus();
-        console.log(data.body);
         if (data && data.success) {
           setIsAuthenticated(true);
           setUserInfo(data.body);
