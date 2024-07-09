@@ -41,6 +41,7 @@ function App() {
           element: <RecipeDetails />,
         },
         { path: "/search", element: <Search /> },
+        { path: "/search/:searchParam", element: <Search /> },
         { path: "/contact", element: <Contact /> },
         { path: "/explore", element: <PrivateRoute element={Explore} /> },
         { path: "/login", element: <LoginPage /> },
