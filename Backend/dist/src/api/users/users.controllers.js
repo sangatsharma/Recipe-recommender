@@ -226,7 +226,6 @@ const updateUserInfo = async (req, res, next) => {
     // Provide body
     const body = req.body;
     const userInfo = res.locals.user;
-    console.log(req.file);
     const updateData = {};
     // if (body.username) updateData.username = body.username;
     if (body.fullName)
@@ -246,9 +245,10 @@ const updateUserInfo = async (req, res, next) => {
             updateData.profile_pic = url;
         }
         // Update DB
-        console.log(updateData);
         if (Object.keys(updateData).length !== 0)
             await db_1.db.update(users_models_1.userSchema).set(updateData).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
+        if (body?.city)
+            await db_1.db.execute((0, drizzle_orm_1.sql) `UPDATE "${users_models_1.userSchema}" SET city = ${body.city} where "${users_models_1.userSchema.email}" == '${userInfo.email}' `);
         return res.json({
             success: true,
             body: {
