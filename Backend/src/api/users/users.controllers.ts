@@ -308,7 +308,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 
     if (body?.city)
-      await db.execute(sql`UPDATE "${userSchema}" SET city = '${body.city}' where "${userSchema.email}" == '${userInfo.email}' `);
+      await db.execute(sql`UPDATE "${userSchema}" SET city = '${body.city}' where "${userSchema.email}" = '${userInfo.email}' `);
 
     return res.json({
       success: true,
