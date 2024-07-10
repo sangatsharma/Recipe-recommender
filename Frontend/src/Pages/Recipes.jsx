@@ -10,20 +10,35 @@ const Recipes = (props) => {
         <title>Recipes - CIY </title>
       </Helmet>
 
-        <h1>Add a Recipe</h1>
+      <h1>Add a Recipe</h1>
       <div className="w-full text-start">
         <RecipeForm />
       </div>
 
       <div className="p-4 w-full">Recipes</div>
       <PeopleCard
-        userInfo={{ name: "Sam Bahadur adhikari", id: 20, city: "Pokhara" }}
+        userInfo={{
+          name: "Sam Bahadur adhikari",
+          id: 1,
+          city: "Pokhara",
+          email: "sangat202@gmail.com",
+        }}
       />
       <PeopleCard
-        userInfo={{ name: "Hari Bahadur", id: 20, city: "Kathmandu" }}
+        userInfo={{
+          name: "Hari Bahadur",
+          id: 2,
+          city: "Kathmandu",
+          email: "sangatsharma2@gmail.com",
+        }}
       />
       <PeopleCard
-        userInfo={{ name: "Gyan Bahadur", id: 20, city: "Chitwan" }}
+        userInfo={{
+          name: "Gyan Bahadur",
+          id: 3,
+          city: "Chitwan",
+          email: "test@test.com",
+        }}
       />
     </div>
   );
