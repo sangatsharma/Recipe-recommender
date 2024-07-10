@@ -291,7 +291,6 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   if (body.fullName) updateData.name = body.fullName;
   if (body.bio) updateData.bio = body.bio;
   if (body.birthday) updateData.birthday = body.birthday;
-  if (body.city) updateData.city = body.city;
 
   try {
     // If profile picture provided
@@ -307,6 +306,14 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     // Update DB
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
+
+    if (body?.city) {
+      await db.update(userSchema).set({ city: body.city }).where(eq(userSchema.id, 91));
+      // const cityName = String(body.city);
+      // const userEmail = String(userInfo.email);
+      // // const query = `UPDATE "users" SET city = '${cityName}' where "email" = '${String(userInfo.email)}'`
+      // await db.execute(sql`UPDATE users SET city = '12' where email = '${userEmail}' `);
+    }
 
     return res.json({
       success: true,
