@@ -307,8 +307,13 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
     if (Object.keys(updateData).length !== 0)
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 
-    if (body?.city)
-      await db.execute(sql`UPDATE "${userSchema}" SET city = '${body.city}' where "${userSchema.email}" = '${userInfo.email}' `);
+    if (body?.city) {
+      await db.update(userSchema).set({ city: body.city }).where(eq(userSchema.id, 91));
+      // const cityName = String(body.city);
+      // const userEmail = String(userInfo.email);
+      // // const query = `UPDATE "users" SET city = '${cityName}' where "email" = '${String(userInfo.email)}'`
+      // await db.execute(sql`UPDATE users SET city = '12' where email = '${userEmail}' `);
+    }
 
     return res.json({
       success: true,
