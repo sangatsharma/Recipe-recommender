@@ -47,7 +47,7 @@ function App() {
         { path: "/login", element: <LoginPage /> },
         { path: "/signup", element: <SignupPage /> },
         { path: "/profile", element: <PrivateRoute element={Profile} /> },
-        { path: "/profile/user", element: <PrivateRoute element={Profile} /> },
+        { path: "/profile/:user", element: <PrivateRoute element={Profile} /> },
         { path: "/settings", element: <PrivateRoute element={Settings} /> },
         {
           path: "/bookmarks",
