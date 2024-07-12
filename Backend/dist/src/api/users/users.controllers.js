@@ -248,7 +248,7 @@ const updateUserInfo = async (req, res, next) => {
         if (Object.keys(updateData).length !== 0)
             await db_1.db.update(users_models_1.userSchema).set(updateData).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
         if (body?.city) {
-            await db_1.db.update(users_models_1.userSchema).set({ city: body.city }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, 91));
+            await db_1.db.update(users_models_1.userSchema).set({ city: body.city }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
             // const cityName = String(body.city);
             // const userEmail = String(userInfo.email);
             // // const query = `UPDATE "users" SET city = '${cityName}' where "email" = '${String(userInfo.email)}'`
