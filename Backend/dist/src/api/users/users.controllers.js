@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = require("../../utils/config");
+const config_1 = require("@/utils/config");
 // DB
 const drizzle_orm_1 = require("drizzle-orm");
-const db_1 = require("../../utils/db");
-const recipes_models_1 = require("../../api/recipes/recipes.models");
-const users_models_1 = require("../../api/users/users.models");
+const db_1 = require("@/utils/db");
+const recipes_models_1 = require("@/api/recipes/recipes.models");
+const users_models_1 = require("@/api/users/users.models");
 const auth_helpers_1 = require("./auth/auth.helpers");
-const cloudinary_1 = require("../../utils/cloudinary");
+const cloudinary_1 = require("@/utils/cloudinary");
 /****************
 * ROUTES
 ****************/
@@ -72,18 +72,18 @@ const followUser = async (req, res, _) => {
         return res.json(jsonResponse);
     }
     // Add follower & following
-    await db_1.db.insert(users_models_1.followerSchema).values({
-        follower: Number(userToken.id),
-        followedUser: followedUser.id,
-    });
+    // await db.insert(followerSchema).values({
+    //   follower: Number(userToken.id),
+    //   followedUser: followedUser.id,
+    // });
     // Update user's followers
     await db_1.db.update(users_models_1.userSchema).set({
-        "followers": followedUser.followers + 1,
+        followers: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.followers}, ${userToken.id} )`,
     }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
     // Update user's following
     // TODO: better implementation
     await db_1.db.update(users_models_1.userSchema).set({
-        "following": currentUser.body.following + 1,
+        following: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.following}, ${followedUser.id} )`,
     }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, Number(userToken.id)));
     const jsonResponse = {
         success: true,
@@ -248,7 +248,7 @@ const updateUserInfo = async (req, res, next) => {
         if (Object.keys(updateData).length !== 0)
             await db_1.db.update(users_models_1.userSchema).set(updateData).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
         if (body?.city) {
-            await db_1.db.update(users_models_1.userSchema).set({ city: body.city }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, 91));
+            await db_1.db.update(users_models_1.userSchema).set({ city: body.city }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
             // const cityName = String(body.city);
             // const userEmail = String(userInfo.email);
             // // const query = `UPDATE "users" SET city = '${cityName}' where "email" = '${String(userInfo.email)}'`
@@ -313,12 +313,12 @@ const userProfile = async (req, res, next) => {
         const followers = await db_1.db.select({
             name: users_models_1.userSchema.name,
             email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
+        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
         // Get following info
         const following = await db_1.db.select({
             name: users_models_1.userSchema.name,
             email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
+        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
         // Get all recipes uploaded by user
         const posts = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.AuthorId, id));
         // Return info

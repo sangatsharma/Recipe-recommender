@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.oAuth2Server = exports.oAuthHandler = void 0;
-const config_1 = require("../../../utils/config");
+const config_1 = require("@/utils/config");
 const auth_helpers_1 = require("./auth.helpers");
 const oAuthHandler = (_, res) => {
     // Where to redirect to when user picks a account to login with

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
-const db_1 = require("../../utils/db");
+exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+const db_1 = require("@/utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
 const users_models_1 = require("../users/users.models");
@@ -99,12 +99,37 @@ const filterRecipe = (req, res, next) => {
     });
 };
 exports.filterRecipe = filterRecipe;
+const filterDemo = (req, res, next) => {
+    const dataTmp = req.body.res;
+    /*
+      res.body =
+      {
+        type: "Recipe",
+        options: {
+          "Dishes": "Breakfast"
+        }
+      }
+    */
+    const que = "SELECT * FROM recipes WHERE ";
+    switch (dataTmp.type) {
+        case "Recipe":
+            const options = dataTmp.options;
+        // if (dataTmp.option?.Dishes === "sasa") {
+        // }
+    }
+    console.log(que);
+    return res.json({
+        "hello": "world",
+    });
+};
+exports.filterDemo = filterDemo;
 /*
   SEARCH FOR A SPECIFIC RECIPE
 */
 const recipeDetails = async (req, res, next) => {
     // Get recipe id from parameter
     const recipeId = Number(req.params.id);
+    const userInfo = res.locals;
     try {
         // Get the recipe
         const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, recipeId));
@@ -117,7 +142,7 @@ const recipeDetails = async (req, res, next) => {
                 },
             });
         }
-        await db_1.db.update(users_models_1.userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1)] });
+        await db_1.db.update(users_models_1.userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1)] }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, userInfo.email));
         console.log(recipeDB);
         // If found
         return res.send({

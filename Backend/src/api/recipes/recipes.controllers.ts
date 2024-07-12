@@ -5,6 +5,7 @@ import { SQL, eq, lte, and, ilike, sql } from "drizzle-orm";
 import { userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 
+
 /*
   FETCH ALL RECIPIES
 */
@@ -63,6 +64,7 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
   const data: FilterRecord = req.body as FilterRecord;
   const q: SQL[] = [];
 
+
   // If name search is present
   let nameSearch = false;
   let nameQuery = "";
@@ -110,6 +112,39 @@ export const filterRecipe = (req: Request, res: Response, next: NextFunction) =>
 };
 
 
+export const filterDemo = (req: Request, res: Response, next: NextFunction) => {
+  type Dishes = string;
+  type FilterRecordDemo = Record<string, string | Record<string, string>>;
+  const dataTmp: FilterRecordDemo = req.body.res as FilterRecordDemo;
+
+  /*
+    res.body =
+    {
+      type: "Recipe",
+      options: {
+        "Dishes": "Breakfast"
+      }
+    }
+  */
+
+  const que = "SELECT * FROM recipes WHERE ";
+  switch (dataTmp.type) {
+    case "Recipe":
+      type Dishes = string;
+      const options = dataTmp.options;
+    // if (dataTmp.option?.Dishes === "sasa") {
+
+    // }
+  }
+
+  console.log(que);
+
+  return res.json({
+    "hello": "world",
+  });
+};
+
+
 /*
   SEARCH FOR A SPECIFIC RECIPE
 */
@@ -117,6 +152,8 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
 
   // Get recipe id from parameter
   const recipeId: number = Number(req.params.id);
+
+  const userInfo = res.locals as { email: string };
 
   try {
     // Get the recipe
@@ -132,7 +169,7 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
       });
     }
 
-    await db.update(userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1) as string] });
+    await db.update(userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1) as string] }).where(eq(userSchema.email, userInfo.email));
     console.log(recipeDB);
 
     // If found

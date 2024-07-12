@@ -97,20 +97,20 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   }
 
   // Add follower & following
-  await db.insert(followerSchema).values({
-    follower: Number(userToken.id),
-    followedUser: followedUser.id,
-  });
+  // await db.insert(followerSchema).values({
+  //   follower: Number(userToken.id),
+  //   followedUser: followedUser.id,
+  // });
 
   // Update user's followers
   await db.update(userSchema).set({
-    "followers": followedUser.followers + 1,
+    followers: sql`array_append(${userSchema.followers}, ${userToken.id} )`,
   }).where(eq(userSchema.id, followedUser.id));
 
   // Update user's following
   // TODO: better implementation
   await db.update(userSchema).set({
-    "following": currentUser.body.following + 1,
+    following: sql`array_append(${userSchema.following}, ${followedUser.id} )`,
   }).where(eq(userSchema.id, Number(userToken.id)));
 
   const jsonResponse: JsonResponse = {
@@ -308,7 +308,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
       await db.update(userSchema).set(updateData).where(eq(userSchema.email, userInfo.email));
 
     if (body?.city) {
-      await db.update(userSchema).set({ city: body.city }).where(eq(userSchema.id, 91));
+      await db.update(userSchema).set({ city: body.city }).where(eq(userSchema.email, userInfo.email));
       // const cityName = String(body.city);
       // const userEmail = String(userInfo.email);
       // // const query = `UPDATE "users" SET city = '${cityName}' where "email" = '${String(userInfo.email)}'`
@@ -398,13 +398,13 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
     const followers = await db.select({
       name: userSchema.name,
       email: userSchema.email,
-    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
+    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
 
     // Get following info
     const following = await db.select({
       name: userSchema.name,
       email: userSchema.email,
-    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
+    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
 
     // Get all recipes uploaded by user
     const posts = await db.select().from(recipeSchema).where(eq(recipeSchema.AuthorId, id));
