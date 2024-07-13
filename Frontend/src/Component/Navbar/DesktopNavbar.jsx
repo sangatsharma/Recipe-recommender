@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import NotificationButton from "./NotificationButton";
 import ThemeToggle from "./ThemeToggle";
 import { useThemeContext } from "../../context/ThemeContext";
-
+import { FiPlusCircle } from "react-icons/fi";
 
 const DesktopNavbar = () => {
   const { isAuthenticated } = useContext(AuthContext);
@@ -109,6 +109,9 @@ const DesktopNavbar = () => {
       </nav>
       <div className="Profile">
         {isAuthenticated && (
+          <FiPlusCircle onClick={() => navigate("/upload")} className=" p-2  h-10 w-10 rounded-full  hover:bg-gray-300 cursor-pointer  flex justify-center"/>
+        )}
+        {isAuthenticated && (
           <>
             <Link to="/bookmarks">
               <span className="flex items-center justify-center  cursor-pointer m-auto pb-1 transition-all hover:scale-125 hover:border-b-2 border-orange-500 w-5 h-8 mr-2 ">
@@ -127,6 +130,7 @@ const DesktopNavbar = () => {
             Sign Up
           </button>
         )}
+
         <ProfileDropdown
           isMobile={false}
           isOpen={isOpen}

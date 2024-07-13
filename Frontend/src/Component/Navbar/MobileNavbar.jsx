@@ -6,7 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import NotificationButton from "./NotificationButton";
 import ProfileDropdown from "./ProfileDropdown";
 import ThemeToggle from "./ThemeToggle";
-import { useThemeContext } from "../../context/ThemeContext";
+import { useThemeContext } from "../../context/ThemeContext";import { FiPlusCircle } from "react-icons/fi";
 
 const MobileNavbar = () => {
   const { isDarkMode } = useThemeContext();
@@ -54,6 +54,9 @@ const MobileNavbar = () => {
           </div>
         </Link>
         <div className="Profile flex">
+        {isAuthenticated && (
+          <FiPlusCircle onClick={() => navigate("/upload")} className=" p-2  h-12 w-12 rounded-full  hover:bg-gray-300 cursor-pointer  flex justify-center"/>
+        )}
           <ThemeToggle />
           {isAuthenticated && <NotificationButton />}
           {!isAuthenticated && (
