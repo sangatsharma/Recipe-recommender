@@ -110,7 +110,7 @@ nav > button:hover {
   align-items: center;
   margin-right: 8px;
 }
-.Profile > button {
+.Profile >  .signup {
   height: 50px;
   margin: auto;
   display: flex;
@@ -124,7 +124,7 @@ nav > button:hover {
   border-radius: 12px;
   transition: 0.1s ease-in;
 }
-.Profile > button:hover {
+.Profile > .signup:hover  {
   background-color: #ed802b;
   color: white;
 }
