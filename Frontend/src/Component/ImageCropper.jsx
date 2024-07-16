@@ -23,7 +23,6 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     "image/webp",
     "image/bmp",
   ];
-
   const handleUploadClick = () => {
     fileInputRef.current.click();
   };
@@ -73,9 +72,10 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
   const handleConfirmCrop = async () => {
     if (imageSrc && croppedAreaPixels) {
       const croppedImg = await getCroppedImg(imageSrc, croppedAreaPixels);
+      resetState();
       setProfilePic(croppedImg);
       await uploadProfilePic(croppedImg);
-      resetState();
+     
     }
   };
 
@@ -84,6 +84,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     const mimeType = "image/jpeg";
     const file = await createFileFromBlobUrl(croppedImg, fileName, mimeType);
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("profile_pic", file);
       const response = await axios.post(
@@ -102,6 +103,8 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
+    }finally{
+      setLoading(false);
     }
   };
 
