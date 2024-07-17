@@ -37,6 +37,7 @@ const Search = () => {
         return { [key]: value };
       }),
     ]);
+
     if (searchValue) {
       fetchAndProcessItems(searchValue);
     }
@@ -82,7 +83,7 @@ const Search = () => {
     )}&filterType=${encodeURIComponent(activeFilter[0])}&${activeFilter
       .slice(1)
       .map(
-        (filter, index) =>
+        (filter) =>
           `filter=${encodeURIComponent(
             Object.keys(filter)[0]
           )}:${encodeURIComponent(Object.values(filter)[0])}`
@@ -95,6 +96,7 @@ const Search = () => {
     <>
       <Helmet>
         <title>Search - CIY</title>
+        <meta name="description" content={`Search results for ${search}`} />
       </Helmet>
 
       <div className="flex flex-col m-auto gap-2">
@@ -111,7 +113,9 @@ const Search = () => {
         />
 
         {fetchItems.length > 0 && (
-          <p className="mb-4 text-center">Search Results for {search}:</p>
+          <p className="mb-4 text-center" aria-live="polite">
+            Search Results for {search}:
+          </p>
         )}
 
         <div className="w-[100%] flex flex-row flex-wrap justify-center gap-2">
@@ -142,7 +146,9 @@ const Search = () => {
         </div>
 
         {searchPerformed && fetchItems.length === 0 && (
-          <p className="mt-2 text-center">No results found.</p>
+          <p className="mt-2 text-center" aria-live="assertive">
+            No results found.
+          </p>
         )}
       </div>
     </>
