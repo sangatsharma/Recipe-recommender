@@ -12,6 +12,7 @@ const ItemsCard = ({
   isFavorite,
   toggleTick,
   RecipeCategory,
+  matchedIngredients = [],
 }) => {
   const { isDarkMode } = useThemeContext();
   const [isScaling, setIsScaling] = useState(false);
@@ -23,7 +24,7 @@ const ItemsCard = ({
 
   //navigate to the recipe details page
   const handleClick = () => {
-    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
+    navigate(`/recipes/${itemName}`, { state: { matchedIngredients } });
   };
 
   const fallbackSrc =

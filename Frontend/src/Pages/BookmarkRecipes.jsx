@@ -12,14 +12,15 @@ const BookmarkRecipes = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="w-full mx-auto px-4 py-8 flex flex-col items-center justify-center ">
       <Helmet>
         <title>Favorites Recipes - CIY </title>
       </Helmet>
       <h1 className="text-3xl font-bold text-center mb-8">
         My Favorite Recipes
       </h1>
-      <div className="flex flex-row gap-2 flex-wrap justify-center">
+
+      <div className="flex gap-2 flex-wrap  p-1 justify-center  ">
         {tickedItems.size > 0 &&
           Save.map((item) => {
             const regex = /"([^"]+)"/g;
