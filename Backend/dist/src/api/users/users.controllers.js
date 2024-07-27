@@ -45,6 +45,14 @@ const followUser = async (req, res, _) => {
     // TODO: TRY-CATCH
     //TODO: CHECK IF ALREADY FOLLOWING
     const data = req.body;
+    if (!(data.action === "follow" || data.action === "unfollow")) {
+        return res.json({
+            success: false,
+            body: {
+                message: "Invalid action"
+            }
+        });
+    }
     const cookie = req.cookies;
     const userToken = jsonwebtoken_1.default.verify(cookie.auth_token, config_1.SECRET);
     // Make sure user with email exists
@@ -72,19 +80,35 @@ const followUser = async (req, res, _) => {
         return res.json(jsonResponse);
     }
     // Add follower & following
-    await db_1.db.insert(users_models_1.followerSchema).values({
-        follower: Number(userToken.id),
-        followedUser: followedUser.id,
-    });
+    // await db.insert(followerSchema).values({
+    //   follower: Number(userToken.id),
+    //   followedUser: followedUser.id,
+    // });
+    if (data.action === "follow") {
+        await db_1.db.update(users_models_1.userSchema).set({
+            following: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.following}, ${followedUser.id} )`,
+        }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, currentUser.body.id));
+        await db_1.db.update(users_models_1.userSchema).set({
+            followers: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
+        }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
+    }
+    else if (data.action === "unfollow") {
+        await db_1.db.update(users_models_1.userSchema).set({
+            following: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.following}, ${followedUser.id} )`,
+        }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, currentUser.body.id));
+        await db_1.db.update(users_models_1.userSchema).set({
+            followers: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
+        }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
+    }
     // Update user's followers
-    await db_1.db.update(users_models_1.userSchema).set({
-        "followers": followedUser.followers + 1,
-    }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
+    // await db.update(userSchema).set({
+    //   "followers": followedUser.followers + 1,
+    // }).where(eq(userSchema.id, followedUser.id));
     // Update user's following
     // TODO: better implementation
-    await db_1.db.update(users_models_1.userSchema).set({
-        "following": currentUser.body.following + 1,
-    }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, Number(userToken.id)));
+    // await db.update(userSchema).set({
+    //   "following": currentUser.body.following + 1,
+    // }).where(eq(userSchema.id, Number(userToken.id)));
     const jsonResponse = {
         success: true,
         body: {

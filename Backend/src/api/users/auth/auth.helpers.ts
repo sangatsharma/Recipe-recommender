@@ -66,7 +66,6 @@ export const userRegisterHelper = async (body: RegisterForm) => {
 	return { success: true, body: userData };
 };
 
-
 export const userExists = async (email: string) => {
 	// Check for user with given email
 	const userTmp = await (db.select().from(userSchema).where(eq(userSchema.email, email)));

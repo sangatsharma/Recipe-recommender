@@ -16,8 +16,8 @@ export type UserDataDB = {
   email: string;
   password: string | null;
   joinedOn: Date;
-  followers: number;
-  following: number;
+  followers: number[];
+  following: number[];
   verified: number,
   profile_pic: string | null;
 };
@@ -25,7 +25,7 @@ export type UserDataDB = {
 export type JsonResponse = {
   success: boolean;
   body: {
-    [message: string]: string | number | Date | null;
+    [message: string]: string | number | Date | null | Array<number>;
   };
 };
 
