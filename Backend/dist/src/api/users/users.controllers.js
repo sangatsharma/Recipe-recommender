@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = require("@/utils/config");
+const config_1 = require("../../utils/config");
 // DB
 const drizzle_orm_1 = require("drizzle-orm");
-const db_1 = require("@/utils/db");
-const recipes_models_1 = require("@/api/recipes/recipes.models");
-const users_models_1 = require("@/api/users/users.models");
+const db_1 = require("../../utils/db");
+const recipes_models_1 = require("../../api/recipes/recipes.models");
+const users_models_1 = require("../../api/users/users.models");
 const auth_helpers_1 = require("./auth/auth.helpers");
-const cloudinary_1 = require("@/utils/cloudinary");
+const cloudinary_1 = require("../../utils/cloudinary");
 /****************
 * ROUTES
 ****************/
@@ -86,18 +86,18 @@ const followUser = async (req, res, _) => {
     // });
     if (data.action === "follow") {
         await db_1.db.update(users_models_1.userSchema).set({
-            following: (0, drizzle_orm_1.sql)`array_append(${users_models_1.userSchema.following}, ${followedUser.id} )`,
+            following: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.following}, ${followedUser.id} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, currentUser.body.id));
         await db_1.db.update(users_models_1.userSchema).set({
-            followers: (0, drizzle_orm_1.sql)`array_append(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
+            followers: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
     }
     else if (data.action === "unfollow") {
         await db_1.db.update(users_models_1.userSchema).set({
-            following: (0, drizzle_orm_1.sql)`array_remove(${users_models_1.userSchema.following}, ${followedUser.id} )`,
+            following: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.following}, ${followedUser.id} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, currentUser.body.id));
         await db_1.db.update(users_models_1.userSchema).set({
-            followers: (0, drizzle_orm_1.sql)`array_remove(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
+            followers: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
     }
     // Update user's followers
@@ -194,14 +194,14 @@ const favouriteRecipeHandler = async (req, res, next) => {
             //   recipeId: recipeDB[0].RecipeId,
             // });
             await db_1.db.update(users_models_1.userSchema).set({
-                favourite: (0, drizzle_orm_1.sql)`array_append(${users_models_1.userSchema.favourite}, ${body.recipeId} )`,
+                favourite: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.favourite}, ${body.recipeId} )`,
             }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, userCookie.id));
         }
         // Else, remove
         else {
             // await db.delete(favouriteRecipes).where((and(eq(favouriteRecipes.recipeId, body.recipeId), eq(favouriteRecipes.userId, userCookie.id))));
             await db_1.db.update(users_models_1.userSchema).set({
-                favourite: (0, drizzle_orm_1.sql)`array_remove(${users_models_1.userSchema.favourite}, ${body.recipeId})`
+                favourite: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.favourite}, ${body.recipeId})`
             });
         }
         // Return response

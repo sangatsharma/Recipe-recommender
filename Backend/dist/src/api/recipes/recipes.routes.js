@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 */
 const express_1 = __importDefault(require("express"));
 const recipes_controllers_1 = require("./recipes.controllers");
-const middleware_1 = require("@/utils/middleware");
+const middleware_1 = require("../../utils/middleware");
 const recipeRouter = express_1.default.Router();
 // ROUTES
 recipeRouter.get("/", middleware_1.authenticateJWT, recipes_controllers_1.returnAllRecipies);

@@ -109,19 +109,6 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   //   follower: Number(userToken.id),
   //   followedUser: followedUser.id,
   // });
-<<<<<<< HEAD
-
-  // Update user's followers
-  await db.update(userSchema).set({
-    followers: sql`array_append(${userSchema.followers}, ${userToken.id} )`,
-  }).where(eq(userSchema.id, followedUser.id));
-
-  // Update user's following
-  // TODO: better implementation
-  await db.update(userSchema).set({
-    following: sql`array_append(${userSchema.following}, ${followedUser.id} )`,
-  }).where(eq(userSchema.id, Number(userToken.id)));
-=======
   if (data.action === "follow") {
     await db.update(userSchema).set({
       following: sql`array_append(${userSchema.following}, ${followedUser.id} )`,
@@ -151,7 +138,6 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   // await db.update(userSchema).set({
   //   "following": currentUser.body.following + 1,
   // }).where(eq(userSchema.id, Number(userToken.id)));
->>>>>>> main
 
   const jsonResponse: JsonResponse = {
     success: true,

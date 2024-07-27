@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.recipeRelations = exports.recipeReview = exports.recipeSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
-const users_models_1 = require("@/api/users/users.models");
+const users_models_1 = require("../../api/users/users.models");
 // Schema for recipes (TODO)
 exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     RecipeId: (0, pg_core_1.serial)("RecipeId").primaryKey(),

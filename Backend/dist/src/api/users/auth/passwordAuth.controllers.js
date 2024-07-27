@@ -7,7 +7,7 @@ exports.logoutHandler = exports.changePasswordHandler = exports.verifyEmailHandl
 const auth_helpers_1 = require("./auth.helpers");
 const auth_helpers_2 = require("./auth.helpers");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const cloudinary_1 = require("@/utils/cloudinary");
+const cloudinary_1 = require("../../../utils/cloudinary");
 const userRegisterHandler = async (req, res, next) => {
     // Get credentails
     const body = req.body;

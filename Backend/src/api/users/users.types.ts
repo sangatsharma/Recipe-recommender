@@ -25,7 +25,7 @@ export type UserDataDB = {
 export type JsonResponse = {
   success: boolean;
   body: {
-    [message: string]: string | number | Date | null | Array<number>;
+    [message: string]: string | number | Date | null | number[];
   };
 };
 
