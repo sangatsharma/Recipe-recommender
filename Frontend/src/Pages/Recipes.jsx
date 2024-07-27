@@ -17,27 +17,27 @@ const Recipes = (props) => {
 
       <div className="p-4 w-full">Recipes</div>
       <PeopleCard
-        userInfo={{
-          name: "Sam Bahadur adhikari",
-          id: 1,
+        userDetails={{
+          name: "Sam Bahadur hjsdsjdj hskjdhsjh dkh hjsdsk sdsdsdsd j",
+          id: 3,
           city: "Pokhara",
           email: "sangat202@gmail.com",
         }}
       />
       <PeopleCard
-        userInfo={{
+        userDetails={{
           name: "Hari Bahadur",
-          id: 2,
+          id: 1,
           city: "Kathmandu",
-          email: "sangatsharma2@gmail.com",
+          email: "sauravdhakal121@gmail.com",
         }}
       />
       <PeopleCard
-        userInfo={{
+        userDetails={{
           name: "Gyan Bahadur",
-          id: 3,
+          id: 2,
           city: "Chitwan",
-          email: "test@test.com",
+          email: "pikachu00824@gmail.com",
         }}
       />
     </div>

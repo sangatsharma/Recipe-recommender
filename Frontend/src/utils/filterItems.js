@@ -84,6 +84,7 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
 
     return filteredItems;
   }
+  return []
 }
 
 function convertToKeywordArray(input) {

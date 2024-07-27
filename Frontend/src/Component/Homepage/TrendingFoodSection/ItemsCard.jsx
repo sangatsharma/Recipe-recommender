@@ -40,7 +40,9 @@ const ItemsCard = ({
 
   return (
     <div
-      className={`ItemsCard ${isDarkMode ? "ItemsCard-dark-mode" : ""} group`}
+      className={`ItemsCard ${
+        isDarkMode ? "ItemsCard-dark-mode" : ""
+      } group h-96 w-72`}
     >
       <div className="ImageContainer">
         <img
