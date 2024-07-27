@@ -19,11 +19,13 @@ exports.userSchema = (0, pg_core_1.pgTable)("users", {
     }).defaultNow().notNull(),
     birthday: (0, pg_core_2.date)("birthday"),
     city: (0, pg_core_1.text)("city"),
-    followers: (0, pg_core_1.integer)("followerss").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
-    following: (0, pg_core_1.integer)("followingg").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
+    // followers: integer("followers").default(0).notNull(),
+    // following: integer("following").default(0).notNull(),
+    followers: (0, pg_core_1.integer)("followers").array().notNull().default((0, drizzle_orm_1.sql)`'{}'::integer[]`),
+    following: (0, pg_core_1.integer)("following").array().notNull().default((0, drizzle_orm_1.sql)`'{}'::integer[]`),
     posts: (0, pg_core_1.integer)("posts").default(0).notNull(),
-    visitHistory: (0, pg_core_1.text)("visitHistory").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
-    favourite: (0, pg_core_1.integer)("favourite").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::integer[]`),
+    visitHistory: (0, pg_core_1.text)("visitHistory").array().notNull().default((0, drizzle_orm_1.sql)`'{}'::integer[]`),
+    favourite: (0, pg_core_1.integer)("favourite").array().notNull().default((0, drizzle_orm_1.sql)`'{}'::integer[]`),
 });
 // User Preferences
 exports.userPref = (0, pg_core_1.pgTable)("userPref", {

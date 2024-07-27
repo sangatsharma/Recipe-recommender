@@ -4,6 +4,7 @@ import Explore from "./Pages/Explore.jsx";
 import Contact from "./Pages/Contact.jsx";
 import Recipes from "./Pages/Recipes.jsx";
 import RecipeDetails from "./Pages/RecipeDetails.jsx";
+import AddRecipe from "./Pages/AddRecipe.jsx";
 import Homepage from "./Pages/HomePage.jsx";
 import RootPageLayout from "./Pages/RootPageLayout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -41,11 +42,14 @@ function App() {
           element: <RecipeDetails />,
         },
         { path: "/search", element: <Search /> },
+        { path: "/search/:searchParam", element: <Search /> },
         { path: "/contact", element: <Contact /> },
         { path: "/explore", element: <PrivateRoute element={Explore} /> },
+        { path: "/upload", element: <PrivateRoute element={AddRecipe} /> },
         { path: "/login", element: <LoginPage /> },
         { path: "/signup", element: <SignupPage /> },
         { path: "/profile", element: <PrivateRoute element={Profile} /> },
+        { path: "/profile/:user", element: <PrivateRoute element={Profile} /> },
         { path: "/settings", element: <PrivateRoute element={Settings} /> },
         {
           path: "/bookmarks",

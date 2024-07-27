@@ -1,64 +1,32 @@
 import "./SearchBanner.css";
-import React, { useState } from "react";
-import axios from "axios";
-import { rankFoodItems } from "../../utils/filterItems";
-import {toast } from "react-toastify";
+import React from "react";
+
+import Filters from "../Filters";
 
 const SearchBanner = ({
-  setFoodItems,
-  setSearchPerformed,
   search,
   setSearch,
+  activeFilter,
+  setActiveFilter,
+  isButtonDisabled,
+  handleSearch,
+  setPrevSearch,
 }) => {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
-  // Function to fetch the items from the backend
-  const fetchAndProcessItems = async (search) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/recipe`,
-        { withCredentials: true }
-      );
-      const items = response.data;
-      const rankedItems = rankFoodItems(items, search);
-      setFoodItems(rankedItems);
-    } catch (error) {
-      console.error("Error fetching or processing items:", error);
-    }
-  };
-
-  // Function to handle the change in the search bar
+  // Function to handle changes in the search bar input
   const handleChange = (e) => {
-    setSearch(e.target.value);
+    setSearch(e.target.value); // Update the search state as the user types
   };
 
-  //function to handle the search button
-  const handleSearch = () => {
-    if (search.trim() === "") {
-      toast.error("Please enter a search term.");
-      return;
-    }
-    // Disable the button to prevent rapid presses
-    setFoodItems([]);
-    setIsButtonDisabled(true);
-    // Re-enable the button after 5 second  to allow the user to search again
-    setTimeout(() => {
-      setIsButtonDisabled(false);
-    }, 5000);
-    console.log(search);
-    setSearchPerformed(true);
-    fetchAndProcessItems(search);
-  };
-
-  //function to execute the search if the user presses enter
+  // Function to execute the search if the user presses Enter
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      handleSearch();
+      handleSearch(); // Trigger search when Enter key is pressed
     }
   };
 
   return (
     <>
+      {/* Search banner section */}
       <div className="Banner">
         <div className="BannerTitleWrapper">
           <p id="Title">Explore Recipes from Our Community</p>
@@ -66,26 +34,43 @@ const SearchBanner = ({
             Discover, cook, and enjoy meals shared by fellow food enthusiasts.
           </p>
         </div>
+        {/* Search bar section */}
         <div className="SearchBar">
+          {/* Label for screen readers */}
+          <label htmlFor="searchInput" className="sr-only">
+            Search recipes
+          </label>
+          {/* Input for searching recipes */}
           <input
             type="text"
+            id="searchInput"
             placeholder="Search tasty recipes"
             aria-label="Find recipes, ingredients, or dishes"
-            onChange={handleChange}
             value={search}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
           />
+          {/* Button to trigger the search */}
           <button
             type="button"
             onClick={handleSearch}
             disabled={isButtonDisabled}
+            aria-label="Search"
           >
             Search
           </button>
         </div>
       </div>
-      {/* {props.content} */}
+      {/* Filters section */}
+      <div className="flex flex-row w-full justify-center">
+        <Filters
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+          setPrevSearch={setPrevSearch}
+        />
+      </div>
     </>
   );
 };
+
 export default SearchBanner;

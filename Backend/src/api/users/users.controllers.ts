@@ -58,7 +58,15 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
 
   // TODO: TRY-CATCH
   //TODO: CHECK IF ALREADY FOLLOWING
-  const data: { email: string } = req.body as { email: string };
+  const data: { email: string, action: string } = req.body as { email: string, action: string };
+  if (!(data.action === "follow" || data.action === "unfollow")) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Invalid action"
+      }
+    });
+  }
   const cookie = req.cookies;
 
   const userToken = jwt.verify(cookie.auth_token as string, SECRET) as JwtPayload;
@@ -101,6 +109,7 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   //   follower: Number(userToken.id),
   //   followedUser: followedUser.id,
   // });
+<<<<<<< HEAD
 
   // Update user's followers
   await db.update(userSchema).set({
@@ -112,6 +121,37 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   await db.update(userSchema).set({
     following: sql`array_append(${userSchema.following}, ${followedUser.id} )`,
   }).where(eq(userSchema.id, Number(userToken.id)));
+=======
+  if (data.action === "follow") {
+    await db.update(userSchema).set({
+      following: sql`array_append(${userSchema.following}, ${followedUser.id} )`,
+    }).where(eq(userSchema.id, currentUser.body.id));
+
+    await db.update(userSchema).set({
+      followers: sql`array_append(${userSchema.followers}, ${currentUser.body.id} )`,
+    }).where(eq(userSchema.id, followedUser.id));
+  }
+  else if (data.action === "unfollow") {
+    await db.update(userSchema).set({
+      following: sql`array_remove(${userSchema.following}, ${followedUser.id} )`,
+    }).where(eq(userSchema.id, currentUser.body.id));
+
+    await db.update(userSchema).set({
+      followers: sql`array_remove(${userSchema.followers}, ${currentUser.body.id} )`,
+    }).where(eq(userSchema.id, followedUser.id));
+  }
+
+  // Update user's followers
+  // await db.update(userSchema).set({
+  //   "followers": followedUser.followers + 1,
+  // }).where(eq(userSchema.id, followedUser.id));
+
+  // Update user's following
+  // TODO: better implementation
+  // await db.update(userSchema).set({
+  //   "following": currentUser.body.following + 1,
+  // }).where(eq(userSchema.id, Number(userToken.id)));
+>>>>>>> main
 
   const jsonResponse: JsonResponse = {
     success: true,

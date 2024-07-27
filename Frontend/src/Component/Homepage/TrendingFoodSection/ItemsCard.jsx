@@ -12,6 +12,7 @@ const ItemsCard = ({
   isFavorite,
   toggleTick,
   RecipeCategory,
+  matchedIngredients = [],
 }) => {
   const { isDarkMode } = useThemeContext();
   const [isScaling, setIsScaling] = useState(false);
@@ -23,7 +24,7 @@ const ItemsCard = ({
 
   //navigate to the recipe details page
   const handleClick = () => {
-    navigate(`/recipes/${itemName}`, { state: { id, src, name, rating } });
+    navigate(`/recipes/${itemName}`, { state: { matchedIngredients } });
   };
 
   const fallbackSrc =
@@ -67,13 +68,19 @@ const ItemsCard = ({
           {isFavorite ? (
             <i
               className={`fas fa-heart ${
-                isScaling ? "transform scale-150 transition-transform duration-200" : "transition-transform duration-200"
+                isScaling
+                  ? "transform scale-150 transition-transform duration-200"
+                  : "transition-transform duration-200"
               }`}
             ></i>
           ) : (
-            <i className={` ${
-              isScaling ? "transform scale-0 transition-transform duration-100" : "transition-transform duration-200"
-            } far fa-heart`}></i>
+            <i
+              className={` ${
+                isScaling
+                  ? "transform scale-0 transition-transform duration-100"
+                  : "transition-transform duration-200"
+              } far fa-heart`}
+            ></i>
           )}
         </button>
       </div>

@@ -4,12 +4,14 @@ import { useThemeContext } from "../context/ThemeContext";
 
 const Footer = () => {
   const { isDarkMode } = useThemeContext();
+
   return (
-    <footer className={`${isDarkMode? " bg-[#302f2f]":"bg-blue-100"} py-4 w-[100%] mx-auto`}>
+    <footer className={`${isDarkMode ? "bg-[#302f2f]" : "bg-blue-100"} py-4 w-[100%] mx-auto`}>
       <div className="container mx-auto px-2">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-8">
+          {/* Logo and Branding */}
           <div className="flex flex-col justify-center mx-auto items-center md:items-start">
-            <img src={footerLogo} alt="Logo" className="w-24 h-24 mx-auto " />
+            <img src={footerLogo} alt="Cook It Yourself Logo" className="w-24 h-24 mx-auto" />
             <p className="font-bold text-xl text-[#f97316]">
               Cook It Yourself
             </p>
@@ -77,12 +79,11 @@ const Footer = () => {
           {/* Contact Us */}
           <div className="text-center md:text-left">
             <h3 className="font-semibold mb-4">Contact Us</h3>
-            <p>Amarsingh Chowk, Pokhara</p>
+            <address>
+              Amarsingh Chowk, Pokhara
+            </address>
             <p>
-              <a
-                href="mailto:CookitYourself@gmail.com"
-                className="hover:text-pink-600"
-              >
+              <a href="mailto:CookitYourself@gmail.com" className="hover:text-pink-600">
                 CookitYourself@gmail.com
               </a>
             </p>

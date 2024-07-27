@@ -1,4 +1,4 @@
-import React, { useEffect, useContext,useState} from "react";
+import React, { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -9,26 +9,28 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { Helmet } from "react-helmet-async";
 
-
 const SignupPage = () => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthContext);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      navigate("/home");
+      toast.success("Signup successful!");
     }
   }, [isAuthenticated]);
 
   const googleOauth = () => {
     window.location.href = `${import.meta.env.VITE_SERVER_URL}/user/auth/oauth`;
   };
+
   const handleSignup = () => {
     setIsAuthenticated(true);
-    toast.success("Signup successful!");
-    navigate("/");
+    window.location.reload();
   };
-  // setup schema and formik
+
+  // Setup schema and formik
   const formik = useFormik({
     initialValues: {
       userName: "",
@@ -40,7 +42,7 @@ const SignupPage = () => {
       userName: Yup.string()
         .matches(
           /^[a-zA-Z](?!.*\s{2})[a-zA-Z0-9]*(?: [a-zA-Z0-9]*)*$/,
-          "Only letters,numbers and space are allowed."
+          "Only letters, numbers and space are allowed."
         )
         .min(3, "Name must be at least 3 characters long")
         .max(40, "Name must be at most 40 characters long")
@@ -52,7 +54,7 @@ const SignupPage = () => {
         .min(6, "Password must be at least 6 characters long")
         .matches(
           /^(?=.*[A-Z])(?=.*[\W_])(?=.*[0-9])[a-zA-Z0-9\W_ ]+$/,
-          "Password must contain at least an uppercase,a symbol & a number,"
+          "Password must contain at least an uppercase, a symbol & a number,"
         )
         .required("* Please enter a password."),
       confirmPassword: Yup.string()
@@ -60,15 +62,15 @@ const SignupPage = () => {
         .required("* Please confirm your password."),
     }),
     onSubmit: async (values) => {
-      {
-        setIsButtonDisabled(true);
-        // Re-enable the button after 4 second  to allow the user to search again
-        setTimeout(() => {
-          setIsButtonDisabled(false);
-        }, 4000);
-        values["name"] = values["userName"];
+      setIsButtonDisabled(true);
+      // Re-enable the button after 4 seconds to allow the user to search again
+      setTimeout(() => {
+        setIsButtonDisabled(false);
+      }, 4000);
 
-        // Send creds to backend
+      values["name"] = values["userName"];
+
+      try {
         const res = await axios.post(
           `${import.meta.env.VITE_SERVER_URL}/user/auth/register`,
           values,
@@ -78,34 +80,35 @@ const SignupPage = () => {
           }
         );
 
-        // If not successful
         if (!res.data.success) {
           toast.error(`${res.data.body.message}`);
-        }
-
-        // Else, signed in successfully
-        else {
-          // Redirect
+        } else {
           handleSignup();
         }
+      } catch (error) {
+        toast.error("An error occurred. Please try again.");
       }
     },
   });
 
   return (
     <div className="bg-white shadow-lg rounded-lg flex flex-row below-sm:flex-col overflow-hidden w-3/4 below-sm:w-[400px]">
+      <Helmet>
+        <title>Sign Up - CIY</title>
+        <meta
+          name="description"
+          content="Create a new account on CIY and enjoy personalized recipes, organizing recipes, and many more features."
+        />
+      </Helmet>
 
-<Helmet>
-         <title>Sign Up - CIY </title>
-         </Helmet>
       {/* Left Side with Form */}
       <div className="w-1/2 below-sm:w-[100%] px-10 pt-2 pb-1 bg-slate-200">
         <div className="flex flex-row justify-center mb-4">
-          <p className="text-2xl below-sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg pb-4 ">
+          <p className="text-2xl below-sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 drop-shadow-lg pb-4">
             Sign Up
           </p>
         </div>
-        <form onSubmit={formik.handleSubmit}>
+        <form onSubmit={formik.handleSubmit} noValidate>
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="userName"
@@ -121,7 +124,6 @@ const SignupPage = () => {
             onBlur={formik.handleBlur}
             value={formik.values.userName}
           />
-
           {formik.touched.userName && formik.errors.userName ? (
             <span className="text-red-500 text-sm">
               {formik.errors.userName}
@@ -216,7 +218,7 @@ const SignupPage = () => {
         <hr className="border-t-1 border-orange-500 my-1" />
         <div className="flex flex-col gap-1 justify-center text-center pt-2">
           <button
-            className="flex flex-row gap-2 m-auto justify-center bg-slate-300  text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
+            className="flex flex-row gap-2 m-auto justify-center bg-slate-300 text-gray-700 border-gray-400 hover:bg-slate-400 hover:text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline below-sm:w-[100%]"
             onClick={googleOauth}
           >
             Continue with
@@ -243,7 +245,7 @@ const SignupPage = () => {
         </h2>
         <br />
         <p className="text-2xl text-teal-50 mb-4">Here's What You'll Get:</p>
-        <ul className=" text-teal-100 list-disc list-inside space-y-1 text-[20px] below-sm:text-white">
+        <ul className="text-teal-100 list-disc list-inside space-y-1 text-[20px] below-sm:text-white">
           <li className="flex items-center">
             <img
               src={bullet}
