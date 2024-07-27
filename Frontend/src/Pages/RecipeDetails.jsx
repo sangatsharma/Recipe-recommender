@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { fetchItemById } from "../utils/auth";
 import html2canvas from "html2canvas";
@@ -17,6 +17,10 @@ const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
 
+  //using location state to extract ingredients if page was redirected from search by ingredients
+  const location = useLocation();
+  const matchedIngredients = location.state.matchedIngredients || [];
+
   const DownloadPdf = () => {
     const input = saveAsPdfRef.current;
     html2canvas(input, {
@@ -31,7 +35,7 @@ const RecipeDetails = () => {
           compress: true,
           floatPrecision: 1,
           unit: "px",
-          format: [canvas.width , canvas.height ], // Use canvas dimensions
+          format: [canvas.width, canvas.height], // Use canvas dimensions
         });
         pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
         pdf.save(`${item.Name}.pdf`);
@@ -82,7 +86,7 @@ const RecipeDetails = () => {
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
   // if (error) return <p>Error: {error}</p>;
-  if (!item) return <Skeleton/>;
+  if (!item) return <Skeleton />;
   if (item.success === false) return <InvalidPage />;
 
   const regex = /"([^"]+)"/g;
@@ -135,7 +139,7 @@ const RecipeDetails = () => {
       {/* Open Graph tags */}
       <Helmet>
         <title>CIY-{item.Name}</title>
-        
+
         <meta
           property="og:title"
           content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
@@ -211,20 +215,66 @@ const RecipeDetails = () => {
           <img src={logo} className="h-[450px] w-[450px]" />
         </div>
         <div className="flex flex-row flex-wrap gap-10 below-sm:gap-4 relative">
+          {/* Ingredients to buy */}
+          {matchedIngredients.length > 0 && (
+            <section className="mb-5">
+              <h2 className="text-2xl font-semibold flex items-center">
+                <span role="img" aria-label="spoon">
+                  🥄
+                </span>
+                Ingredients to Buy :
+              </h2>
+              <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
+                {RecipeIngredientParts.map((ingredient, index) =>
+                  !matchedIngredients.includes(ingredient) ? (
+                    <li key={index}>{ingredient}</li>
+                  ) : null
+                )}
+              </ul>
+            </section>
+          )}
           {/* Ingredients */}
-          <section className="mb-5">
-            <h2 className="text-2xl font-semibold flex items-center">
-              <span role="img" aria-label="spoon">
-                🥄
-              </span>
-              Ingredients Used:
-            </h2>
-            <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
-              {RecipeIngredientParts.map((ingredient, index) => (
-                <li key={index}>{ingredient}</li>
-              ))}
-            </ul>
-          </section>
+
+          {matchedIngredients.length > 0 ? (
+            <section className="mb-5">
+              <h2 className="text-2xl font-semibold flex items-center">
+                <span role="img" aria-label="spoon">
+                  🥄
+                </span>
+                Ingredients you have :
+              </h2>
+              <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
+                {RecipeIngredientParts.map((ingredient, index) =>
+                  matchedIngredients.includes(ingredient) ? (
+                    <li key={index}>{ingredient}</li>
+                  ) : null
+                )}
+              </ul>
+            </section>
+          ) : (
+            <section className="mb-5">
+              <h2 className="text-2xl font-semibold flex items-center">
+                <span role="img" aria-label="spoon">
+                  🥄
+                </span>
+                Ingredients Used:
+              </h2>
+              <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
+                {RecipeIngredientParts.map((ingredient, index) => (
+                  <li
+                    key={index}
+                    className={
+                      matchedIngredients.includes(ingredient)
+                        ? "text-green-400"
+                        : ""
+                    }
+                  >
+                    {ingredient}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
 
           {/* Nutritional Information */}
           <section className="mb-5 pl-2">

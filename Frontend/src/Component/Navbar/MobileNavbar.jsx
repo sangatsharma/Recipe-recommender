@@ -66,7 +66,7 @@ const MobileNavbar = () => {
           {isAuthenticated && <NotificationButton aria-label="Notifications" />}
           {!isAuthenticated && (
             <button
-              className={location === "/signup" ? "activeButton signup" : ""}
+              className={location === "/signup" ? "activeButton signup" : "signup"}
               onClick={() => navigate("/signup")}
               aria-label="Sign Up"
             >

@@ -39,18 +39,18 @@ const Search = () => {
     ]);
 
     if (searchValue) {
-      fetchAndProcessItems(searchValue);
+      fetchAndProcessItems(searchValue, filterType);
     }
   }, [location.search]);
 
-  const fetchAndProcessItems = async (search) => {
+  const fetchAndProcessItems = async (search, activeFilter) => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/recipe`,
         { withCredentials: true }
       );
       const items = response.data;
-      const rankedItems = rankFoodItems(items, search);
+      const rankedItems = rankFoodItems(items, search, activeFilter);
       setFetchItems(rankedItems);
     } catch (error) {
       console.error("Error fetching or processing items:", error);
@@ -75,7 +75,7 @@ const Search = () => {
 
     setSearchPerformed(true);
     setPrevSearch(search);
-    fetchAndProcessItems(search);
+    fetchAndProcessItems(search, activeFilter);
 
     // Construct the URL with updated search parameters
     const url = `/search?search=${encodeURIComponent(
@@ -140,6 +140,7 @@ const Search = () => {
                   cooktime={item.CookTime}
                   isFavorite={tickedItems.has(item.RecipeId)}
                   toggleTick={toggleTick}
+                  matchedIngredients={item.matchedIngredients}
                 />
               );
             })}
