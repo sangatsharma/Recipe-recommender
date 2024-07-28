@@ -44,11 +44,11 @@ const TrendingFoods = () => {
     popularItems.length > 0 && (
       <div className="w-full flex flex-col justify-center items-center gap-2 mt-4">
         <fieldset
-          class={`text-xl border-2 ${
+          className={`text-xl border-2 ${
             isDarkMode ? "border-gray-700" : "border-slate-300"
           } rounded-lg p-2`}
         >
-          <legend class="px-2 text-3xl text-center font-semibold  decoration-2">
+          <legend className="px-2 text-3xl text-center font-semibold  decoration-2">
             Popular this week
           </legend>
 

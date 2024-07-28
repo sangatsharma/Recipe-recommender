@@ -6,9 +6,6 @@ import banner3 from "../assets/Images/banner3.jpg";
 import { Helmet } from "react-helmet-async";
 
 const Homepage = () => {
-  <Helmet>
-    <title>Home - CIY </title>
-  </Helmet>;
   const images = [
     {
       title: "Welcome to Cook It Yourself",
@@ -20,6 +17,9 @@ const Homepage = () => {
   ];
   return (
     <>
+      <Helmet>
+        <title>Home - CIY </title>
+      </Helmet>
       {/* <Banner /> */}
       <Slider images={images} />
       <TrendingFoods />

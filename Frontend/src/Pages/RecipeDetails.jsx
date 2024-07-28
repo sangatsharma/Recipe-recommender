@@ -13,9 +13,13 @@ import { Helmet } from "react-helmet-async";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import Skeleton from "../Component/Loader/Skeleton";
+import AddToFav from "../Component/AddToFav";
+import { useFavContext } from "../context/FavContext";
+
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
+  const { tickedItems, toggleTick } = useFavContext();
 
   //using location state to extract ingredients if page was redirected from search by ingredients
   const location = useLocation();
@@ -171,16 +175,32 @@ const RecipeDetails = () => {
       <div
         className={`${
           isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
-        } p-6 below-sm:p-2  relative`}
+        } px-6 py-4 below-sm:p-2  relative`}
         ref={saveAsPdfRef}
       >
         {/* Recipe Overview */}
         <section className="mb-8">
-          <h1 className="text-4xl  below-sm:text-2xl font-bold flex items-center">
+          <h1 className="text-4xl mb-1  below-sm:text-2xl font-bold">
             {item.Name}
           </h1>
-          <p className="text-xl below-sm:text-[14px] leading-snug mt-2 pl-2">
-            {item.Description}
+          <div className="flex flex-row justify-between items-start mr-4">
+            <p className="pl-2">
+              Submitted by{" "}
+              <span className="text-blue-400 cursor-pointer">
+                Sangat Sharma
+              </span>
+            </p>
+            <div className="flex flex-row gap-2 h-8 ">
+              <AddToFav
+                id={id}
+                toggleTick={toggleTick}
+                isFavorite={tickedItems.has(item.RecipeId)}
+              />
+              <button className="text-4xl hover:text-blue-500 rotate-180 pb-11 ">...</button>
+            </div>
+          </div>
+          <p className="text-xl below-sm:text-sm pl-3">
+            "{item.Description}"
           </p>
           <p className="mt-4 text-sm pl-2 ">Category: {item.RecipeCategory}</p>
           <p className="mt-1 text-sm pl-2">
@@ -322,7 +342,7 @@ const RecipeDetails = () => {
 
       {/* Share Buttons and Ratings */}
       <div className="px-8 flex-col gap-2 justify-between below-sm:pl-8 ">
-        <div className="items-center space-x-2 mb-4">
+        <div className="items-center space-x-2 mb-2">
           <StarRating />
         </div>
         <div className="flex flex-wrap gap-8 justify-between">
