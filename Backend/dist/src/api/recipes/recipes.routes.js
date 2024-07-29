@@ -23,5 +23,6 @@ recipeRouter.post("/review/add", middleware_1.authenticateJWT, recipes_controlle
 recipeRouter.post("/review/remove", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewRemoveHandler);
 recipeRouter.get("/review/:id", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewGet);
 recipeRouter.post("/recommend", middleware_1.authenticateJWT, recipes_controllers_1.recommendRecipies);
+recipeRouter.post("/search", middleware_1.authenticateJWT, recipes_controllers_1.searchRecipe);
 recipeRouter.post("/demo", recipes_controllers_1.filterDemo);
 exports.default = recipeRouter;

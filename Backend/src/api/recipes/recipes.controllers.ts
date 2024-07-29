@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
-import { SQL, eq, lte, and, ilike, sql } from "drizzle-orm";
+import { SQL, eq, lte, and, ilike, sql, arrayContains, arrayOverlaps } from "drizzle-orm";
 import { userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 
@@ -169,7 +169,7 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
       });
     }
 
-    await db.update(userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1) as string] }).where(eq(userSchema.email, userInfo.email));
+    // await db.update(userSchema).set({ visitHistory: recipeDB[0].Keywords }).where(eq(userSchema.email, userInfo.email));
     console.log(recipeDB);
 
     // If found
@@ -348,4 +348,26 @@ export const recommendRecipies = async (req: Request, res: Response, next: NextF
   catch (err) {
     next(err);
   }
+};
+
+
+export const searchRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  const searchFilter = req.body as { query: string, type: string, values: string[] };
+
+  // let searchRes: RecipeSchemaType[];
+  try {
+    if (searchFilter.type === "recipes") {
+      const searchRes = await db.select().from(recipeSchema).where(and(ilike(recipeSchema.Name, "%" + searchFilter.query + "%"), arrayContains(recipeSchema.Keywords, searchFilter.values)));
+      return res.json(searchRes.length !== 0 ? searchRes : []);
+    }
+    else if (searchFilter.type === "ingredients") {
+      const searchRes = await db.select().from(recipeSchema).where(arrayContains(recipeSchema.RecipeIngredientParts, [searchFilter.query.toLocaleLowerCase()]));
+      return res.json(searchRes);
+    }
+  }
+  catch (err) {
+    next(err);
+  }
+
+  return res.json(searchRecipe);
 };
