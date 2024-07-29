@@ -337,12 +337,12 @@ const userProfile = async (req, res, next) => {
         const followers = await db_1.db.select({
             name: users_models_1.userSchema.name,
             email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
+        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
         // Get following info
         const following = await db_1.db.select({
             name: users_models_1.userSchema.name,
             email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).rightJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
+        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
         // Get all recipes uploaded by user
         const posts = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.AuthorId, id));
         // Return info

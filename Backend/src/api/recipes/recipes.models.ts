@@ -1,4 +1,4 @@
-import { relations, InferSelectModel } from "drizzle-orm";
+import { relations, InferSelectModel, sql } from "drizzle-orm";
 import { serial, text, pgTable, timestamp, integer, numeric } from "drizzle-orm/pg-core";
 import { userSchema } from "@/api/users/users.models";
 
@@ -15,11 +15,12 @@ export const recipeSchema = pgTable("recipes", {
   }).defaultNow(),
   Description: text("Description").notNull(),
   TotalLikes: integer("TotalLikes").default(0),
-  Images: text("Images"),
+  Images: text("Images").array().notNull().default(sql`'{}'::text[]`),
   RecipeCategory: text("RecipeCategory"),
-  Keywords: text("Keywords"),
+  // Keywords: text("Keywords"),
+  Keywords: text("Keywords").array().notNull().default(sql`'{}'::text[]`),
   RecipeIngredientQualities: text("RecipeIngredientQualities"),
-  RecipeIngredientParts: text("RecipeIngredientParts"),
+  RecipeIngredientParts: text("RecipeIngredientParts").array().notNull().default(sql`'{}'::text[]`),
   AggregatedRating: numeric("AggregatedRating"),
   ReviewCount: numeric("ReviewCount"),
   Calories: numeric("Calories"),
@@ -31,7 +32,7 @@ export const recipeSchema = pgTable("recipes", {
   FiberContent: numeric("FiberContent"),
   SugarContent: numeric("SugarContent"),
   ProteinContent: numeric("ProteinContent"),
-  RecipeInstructions: text("RecipeInstructions").notNull(),
+  RecipeInstructions: text("RecipeInstructions").array().notNull().default(sql`'{}'::text[]`),
 });
 
 export type RecipeSchemaType = InferSelectModel<typeof recipeSchema>;
