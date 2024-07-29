@@ -13,14 +13,20 @@ import { Helmet } from "react-helmet-async";
 import { FaFacebook, FaWhatsapp } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import Skeleton from "../Component/Loader/Skeleton";
+import AddToFav from "../Component/AddToFav";
+import { useFavContext } from "../context/FavContext";
+import PeopleCard from "../Component/PeopleCard";
+import Spinner from "../Component/Loader/Spinner";
+
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
   const saveAsPdfRef = useRef();
+  const { tickedItems, toggleTick } = useFavContext();
 
   //using location state to extract ingredients if page was redirected from search by ingredients
   const location = useLocation();
-  const matchedIngredients = location.state.matchedIngredients || [];
-
+  const matchedIngredients = location.state?.matchedIngredients || [];
+  const [downloading, setDownloading] = useState(false);
   const DownloadPdf = () => {
     const input = saveAsPdfRef.current;
     html2canvas(input, {
@@ -39,6 +45,7 @@ const RecipeDetails = () => {
         });
         pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
         pdf.save(`${item.Name}.pdf`);
+        setDownloading(false);
       })
       .catch((error) => {
         console.error("Error generating PDF:", error);
@@ -46,6 +53,7 @@ const RecipeDetails = () => {
   };
   const handleDownloadPdf = () => {
     setShowWaterMark(true);
+    setDownloading(true);
     setTimeout(() => {
       DownloadPdf();
       setShowWaterMark(false);
@@ -89,26 +97,6 @@ const RecipeDetails = () => {
   if (!item) return <Skeleton />;
   if (item.success === false) return <InvalidPage />;
 
-  const regex = /"([^"]+)"/g;
-  let matches;
-  let imageUrls = [];
-  let instructions = [];
-  let RecipeIngredientParts = [];
-  let tags = [];
-
-  // Loop through all matches
-  while ((matches = regex.exec(item.Images)) !== null) {
-    imageUrls.push(matches[1]);
-  }
-  while ((matches = regex.exec(item.RecipeInstructions)) !== null) {
-    instructions.push(matches[1]);
-  }
-  while ((matches = regex.exec(item.RecipeIngredientParts)) !== null) {
-    RecipeIngredientParts.push(matches[1]);
-  }
-  while ((matches = regex.exec(item.Keywords)) !== null) {
-    tags.push(matches[1]);
-  }
   // share using native share
   const handleNativeShare = () => {
     if (navigator.share) {
@@ -134,6 +122,10 @@ const RecipeDetails = () => {
     "cookityourself,tastyrecipe,healthyfood,cooking"
   );
 
+  //todo :navigate to path when click on author name
+  // const path = item.name.split(" ")[0] + "_" + userDetails.id;
+  // navigate(`/profile/${path}`);
+
   return (
     <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
       {/* Open Graph tags */}
@@ -148,7 +140,7 @@ const RecipeDetails = () => {
           property="og:description"
           content={`Checkout this amazing recipe: ${item.Name} from Cook It Yourself.`}
         />
-        <meta property="og:image" content={imageUrls[0]} />
+        <meta property="og:image" content={item.Images[0]} />
         <meta
           property="og:url"
           content={`https://recipe-recommender-five.vercel.app/recipes/${recipeName}`}
@@ -165,35 +157,51 @@ const RecipeDetails = () => {
           name="twitter:description"
           content={`Checkout this amazing recipe: ${item.Name}, from Cook It Yourself.`}
         />
-        <meta name="twitter:image" content={imageUrls[0]} />
+        <meta name="twitter:image" content={item.Images[0]} />
       </Helmet>
 
       <div
         className={`${
           isDarkMode ? "bg-[#232323]" : "bg-[#f0f8ff]"
-        } p-6 below-sm:p-2  relative`}
+        } px-6 py-4 below-sm:p-2  relative`}
         ref={saveAsPdfRef}
       >
         {/* Recipe Overview */}
         <section className="mb-8">
-          <h1 className="text-4xl  below-sm:text-2xl font-bold flex items-center">
+          <h1 className="text-4xl mb-1  below-sm:text-2xl font-bold">
             {item.Name}
           </h1>
-          <p className="text-xl below-sm:text-[14px] leading-snug mt-2 pl-2">
-            {item.Description}
-          </p>
-          <p className="mt-4 text-sm pl-2 ">Category: {item.RecipeCategory}</p>
+          <div className="flex flex-row justify-between items-start mr-4 mb-2">
+            <p className="pl-2">
+              Submitted by{" "}
+              <span className="text-blue-400 cursor-pointer">
+                Sangat Sharma
+              </span>
+            </p>
+            <div className="flex flex-row gap-2 h-8 ">
+              <AddToFav
+                id={id}
+                toggleTick={toggleTick}
+                isFavorite={tickedItems.has(item.RecipeId)}
+              />
+              <button className="text-4xl hover:text-blue-500 rotate-180 pb-11 ">
+                ...
+              </button>
+            </div>
+          </div>
+          <p className="text-xl below-sm:text-sm pl-3">"{item.Description}"</p>
+          <p className="mt-2 text-sm pl-2 ">Category: {item.RecipeCategory}</p>
           <p className="mt-1 text-sm pl-2">
             Date Published: {new Date(item.DatePublished).toLocaleString()}
           </p>
         </section>
         <div className="m-auto">
-          <Slider images={imageUrls} interval={3500} />
+          <Slider images={item.Images} interval={3500} />
         </div>
 
         {/* Time Details */}
         <section className="mb-6 mt-6  ">
-          <h2 className="text-2xl  font-semibold flex items-center">
+          <h2 className="text-2xl  font-semibold flex items-center ">
             <span role="img" aria-label="clock">
               ⏱️
             </span>
@@ -225,7 +233,7 @@ const RecipeDetails = () => {
                 Ingredients to Buy :
               </h2>
               <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
-                {RecipeIngredientParts.map((ingredient, index) =>
+                {item.RecipeIngredientParts.map((ingredient, index) =>
                   !matchedIngredients.includes(ingredient) ? (
                     <li key={index}>{ingredient}</li>
                   ) : null
@@ -244,7 +252,7 @@ const RecipeDetails = () => {
                 Ingredients you have :
               </h2>
               <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
-                {RecipeIngredientParts.map((ingredient, index) =>
+                {item.RecipeIngredientParts.map((ingredient, index) =>
                   matchedIngredients.includes(ingredient) ? (
                     <li key={index}>{ingredient}</li>
                   ) : null
@@ -260,17 +268,8 @@ const RecipeDetails = () => {
                 Ingredients Used:
               </h2>
               <ul className="list-disc list-inside mt-1 space-y-1 pl-8">
-                {RecipeIngredientParts.map((ingredient, index) => (
-                  <li
-                    key={index}
-                    className={
-                      matchedIngredients.includes(ingredient)
-                        ? "text-green-400"
-                        : ""
-                    }
-                  >
-                    {ingredient}
-                  </li>
+                {item.RecipeIngredientParts.map((ingredient, index) => (
+                  <li key={index}>{ingredient}</li>
                 ))}
               </ul>
             </section>
@@ -311,7 +310,7 @@ const RecipeDetails = () => {
             Cooking Guidelines:
           </h2>
           <ol className="list-decimal mt-1 list-outside  pl-10 ">
-            {instructions.map((instruction, index) => (
+            {item.RecipeInstructions.map((instruction, index) => (
               <li key={index} className="leading-6 mt-2 ">
                 {instruction}
               </li>
@@ -322,7 +321,7 @@ const RecipeDetails = () => {
 
       {/* Share Buttons and Ratings */}
       <div className="px-8 flex-col gap-2 justify-between below-sm:pl-8 ">
-        <div className="items-center space-x-2 mb-4">
+        <div className="items-center space-x-2 mb-2">
           <StarRating />
         </div>
         <div className="flex flex-wrap gap-8 justify-between">
@@ -372,11 +371,33 @@ const RecipeDetails = () => {
               className="bg-green-500 py-2 px-3  rounded  hover:bg-green-700  hover:text-white"
               onClick={handleDownloadPdf}
             >
-              Download
-              <i className="fas fa-download pl-2"></i>
+              {downloading ? (
+                <span className="flex flex-row  justify-center items-center gap-2">
+                  <Spinner /> Downloading{" "}
+                </span>
+              ) : (
+                <>
+                  {" "}
+                  <i className="fas fa-download pl-2"></i> Download{" "}
+                </>
+              )}
             </button>
           </div>
         </div>
+      </div>
+      <div className="px-8 mt-3  flex flex-col below-sm:pl-8 ">
+        <p className="text-xl mb-1">Recipe by:</p>
+        <PeopleCard
+          bio={
+            "FYI Update: 06/03/14)... My About Me page is correct. I joined as a member on March 19, 2012 (2+ years ago). But if you click on my public"
+          }
+          userDetails={{
+            name: "Sangat Sharma",
+            id: 2,
+            city: "Pokhara",
+            email: "pikachu00824@gmail.com",
+          }}
+        />
       </div>
     </div>
   );

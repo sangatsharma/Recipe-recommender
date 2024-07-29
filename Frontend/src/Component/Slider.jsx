@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-const Slider = ({ images, interval = 4000 }) => {
+const Slider = ({
+  images,
+  interval = 4000,
+  height = "h-[32rem]",
+  width = "full",
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Determine the type of images array
@@ -23,7 +28,9 @@ const Slider = ({ images, interval = 4000 }) => {
   // Slider for an array of image URLs
   if (isImageArray)
     return (
-      <div className="relative w-full h-96 overflow-hidden rounded-md">
+      <div
+        className={`relative w-${width} ${height} overflow-hidden rounded-md`}
+      >
         {images.map((image, index) => (
           <div
             key={index}
@@ -56,7 +63,7 @@ const Slider = ({ images, interval = 4000 }) => {
 
   // Slider for an array of objects with image URLs and titles
   return (
-    <div className="relative w-full h-96 overflow-hidden rounded-md">
+    <div className={`relative w-${width} ${height} overflow-hidden rounded-md`}>
       {images.map((image, index) => (
         <div
           key={index}

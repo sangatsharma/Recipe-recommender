@@ -6,14 +6,15 @@ import { toast } from "react-toastify";
 import { useThemeContext } from "../../context/ThemeContext";
 
 const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
-  const { setIsAuthenticated, isAuthenticated, userInfo } = useContext(AuthContext);
+  const { setIsAuthenticated, isAuthenticated, userInfo } =
+    useContext(AuthContext);
   const { isDarkMode } = useThemeContext();
   const navigate = useNavigate();
   const location = useLocation().pathname;
   const dropdownRef = useRef(null);
 
   const handleToggle = () => {
-    setIsOpen(prevIsOpen => !prevIsOpen);
+    setIsOpen((prevIsOpen) => !prevIsOpen);
   };
 
   const handleScrollToTop = () => {
@@ -45,11 +46,17 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
 
   return isMobile ? (
     <div ref={dropdownRef} className="overflow-hidden">
-      <button onClick={handleToggle} className="focus:outline-none" aria-label="Toggle menu">
+      <button
+        onClick={handleToggle}
+        className="focus:outline-none"
+        aria-label="Toggle menu"
+      >
         <i className="fas fa-bars text-2xl cursor-pointer text-gray-500 hover:text-orange-400"></i>
       </button>
       <div
-        className={`sidebar ${isOpen ? "open" : "closed"} ${isDarkMode ? "bg-[#303030] border-l border-[#4a4a4a]" : "bg-white"} rounded-[10px] h-screen w-64 shadow-lg p-4 flex flex-col justify-between fixed top-0 right-0 transition-all`}
+        className={`sidebar ${isOpen ? "open" : "closed"} ${
+          isDarkMode ? "bg-[#303030] border-l border-[#4a4a4a]" : "bg-white"
+        } rounded-[10px] h-screen w-64 shadow-lg p-4 flex flex-col justify-between fixed top-0 right-0 transition-all`}
       >
         <div>
           <Link
@@ -72,7 +79,11 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
                 {isAuthenticated ? (
                   <>
                     <h2 className="font-semibold">Good Day 👋</h2>
-                    <span className={`text-sm ${isDarkMode ? "text-gray-100" : "text-gray-500"}`}>
+                    <span
+                      className={`text-sm ${
+                        isDarkMode ? "text-gray-100" : "text-gray-500"
+                      }`}
+                    >
                       {userInfo.name}
                     </span>
                   </>
@@ -83,8 +94,19 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
             </div>
           </Link>
           <hr className="h-2"></hr>
-          <nav className={`${isDarkMode ? "dark-mode" : "light-mode"}`} onClick={handleToggle}>
-            {["home", "recipes", "explore", "search", "contact", "bookmarks", "settings"].map((page) => (
+          <nav
+            className={`${isDarkMode ? "dark-mode" : "light-mode"}`}
+            onClick={handleToggle}
+          >
+            {[
+              "home",
+              "recipes",
+              "explore",
+              "search",
+              "contact",
+              "bookmarks",
+              "settings",
+            ].map((page) => (
               <button
                 key={page}
                 className={location === `/${page}` ? "activePage" : ""}
@@ -95,8 +117,24 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
                 aria-label={`Navigate to ${page}`}
               >
                 <i
-                  className={`fas fa-${page === "home" ? "home" : page === "recipes" ? "utensils" : page === "explore" ? "compass" : page === "search" ? "search" : page === "contact" ? "address-book" : page === "bookmarks" ? "bookmark" : "cog"} text-2xl pr-2 ${
-                    location === `/${page}` ? "text-orange-400" : "text-gray-500"
+                  className={`fas fa-${
+                    page === "home"
+                      ? "home"
+                      : page === "recipes"
+                      ? "utensils"
+                      : page === "explore"
+                      ? "compass"
+                      : page === "search"
+                      ? "search"
+                      : page === "contact"
+                      ? "address-book"
+                      : page === "bookmarks"
+                      ? "bookmark"
+                      : "cog"
+                  } text-2xl pr-2 ${
+                    location === `/${page}`
+                      ? "text-orange-400"
+                      : "text-gray-500"
                   }`}
                 ></i>
                 {page.charAt(0).toUpperCase() + page.slice(1)}
@@ -128,24 +166,29 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
   ) : (
     <div className="relative inline-block" ref={dropdownRef}>
       <button
-        onClick={isAuthenticated ? handleToggle : null}
+        onClick={
+          isAuthenticated
+            ? handleToggle
+            : () => {
+                navigate("/login");
+              }
+        }
         className="focus:outline-none"
         aria-label="Profile"
         aria-expanded={isOpen}
       >
-        <Link to={isAuthenticated ? `${location}` : "/login"}>
-          <img
-            loading="lazy"
-            src={
-              isAuthenticated
-                ? userInfo.profile_pic ??
-                  "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
-                : "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
-            }
-            alt="Profile"
-            className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
-          />
-        </Link>
+        <img
+          onClick={() => {
+            isAuthenticated ? null : navigate("/login");
+          }}
+          loading="lazy"
+          src={
+            userInfo?.profile_pic ||
+            "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
+          }
+          alt="Profile"
+          className="w-12 h-12 rounded-full transition-shadow hover:shadow-gray-400 shadow-md"
+        />
       </button>
       {isOpen && (
         <div className="relative">

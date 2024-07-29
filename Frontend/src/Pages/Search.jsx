@@ -65,7 +65,7 @@ const Search = () => {
     if (search === prevSearch) {
       return;
     }
-
+    console.log(activeFilter);
     // Disable the button to prevent rapid presses
     setIsButtonDisabled(true);
     // Re-enable the button after 5 seconds to allow the user to search again
@@ -123,17 +123,12 @@ const Search = () => {
             (activeFilter.includes("Recipes") ||
               activeFilter.includes("Ingredients")) &&
             fetchItems.map((item) => {
-              const regex = /"([^"]+)"/g;
-              let matches;
-              let urls = [];
-              while ((matches = regex.exec(item.Images)) !== null) {
-                urls.push(matches[1]);
-              }
+              
               return (
                 <ItemsCard
                   key={item.RecipeId}
                   id={item.RecipeId}
-                  src={urls[0]}
+                  src={item.Images[0]}
                   name={item.Name}
                   rating={item.AggregatedRating}
                   RecipeCategory={item.RecipeCategory}
@@ -145,7 +140,6 @@ const Search = () => {
               );
             })}
         </div>
-
         {searchPerformed && fetchItems.length === 0 && (
           <p className="mt-2 text-center" aria-live="assertive">
             No results found.
@@ -157,3 +151,12 @@ const Search = () => {
 };
 
 export default Search;
+// {
+//   "keyword":"momo"
+//   "type": "Recipes",
+//   "filters": {
+//     "Dishes": "Breakfast",
+//     "Nutritional": "Low Calorie",
+//     "CookingTime": "30-60 mins"
+//   }
+// }

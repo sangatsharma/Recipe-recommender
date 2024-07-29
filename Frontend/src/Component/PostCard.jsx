@@ -50,9 +50,9 @@ const PostCard = ({
         src={recipeDetails.image}
         alt="Cookies"
       />
-      <div className="flex justify-between text-sm text-gray-500">
+      {/* <div className="flex justify-between text-sm text-gray-500">
         <StarRating />
-      </div>
+      </div> */}
     </div>
   );
 };
