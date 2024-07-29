@@ -17,11 +17,12 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     }).defaultNow(),
     Description: (0, pg_core_1.text)("Description").notNull(),
     TotalLikes: (0, pg_core_1.integer)("TotalLikes").default(0),
-    Images: (0, pg_core_1.text)("Images"),
+    Images: (0, pg_core_1.text)("Images").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     RecipeCategory: (0, pg_core_1.text)("RecipeCategory"),
-    Keywords: (0, pg_core_1.text)("Keywords"),
+    // Keywords: text("Keywords"),
+    Keywords: (0, pg_core_1.text)("Keywords").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     RecipeIngredientQualities: (0, pg_core_1.text)("RecipeIngredientQualities"),
-    RecipeIngredientParts: (0, pg_core_1.text)("RecipeIngredientParts"),
+    RecipeIngredientParts: (0, pg_core_1.text)("RecipeIngredientParts").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     AggregatedRating: (0, pg_core_1.numeric)("AggregatedRating"),
     ReviewCount: (0, pg_core_1.numeric)("ReviewCount"),
     Calories: (0, pg_core_1.numeric)("Calories"),
@@ -33,7 +34,7 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     FiberContent: (0, pg_core_1.numeric)("FiberContent"),
     SugarContent: (0, pg_core_1.numeric)("SugarContent"),
     ProteinContent: (0, pg_core_1.numeric)("ProteinContent"),
-    RecipeInstructions: (0, pg_core_1.text)("RecipeInstructions").notNull(),
+    RecipeInstructions: (0, pg_core_1.text)("RecipeInstructions").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
 });
 // One recipies can have multiple likes
 exports.recipeReview = (0, pg_core_1.pgTable)("recipeReview", {

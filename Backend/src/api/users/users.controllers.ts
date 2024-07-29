@@ -424,13 +424,13 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
     const followers = await db.select({
       name: userSchema.name,
       email: userSchema.email,
-    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
+    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
 
     // Get following info
     const following = await db.select({
       name: userSchema.name,
       email: userSchema.email,
-    }).from(followerSchema).rightJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
+    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
 
     // Get all recipes uploaded by user
     const posts = await db.select().from(recipeSchema).where(eq(recipeSchema.AuthorId, id));

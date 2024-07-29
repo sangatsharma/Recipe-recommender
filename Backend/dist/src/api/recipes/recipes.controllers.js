@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -99,12 +99,37 @@ const filterRecipe = (req, res, next) => {
     });
 };
 exports.filterRecipe = filterRecipe;
+const filterDemo = (req, res, next) => {
+    const dataTmp = req.body.res;
+    /*
+      res.body =
+      {
+        type: "Recipe",
+        options: {
+          "Dishes": "Breakfast"
+        }
+      }
+    */
+    const que = "SELECT * FROM recipes WHERE ";
+    switch (dataTmp.type) {
+        case "Recipe":
+            const options = dataTmp.options;
+        // if (dataTmp.option?.Dishes === "sasa") {
+        // }
+    }
+    console.log(que);
+    return res.json({
+        "hello": "world",
+    });
+};
+exports.filterDemo = filterDemo;
 /*
   SEARCH FOR A SPECIFIC RECIPE
 */
 const recipeDetails = async (req, res, next) => {
     // Get recipe id from parameter
     const recipeId = Number(req.params.id);
+    const userInfo = res.locals;
     try {
         // Get the recipe
         const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, recipeId));
@@ -117,7 +142,7 @@ const recipeDetails = async (req, res, next) => {
                 },
             });
         }
-        await db_1.db.update(users_models_1.userSchema).set({ visitHistory: [recipeDB[0].Keywords?.split(", ")[0].slice(3, -1)] });
+        // await db.update(userSchema).set({ visitHistory: recipeDB[0].Keywords }).where(eq(userSchema.email, userInfo.email));
         console.log(recipeDB);
         // If found
         return res.send({
@@ -275,3 +300,22 @@ const recommendRecipies = async (req, res, next) => {
     }
 };
 exports.recommendRecipies = recommendRecipies;
+const searchRecipe = async (req, res, next) => {
+    const searchFilter = req.body;
+    // let searchRes: RecipeSchemaType[];
+    try {
+        if (searchFilter.type === "recipes") {
+            const searchRes = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.and)((0, drizzle_orm_1.ilike)(recipes_models_1.recipeSchema.Name, "%" + searchFilter.query + "%"), (0, drizzle_orm_1.arrayContains)(recipes_models_1.recipeSchema.Keywords, searchFilter.values)));
+            return res.json(searchRes.length !== 0 ? searchRes : []);
+        }
+        else if (searchFilter.type === "ingredients") {
+            const searchRes = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.arrayContains)(recipes_models_1.recipeSchema.RecipeIngredientParts, [searchFilter.query.toLocaleLowerCase()]));
+            return res.json(searchRes);
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+    return res.json(exports.searchRecipe);
+};
+exports.searchRecipe = searchRecipe;
