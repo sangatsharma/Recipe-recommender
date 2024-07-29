@@ -32,10 +32,7 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
 
     // Rank food items based on the number of matched keywords
     const rankedItems = foodItems.map((item) => {
-      const combineKeywords = [
-        ...convertToKeywordArray(item.Keywords),
-        ...item.Name.split(" "),
-      ];
+      const combineKeywords = [...item.Keywords, ...item.Name.split(" ")];
       combineKeywords.push(item.RecipeCategory);
       // Calculate score as the number of matched keywords
       const score = searchKeywords.reduce(
@@ -52,7 +49,6 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
     // Sort items by score in descending order
     const filteredItems = rankedItems.filter((item) => item.score > 0);
     filteredItems.sort((a, b) => b.score - a.score);
-
     return filteredItems;
   }
 
@@ -64,12 +60,16 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
       .map(normalizeKeyword);
     // Rank food items based on the number of matched keywords
     const rankedItems = foodItems.map((item) => {
-      const combineKeywords = convertToKeywordArray(item.RecipeIngredientParts);
       let matchedIngredients = [];
       // Calculate score as the number of matched keywords
       const score = searchIngredients.reduce((count, ingredient) => {
-        if (combineKeywords.map(normalizeKeyword).includes(ingredient)) {
-          matchedIngredients.push(Object.keys(synonyms).find(key => synonyms[key] === ingredient) || ingredient);
+        if (
+          item.RecipeIngredientParts.map(normalizeKeyword).includes(ingredient)
+        ) {
+          matchedIngredients.push(
+            Object.keys(synonyms).find((key) => synonyms[key] === ingredient) ||
+              ingredient
+          );
           return count + 1;
         }
         return count;
@@ -84,17 +84,6 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
 
     return filteredItems;
   }
-  return []
+  return [];
 }
 
-function convertToKeywordArray(input) {
-  // Remove the leading "c(" and trailing ")"
-  let trimmedInput = input.slice(2, -1);
-
-  // Remove the \" symbols and split by comma
-  let keywords = trimmedInput
-    .split(/"\s*,\s*"/) // Split by "\", \" (ignoring spaces)
-    .map((keyword) => keyword.replace(/"/g, "").trim()); // Remove remaining quotes and trim
-
-  return keywords;
-}

@@ -54,18 +54,11 @@ const TrendingFoods = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {popularItems.map((item) => {
-              const regex = /"([^"]+)"/g;
-              let matches;
-              let urls = [];
-              // Loop through all matches
-              while ((matches = regex.exec(item.Images)) !== null) {
-                urls.push(matches[1]);
-              }
               return (
                 <ItemsCard
                   key={item.RecipeId}
                   id={item.RecipeId}
-                  src={urls[0]}
+                  src={item.Images[0]}
                   name={item.Name}
                   rating={item.AggregatedRating}
                   RecipeCategory={item.RecipeCategory}

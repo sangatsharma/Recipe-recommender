@@ -20,16 +20,9 @@ const BookmarkRecipes = () => {
         My Favorite Recipes
       </h1>
 
-      <div  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-center items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-center items-center">
         {tickedItems.size > 0 &&
           Save.map((item) => {
-            const regex = /"([^"]+)"/g;
-            let matches;
-            let urls = [];
-            // Loop through all matches
-            while ((matches = regex.exec(item.Images)) !== null) {
-              urls.push(matches[1]);
-            }
             return (
               <div
                 key={item.RecipeId}
@@ -43,7 +36,7 @@ const BookmarkRecipes = () => {
               >
                 <ItemsCard
                   id={item.RecipeId}
-                  src={urls[0]}
+                  src={item.Images[0]}
                   name={item.Name}
                   RecipeCategory={item.RecipeCategory}
                   rating={item.AggregatedRating}

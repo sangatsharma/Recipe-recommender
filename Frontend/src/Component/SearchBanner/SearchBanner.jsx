@@ -23,6 +23,12 @@ const SearchBanner = ({
       handleSearch(); // Trigger search when Enter key is pressed
     }
   };
+  const placeholderText = {
+    Recipes: "Search tasty recipes",
+    Ingredients: "Search by Ingredients seperated by comma",
+    People: "Search by name/username",
+    Post: "Search post by title or #tags",
+  };
 
   return (
     <>
@@ -44,7 +50,7 @@ const SearchBanner = ({
           <input
             type="text"
             id="searchInput"
-            placeholder="Search tasty recipes"
+            placeholder={placeholderText[activeFilter[0]]}
             aria-label="Find recipes, ingredients, or dishes"
             value={search}
             onChange={handleChange}
