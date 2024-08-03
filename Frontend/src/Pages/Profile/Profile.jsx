@@ -46,12 +46,12 @@ const Profile = () => {
     );
   if (currentUser != undefined)
     return (
-      <div className="w-[80%] mx-auto p-8 flex-col ">
+      <div className="w-[80%] below-sm:w-full below-sm:p-2 mx-auto p-8  flex-col ">
         <Helmet>
           <title>Profile - CIY </title>
         </Helmet>
         {/* Profile Header */}
-        <div className="flex items-center space-x-6 mb-8">
+        <div className="flex items-center space-x-3 mb-8 ">
           <img
             src={
               currentUser.profile_pic ||
@@ -61,17 +61,16 @@ const Profile = () => {
             className="w-24 h-24 rounded-full object-cover"
           />
           <div>
-            <h1 className="text-xl font-bold">{currentUser.name}</h1>
+            <h1 className="text-xl below-sm:text-[1rem] font-bold">
+              {currentUser.name}
+            </h1>
             <p className="text-gray-500">{`@${currentUser.name.split(" ")[0]}${
               currentUser.id
             }`}</p>
           </div>
-          <div className="ml-auto">
+          <div className="">
             <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">
               Follow
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg">
-              Message
             </button>
           </div>
         </div>
@@ -79,18 +78,18 @@ const Profile = () => {
         {/* Stats */}
         <div className="flex space-x-8 mb-8">
           <div className="text-center">
-            <span className="block text-xl font-bold">123</span>
+            <span className="block text-xl font-bold">{currentUser.posts}</span>
             <span className="text-gray-500">Posts</span>
           </div>
           <div className="text-center">
             <span className="block text-xl font-bold">
-              {currentUser.followers}
+              {currentUser.followers.length}
             </span>
             <span className="text-gray-500">Followers</span>
           </div>
           <div className="text-center">
             <span className="block text-xl font-bold">
-              {currentUser.following}
+              {currentUser.following.length}
             </span>
             <span className="text-gray-500">Following</span>
           </div>
@@ -98,7 +97,7 @@ const Profile = () => {
 
         {/* Tabs */}
         <div className="border-b mb-8">
-          <section className="flex space-x-8 text-xl p-2">
+          <section className="flex space-x-8 text-xl below-sm:text-sm p-2 overflow-x-scroll hide-scrollbar scroll-smooth">
             {["Posts", "Followers", "Following", "Activity", "About"].map(
               (tab) => (
                 <button
