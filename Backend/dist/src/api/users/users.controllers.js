@@ -35,7 +35,14 @@ const userInfoHandler = async (req, res, _) => {
     }
     // Remove password and return user data
     userTmp.body.password = null;
-    return res.json(userTmp);
+    const followersInfo = db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.followers, users_models_1.userSchema));
+    const followingInfo = db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.following, users_models_1.userSchema));
+    const userRes = {
+        success: true,
+        body: { ...userTmp.body, followersInfo, followingInfo }
+    };
+    console.log(userRes);
+    return res.json(userRes);
 };
 exports.userInfoHandler = userInfoHandler;
 /*
@@ -333,36 +340,25 @@ exports.getUserPreferences = getUserPreferences;
 const userProfile = async (req, res, next) => {
     const id = Number(req.params.id);
     try {
-        // Get followers info
-        const followers = await db_1.db.select({
-            name: users_models_1.userSchema.name,
-            email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.followedUser)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.followedUser, id));
-        // Get following info
-        const following = await db_1.db.select({
-            name: users_models_1.userSchema.name,
-            email: users_models_1.userSchema.email,
-        }).from(users_models_1.followerSchema).leftJoin(users_models_1.userSchema, (0, drizzle_orm_1.eq)(users_models_1.userSchema.id, users_models_1.followerSchema.follower)).where((0, drizzle_orm_1.eq)(users_models_1.followerSchema.follower, id));
-        // Get all recipes uploaded by user
-        const posts = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.AuthorId, id));
-        // Return info
-        return res.json({
+        // Check if email exists
+        const userTmp = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, id));
+        if (userTmp.length === 0) {
+            return res.json({
+                success: false,
+                body: {
+                    message: "User with provoded email not found",
+                },
+            });
+        }
+        const followersInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.id, userTmp[0].followers.length === 0 ? [-1] : userTmp[0].followers));
+        const followingInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.id, userTmp[0].following.length === 0 ? [-1] : userTmp[0].following));
+        const userRes = {
             success: true,
-            body: {
-                followers: {
-                    length: followers.length,
-                    followers: followers
-                },
-                following: {
-                    length: following.length,
-                    following: following
-                },
-                posts: {
-                    length: posts.length,
-                    posts: posts,
-                }
-            }
-        });
+            body: { ...userTmp[0], followersInfo, followingInfo }
+        };
+        return res.json(userRes);
+        // Remove password and return user data
+        // return res.json(userTmp);
     }
     catch (err) {
         next(err);
