@@ -28,7 +28,7 @@ exports.returnAllRecipies = returnAllRecipies;
 const addNewRecipe = (req, res, next) => {
     const data = req.body;
     // TODO: get author id from token
-    data["AuthorId"] = 1;
+    data["AuthorId"] = res.locals.user.id;
     // TODO: Validate data
     const helper = async () => {
         await db_1.db.insert(recipes_models_1.recipeSchema).values(data);

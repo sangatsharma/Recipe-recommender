@@ -32,7 +32,7 @@ export const addNewRecipe = (req: Request, res: Response, next: NextFunction) =>
   const data = req.body;
 
   // TODO: get author id from token
-  data["AuthorId"] = 1;
+  data["AuthorId"] = res.locals.user.id as number;
   // TODO: Validate data
   const helper = async () => {
     await db.insert(recipeSchema).values(data);
