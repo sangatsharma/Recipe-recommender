@@ -16,7 +16,7 @@ import { arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { recipeSchema } from "@/api/recipes/recipes.models";
-import { followerSchema, userPref, userSchema } from "@/api/users/users.models";
+import { userPref, userSchema, UserSchemaType } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
@@ -47,7 +47,15 @@ export const userInfoHandler = async (req: Request, res: Response, _: NextFuncti
 
   // Remove password and return user data
   userTmp.body.password = null;
-  return res.json(userTmp);
+  const followersInfo = db.select().from(userSchema).where(inArray(userSchema.followers, userSchema));
+  const followingInfo = db.select().from(userSchema).where(inArray(userSchema.following, userSchema));
+
+  const userRes = {
+    success: true,
+    body: { ...userTmp.body, followersInfo, followingInfo }
+  };
+  console.log(userRes);
+  return res.json(userRes);
 };
 
 
@@ -420,39 +428,29 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
   const id = Number(req.params.id);
 
   try {
-    // Get followers info
-    const followers = await db.select({
-      name: userSchema.name,
-      email: userSchema.email,
-    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.followedUser)).where(eq(followerSchema.followedUser, id));
+    // Check if email exists
+    const userTmp: UserSchemaType[] = await db.select().from(userSchema).where(eq(userSchema.id, id));
 
-    // Get following info
-    const following = await db.select({
-      name: userSchema.name,
-      email: userSchema.email,
-    }).from(followerSchema).leftJoin(userSchema, eq(userSchema.id, followerSchema.follower)).where(eq(followerSchema.follower, id));
+    if (userTmp.length === 0) {
+      return res.json({
+        success: false,
+        body: {
+          message: "User with provoded email not found",
+        },
+      });
+    }
+    const followersInfo = await db.select().from(userSchema).where(inArray(userSchema.id, userTmp[0].followers.length === 0 ? [-1] : userTmp[0].followers));
+    const followingInfo = await db.select().from(userSchema).where(inArray(userSchema.id, userTmp[0].following.length === 0 ? [-1] : userTmp[0].following));
 
-    // Get all recipes uploaded by user
-    const posts = await db.select().from(recipeSchema).where(eq(recipeSchema.AuthorId, id));
-
-    // Return info
-    return res.json({
+    const userRes = {
       success: true,
-      body: {
-        followers: {
-          length: followers.length,
-          followers: followers
-        },
-        following: {
-          length: following.length,
-          following: following
-        },
-        posts: {
-          length: posts.length,
-          posts: posts,
-        }
-      }
-    });
+      body: { ...userTmp[0], followersInfo, followingInfo }
+    };
+
+    return res.json(userRes);
+
+    // Remove password and return user data
+    // return res.json(userTmp);
   }
   catch (err) {
     next(err);

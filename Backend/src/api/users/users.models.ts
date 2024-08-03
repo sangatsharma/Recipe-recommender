@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm";
+import { InferSelectModel, relations, sql } from "drizzle-orm";
 import { serial, text, pgTable, timestamp, integer } from "drizzle-orm/pg-core";
 import { recipeSchema } from "../recipes/recipes.models";
 import { date } from "drizzle-orm/pg-core";
@@ -25,6 +25,8 @@ export const userSchema = pgTable("users", {
   visitHistory: text("visitHistory").array().notNull().default(sql`'{}'::integer[]`),
   favourite: integer("favourite").array().notNull().default(sql`'{}'::integer[]`),
 });
+
+export type UserSchemaType = InferSelectModel<typeof userSchema>;
 
 // User Preferences
 export const userPref = pgTable("userPref", {
