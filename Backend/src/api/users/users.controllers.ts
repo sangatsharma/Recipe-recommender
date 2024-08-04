@@ -47,15 +47,8 @@ export const userInfoHandler = async (req: Request, res: Response, _: NextFuncti
 
   // Remove password and return user data
   userTmp.body.password = null;
-  const followersInfo = db.select().from(userSchema).where(inArray(userSchema.followers, userSchema));
-  const followingInfo = db.select().from(userSchema).where(inArray(userSchema.following, userSchema));
 
-  const userRes = {
-    success: true,
-    body: { ...userTmp.body, followersInfo, followingInfo }
-  };
-  console.log(userRes);
-  return res.json(userRes);
+  return res.json(userTmp);
 };
 
 
@@ -439,12 +432,10 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
         },
       });
     }
-    const followersInfo = await db.select().from(userSchema).where(inArray(userSchema.id, userTmp[0].followers.length === 0 ? [-1] : userTmp[0].followers));
-    const followingInfo = await db.select().from(userSchema).where(inArray(userSchema.id, userTmp[0].following.length === 0 ? [-1] : userTmp[0].following));
 
     const userRes = {
       success: true,
-      body: { ...userTmp[0], followersInfo, followingInfo }
+      body: userTmp[0]
     };
 
     return res.json(userRes);

@@ -35,14 +35,7 @@ const userInfoHandler = async (req, res, _) => {
     }
     // Remove password and return user data
     userTmp.body.password = null;
-    const followersInfo = db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.followers, users_models_1.userSchema));
-    const followingInfo = db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.following, users_models_1.userSchema));
-    const userRes = {
-        success: true,
-        body: { ...userTmp.body, followersInfo, followingInfo }
-    };
-    console.log(userRes);
-    return res.json(userRes);
+    return res.json(userTmp);
 };
 exports.userInfoHandler = userInfoHandler;
 /*
@@ -350,11 +343,9 @@ const userProfile = async (req, res, next) => {
                 },
             });
         }
-        const followersInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.id, userTmp[0].followers.length === 0 ? [-1] : userTmp[0].followers));
-        const followingInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.inArray)(users_models_1.userSchema.id, userTmp[0].following.length === 0 ? [-1] : userTmp[0].following));
         const userRes = {
             success: true,
-            body: { ...userTmp[0], followersInfo, followingInfo }
+            body: userTmp[0]
         };
         return res.json(userRes);
         // Remove password and return user data
