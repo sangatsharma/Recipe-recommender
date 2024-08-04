@@ -3,7 +3,7 @@ import Cropper from "react-easy-crop";
 import { getCroppedImg } from "../utils/CropImage";
 import { formatDate } from "../utils/dateFormat";
 import { toast } from "react-toastify";
-import { loadModel } from "../utils/filterNsfw";
+import { loadModel,loadImage } from "../utils/filterNsfw";
 import Loader from "./Loader/Loader";
 import axios from "axios";
 import { createFileFromBlobUrl } from "../utils/CropImage";
@@ -52,18 +52,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     }
   };
 
-  const loadImage = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => resolve(img);
-        img.onerror = (error) => reject(error);
-      };
-      reader.readAsDataURL(file);
-    });
-  };
+  
 
   const onCropComplete = useCallback(async (_, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
@@ -75,7 +64,6 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
       resetState();
       setProfilePic(croppedImg);
       await uploadProfilePic(croppedImg);
-     
     }
   };
 
@@ -103,7 +91,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
