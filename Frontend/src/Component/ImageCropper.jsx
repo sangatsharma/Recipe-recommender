@@ -71,6 +71,7 @@ const ImageCropper = ({ userInfo, profilePic, setProfilePic }) => {
     const fileName = "cropped_image.jpg";
     const mimeType = "image/jpeg";
     const file = await createFileFromBlobUrl(croppedImg, fileName, mimeType);
+    console.log("file",file);
     try {
       setLoading(true);
       const formData = new FormData();

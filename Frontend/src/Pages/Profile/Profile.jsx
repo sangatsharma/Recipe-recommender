@@ -14,9 +14,6 @@ const Profile = () => {
 
   const navigate = useNavigate();
   const { user } = useParams();
-
-  console.log(user);
-
   useEffect(() => {
     if (!loading) {
       if (user == undefined) {
@@ -118,7 +115,7 @@ const Profile = () => {
 
         {/* Content */}
         {activeTab === "posts" && (
-          <div className=" flex flex-row flex-wrap gap-2 justify-center w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
             {Array.from({ length: 4 }).map((_, index) => (
               <PostCard key={index} darkMode={isDarkMode} user={currentUser} />
             ))}

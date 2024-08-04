@@ -20,7 +20,6 @@ export const loadModel = async (image) => {
     try {
       const model = await nsfwjs.load("/models/mobilenet_v2/");
       const predictions = await model.classify(image);
-      console.log(predictions);
       const drawingNeutralSum = predictions.reduce((sum, prediction) => {
         if (
           prediction.className === "Drawing" ||

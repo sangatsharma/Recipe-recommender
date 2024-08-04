@@ -23,7 +23,7 @@ const PostCard = ({
     <div
       className={`p-4 rounded-lg shadow-md ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-      } w-[48%] below-sm:w-[100%]`}
+      }  below-sm:w-[100%]`}
     >
       <div className="flex items-center mb-4">
         <img

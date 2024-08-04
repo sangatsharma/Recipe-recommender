@@ -252,7 +252,9 @@ const RecipeForm = () => {
                 </button>
                 {selectedImages.length > 0 && (
                   <p className="mt-4">
-                    {selectedImages.length} images selected
+                    {selectedImages.length == 1
+                      ? "1 image selected "
+                      : selectedImages.length + " images selected"}
                   </p>
                 )}
               </div>
