@@ -1,21 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Formik, Field, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import { useThemeContext } from "../context/ThemeContext";
+import { toast } from "react-toastify";
+import { loadModel, loadImage } from "../utils/filterNsfw";
+import { createFileFromBlobUrl } from "../utils/CropImage";
 
 const RecipeForm = () => {
-  const [images, setImages] = useState([]);
   const { isDarkMode } = useThemeContext();
 
-  const handleImageChange = (e) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files).map((file) =>
-        URL.createObjectURL(file)
+  const [selectedImages, setSelectedImages] = useState([]);
+  const imageInputRef = useRef(null);
+
+  const validImageTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/bmp",
+  ];
+
+  // Handle image selection
+  const handleImageChange = async (event) => {
+    const files = Array.from(event.target.files);
+
+    // Filter out files that have already been selected
+    const newFiles = files.filter((file) => {
+      const fileExists = selectedImages.some(
+        (image) => image.name === file.name && image.size === file.size
       );
-      setImages((prevImages) => prevImages.concat(filesArray));
-      // Free memory when unmounted
-      Array.from(e.target.files).map((file) => URL.revokeObjectURL(file));
+      return !fileExists;
+    });
+
+    let imageUrls = [];
+
+    // Use for...of to handle async operations
+    for (const file of newFiles) {
+      if (file && validImageTypes.includes(file.type)) {
+        try {
+          const image = await loadImage(file);
+          const isNsfw = await loadModel(image);
+          if (isNsfw) {
+            toast.error(`${file.name} is not appropriate.`);
+          } else {
+            console.log("Check complete", file.name);
+            imageUrls.push({
+              url: URL.createObjectURL(file),
+              name: file.name,
+              size: file.size,
+            });
+          }
+        } catch (error) {
+          console.error("Error loading image or model:", error);
+          toast.error("Failed to load image or model.");
+        }
+      } else {
+        toast.error(
+          `${file.name} is an invalid file type. Only images are allowed.`
+        );
+      }
     }
+    setSelectedImages((prevImages) => [...prevImages, ...imageUrls]);
+  };
+
+  // Handle image removal
+  const removeImage = (imageUrl) => {
+    setSelectedImages((prevImages) =>
+      prevImages.filter((image) => image !== imageUrl)
+    );
+  };
+
+  const handleUploadClick = () => {
+    imageInputRef.current.click();
   };
 
   return (
@@ -58,9 +114,21 @@ const RecipeForm = () => {
           ingredients: Yup.array().of(Yup.string().required("Required")),
           directions: Yup.array().of(Yup.string().required("Required")),
         })}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           // Handle form submission
-          console.log(values);
+          let imageFiles = [];
+          if (selectedImages.length > 0) {
+            let i = 1;
+            for (const image of selectedImages) {
+              const imageFile = await createFileFromBlobUrl(
+                image,
+                `${values.title.split(" ").join("") + i++}.jpg`,
+                "image/jpeg"
+              );
+              imageFiles.push(imageFile);
+            }
+          }
+          console.log(values, imageFiles);
         }}
       >
         {({ values, errors, touched }) => (
@@ -169,18 +237,46 @@ const RecipeForm = () => {
               </label>
               <input
                 type="file"
+                ref={imageInputRef}
                 multiple
                 onChange={handleImageChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md "
+                className="hidden"
               />
-              <div className="mt-2 flex flex-wrap">
-                {images.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Selected ${index}`}
-                    className="w-32 h-32 object-cover rounded-md text-black mr-2 mb-2"
-                  />
+              <div className="flex flex-wrap gap-2 ">
+                <button
+                  className="py-2 px-4 mt-2 bg-orange-500 text-white rounded hover:bg-orange-400"
+                  onClick={handleUploadClick}
+                  type="button"
+                >
+                  Upload Recipe Photos
+                </button>
+                {selectedImages.length > 0 && (
+                  <p className="mt-4">
+                    {selectedImages.length == 1
+                      ? "1 image selected "
+                      : selectedImages.length + " images selected"}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-4 mt-2">
+                {selectedImages.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={image.url}
+                      alt={`Selected ${index}`}
+                      className="w-48 h-48 object-cover rounded shadow"
+                    />
+                    <button
+                      onClick={() => {
+                        removeImage(image);
+                      }}
+                      type="button"
+                      className="absolute top-1 right-0 text-white bg-red-600 rounded-full px-2 scale-90 text-xl hover:bg-red-700"
+                    >
+                      <p className="scale-125">&times;</p>
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>
@@ -271,9 +367,9 @@ const RecipeForm = () => {
 
             <button
               type="submit"
-              className="mt-4 w-full p-2 bg-blue-500 text-white rounded-md text-black hover:bg-blue-600 transition duration-300"
+              className="mt-4 w-full p-2 bg-blue-500 rounded-md hover:bg-blue-600 transition duration-300"
             >
-              Save
+              Upload Recipe
             </button>
           </Form>
         )}
