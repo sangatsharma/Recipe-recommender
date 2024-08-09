@@ -29,8 +29,8 @@ app.use(express_1.default.json());
 ROUTES
 */
 // Recipe route
-app.use("/recipe", recipes_routes_1.default); //recipes
 app.use("/user", users_routes_1.default); //users
+app.use("/recipe", recipes_routes_1.default); //recipes
 // Handle unknown endpoint
 app.use(middleware_1.unknownEndPoint);
 // Handle errors

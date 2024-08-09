@@ -34,8 +34,8 @@ app.use(express.json());
 ROUTES
 */
 // Recipe route
-app.use("/recipe", recipeRouter); //recipes
 app.use("/user", userRouter); //users
+app.use("/recipe", recipeRouter); //recipes
 
 // Handle unknown endpoint
 app.use(unknownEndPoint);

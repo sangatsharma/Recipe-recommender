@@ -9,11 +9,16 @@ import express, { RequestHandler } from "express";
 import { addNewRecipe, filterDemo, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, recommendRecipies, returnAllRecipies, searchRecipe } from "./recipes.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
+import multer from "multer";
+
 const recipeRouter = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // ROUTES
 recipeRouter.get("/", authenticateJWT, returnAllRecipies);
-recipeRouter.post("/", authenticateJWT, addNewRecipe);
+recipeRouter.post("/", upload.array("images"), authenticateJWT, addNewRecipe as RequestHandler);
 recipeRouter.post("/filter", filterRecipe);
 recipeRouter.get("/:id", authenticateJWT, recipeDetails as RequestHandler);
 recipeRouter.post("/review/add", authenticateJWT, recipeReviewAddHandler as RequestHandler);

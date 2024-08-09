@@ -4,6 +4,7 @@ import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
 import { SQL, eq, lte, and, ilike, sql, arrayContains, arrayOverlaps } from "drizzle-orm";
 import { userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
+import { handleUpload } from "@/utils/cloudinary";
 
 
 /*
@@ -28,21 +29,27 @@ export const returnAllRecipies = (_: Request, res: Response, next: NextFunction)
 /*
   ADD A NEW RECIPE
 */
-export const addNewRecipe = (req: Request, res: Response, next: NextFunction) => {
+export const addNewRecipe = async (req: Request, res: Response, next: NextFunction) => {
   const data = req.body;
 
   // TODO: get author id from token
   data["AuthorId"] = res.locals.user.id as number;
+  // data["AuthorId"] = 1;
   // TODO: Validate data
-  const helper = async () => {
-    await db.insert(recipeSchema).values(data);
-  };
+  try {
+    if (req.file) {
+      const b64 = Buffer.from(req.file?.buffer).toString("base64");
+      const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-  helper().then(() => {
+      const cldRes = await handleUpload(dataURI);
+      data.Images = cldRes.secure_url;
+    }
+    await db.insert(recipeSchema).values(data);
     return res.json({ "success": "true" });
-  }).catch((err) => {
+  }
+  catch (err) {
     next(err);
-  });
+  }
 };
 
 
