@@ -6,6 +6,7 @@ const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
 const users_models_1 = require("../users/users.models");
 const auth_helpers_1 = require("../users/auth/auth.helpers");
+const cloudinary_1 = require("../../utils/cloudinary");
 /*
   FETCH ALL RECIPIES
 */
@@ -25,19 +26,25 @@ exports.returnAllRecipies = returnAllRecipies;
 /*
   ADD A NEW RECIPE
 */
-const addNewRecipe = (req, res, next) => {
+const addNewRecipe = async (req, res, next) => {
     const data = req.body;
     // TODO: get author id from token
     data["AuthorId"] = res.locals.user.id;
+    // data["AuthorId"] = 1;
     // TODO: Validate data
-    const helper = async () => {
+    try {
+        if (req.file) {
+            const b64 = Buffer.from(req.file?.buffer).toString("base64");
+            const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
+            data.Images = cldRes.secure_url;
+        }
         await db_1.db.insert(recipes_models_1.recipeSchema).values(data);
-    };
-    helper().then(() => {
         return res.json({ "success": "true" });
-    }).catch((err) => {
+    }
+    catch (err) {
         next(err);
-    });
+    }
 };
 exports.addNewRecipe = addNewRecipe;
 /*

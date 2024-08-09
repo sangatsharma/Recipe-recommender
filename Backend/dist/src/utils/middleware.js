@@ -13,7 +13,6 @@ const unknownEndPoint = (_, res) => {
 };
 exports.unknownEndPoint = unknownEndPoint;
 const authenticateJWT = (req, res, next) => {
-    console.log(req.file);
     const cookie = req.cookies;
     if (cookie?.token)
         cookie.auth_token = cookie.token;
