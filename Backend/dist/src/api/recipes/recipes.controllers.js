@@ -37,7 +37,7 @@ const addNewRecipe = async (req, res, next) => {
             const b64 = Buffer.from(req.file?.buffer).toString("base64");
             const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
             const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-            data.Images = cldRes.secure_url;
+            data.Images = [cldRes.secure_url];
         }
         await db_1.db.insert(recipes_models_1.recipeSchema).values(data);
         return res.json({ "success": "true" });
