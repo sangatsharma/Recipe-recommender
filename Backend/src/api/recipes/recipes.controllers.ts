@@ -42,7 +42,7 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
       const cldRes = await handleUpload(dataURI);
-      data.Images = cldRes.secure_url;
+      data.Images = [cldRes.secure_url];
     }
     await db.insert(recipeSchema).values(data);
     return res.json({ "success": "true" });
