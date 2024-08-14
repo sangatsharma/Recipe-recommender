@@ -1,4 +1,4 @@
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { fetchItemById } from "../utils/auth";
 import html2canvas from "html2canvas";
@@ -17,6 +17,7 @@ import AddToFav from "../Component/AddToFav";
 import { useFavContext } from "../context/FavContext";
 import PeopleCard from "../Component/PeopleCard";
 import Spinner from "../Component/Loader/Spinner";
+import { fetchUserById } from "../utils/auth";
 
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
@@ -25,6 +26,7 @@ const RecipeDetails = () => {
 
   //using location state to extract ingredients if page was redirected from search by ingredients
   const location = useLocation();
+  const navigate = useNavigate();
   const matchedIngredients = location.state?.matchedIngredients || [];
   const [downloading, setDownloading] = useState(false);
   const DownloadPdf = () => {
@@ -70,6 +72,7 @@ const RecipeDetails = () => {
 
   const [item, setItem] = useState(null);
   const [showWaterMark, setShowWaterMark] = useState(false);
+  const [author, setAuthor] = useState({});
 
   useEffect(() => {
     //Check if id and name is available in the URL
@@ -82,8 +85,9 @@ const RecipeDetails = () => {
         // console.log("Fetching item by ID:", id);
         const fetchedItem = await fetchItemById(id, itemName);
         setItem(fetchedItem);
+        const authorDetails = await fetchUserById(fetchedItem.AuthorId);
+        if (authorDetails.success) setAuthor(authorDetails.body);
       } catch (err) {
-        setError(err.message);
         console.error(err);
       }
     };
@@ -121,10 +125,6 @@ const RecipeDetails = () => {
   const encodedHashtags = encodeURIComponent(
     "cookityourself,tastyrecipe,healthyfood,cooking"
   );
-
-  //todo :navigate to path when click on author name
-  // const path = item.name.split(" ")[0] + "_" + userDetails.id;
-  // navigate(`/profile/${path}`);
 
   return (
     <div className="max-w-4xl mx-auto pb-6 rounded-lg shadow-lg ">
@@ -174,8 +174,14 @@ const RecipeDetails = () => {
           <div className="flex flex-row justify-between items-start mr-4 mb-2">
             <p className="pl-2">
               Submitted by{" "}
-              <span className="text-blue-400 cursor-pointer">
-                Sangat Sharma
+              <span
+                onClick={() => {
+                  const path = author.name.split(" ")[0] + "_" + author.id;
+                  navigate(`/profile/${path}`, { state: author });
+                }}
+                className="text-blue-400 cursor-pointer"
+              >
+                {author.name}
               </span>
             </p>
             <div className="flex flex-row gap-2 h-8 ">
@@ -391,12 +397,7 @@ const RecipeDetails = () => {
           bio={
             "FYI Update: 06/03/14)... My About Me page is correct. I joined as a member on March 19, 2012 (2+ years ago). But if you click on my public"
           }
-          userDetails={{
-            name: "Sangat Sharma",
-            id: 2,
-            city: "Pokhara",
-            email: "pikachu00824@gmail.com",
-          }}
+          userDetails={author}
         />
       </div>
     </div>

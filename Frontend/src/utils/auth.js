@@ -43,6 +43,20 @@ export const fetchItemById = async (RecipeId, RecipeName) => {
     throw error;
   }
 };
+//  function to fetch userDetails using ID from a database,export to RecipeDetails Page and profile page
+export const fetchUserById = async (userId) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_SERVER_URL}/user/profile/${userId}`,
+      { withCredentials: true }
+    );
+    if (response.data.success == false) return response.data;
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    throw error;
+  }
+};
 
 export const handleLogout = async () => {
   try {

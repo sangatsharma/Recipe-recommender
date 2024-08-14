@@ -5,11 +5,13 @@ import { useThemeContext } from "../context/ThemeContext";
 import { toast } from "react-toastify";
 import { loadModel, loadImage } from "../utils/filterNsfw";
 import { createFileFromBlobUrl } from "../utils/CropImage";
+import Spinner from "./Loader/Spinner";
 
 const RecipeForm = () => {
   const { isDarkMode } = useThemeContext();
 
   const [selectedImages, setSelectedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const imageInputRef = useRef(null);
 
   const validImageTypes = [
@@ -22,6 +24,7 @@ const RecipeForm = () => {
 
   // Handle image selection
   const handleImageChange = async (event) => {
+   
     const files = Array.from(event.target.files);
 
     // Filter out files that have already been selected
@@ -38,6 +41,7 @@ const RecipeForm = () => {
     for (const file of newFiles) {
       if (file && validImageTypes.includes(file.type)) {
         try {
+          setLoading(true);
           const image = await loadImage(file);
           const isNsfw = await loadModel(image);
           if (isNsfw) {
@@ -53,6 +57,8 @@ const RecipeForm = () => {
         } catch (error) {
           console.error("Error loading image or model:", error);
           toast.error("Failed to load image or model.");
+        }finally{
+          setLoading(false);
         }
       } else {
         toast.error(
@@ -82,24 +88,24 @@ const RecipeForm = () => {
     >
       <Formik
         initialValues={{
-          title: "",
-          description: "",
-          category: "Dessert",
-          prepTime: "",
-          cookTime: "",
+          Name: "",
+          Description: "",
+          RecipeCategory: "Dessert",
+          PrepTime: "",
+          CookTime: "",
           serves: "",
           yield: "",
-          ingredients: [""],
-          directions: [""],
+          RecipeIngredientParts: [""],
+          RecipeInstructions: [""],
         }}
         validationSchema={Yup.object({
-          title: Yup.string().required("Required"),
-          description: Yup.string().required("Required"),
-          prepTime: Yup.number()
+          Name: Yup.string().required("Required"),
+          Description: Yup.string().required("Required"),
+          PrepTime: Yup.number()
             .required("Required")
             .positive("Must be positive")
             .integer("Must be an integer"),
-          cookTime: Yup.number()
+          CookTime: Yup.number()
             .required("Required")
             .positive("Must be positive")
             .integer("Must be an integer"),
@@ -111,62 +117,65 @@ const RecipeForm = () => {
             .required("Required")
             .positive("Must be positive")
             .integer("Must be an integer"),
-          ingredients: Yup.array().of(Yup.string().required("Required")),
-          directions: Yup.array().of(Yup.string().required("Required")),
+          RecipeIngredientParts: Yup.array().of(
+            Yup.string().required("Required")
+          ),
+          RecipeInstructions: Yup.array().of(Yup.string().required("Required")),
         })}
         onSubmit={async (values) => {
           // Handle form submission
-          let imageFiles = [];
+          let Images = [];
           if (selectedImages.length > 0) {
             let i = 1;
             for (const image of selectedImages) {
               const imageFile = await createFileFromBlobUrl(
                 image,
-                `${values.title.split(" ").join("") + i++}.jpg`,
+                `${values.Name.split(" ").join("") + i++}.jpg`,
                 "image/jpeg"
               );
-              imageFiles.push(imageFile);
+              Images.push(imageFile);
             }
           }
-          console.log(values, imageFiles);
+
+          console.log({ ...values, Images: Images });
         }}
       >
         {({ values, errors, touched }) => (
           <Form className="space-y-4">
             <div>
-              <label htmlFor="title" className="block ">
+              <label htmlFor="Name" className="block ">
                 Title
               </label>
               <Field
-                name="title"
+                name="Name"
                 type="text"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               />
-              {touched.title && errors.title ? (
-                <div className="text-red-500 text-sm">{errors.title}</div>
+              {touched.Name && errors.Name ? (
+                <div className="text-red-500 text-sm">{errors.Name}</div>
               ) : null}
             </div>
 
             <div>
-              <label htmlFor="description" className="block ">
+              <label htmlFor="Description" className="block ">
                 Description
               </label>
               <Field
-                name="description"
+                name="Description"
                 type="text"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               />
-              {touched.description && errors.description ? (
-                <div className="text-red-500 text-sm">{errors.description}</div>
+              {touched.Description && errors.Description ? (
+                <div className="text-red-500 text-sm">{errors.Description}</div>
               ) : null}
             </div>
 
             <div>
-              <label htmlFor="category" className="block ">
+              <label htmlFor="RecipeCategory" className="block ">
                 Category
               </label>
               <Field
-                name="category"
+                name="RecipeCategory"
                 as="select"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               >
@@ -176,30 +185,30 @@ const RecipeForm = () => {
             </div>
 
             <div>
-              <label htmlFor="prepTime" className="block ">
+              <label htmlFor="PrepTime" className="block ">
                 Prep Time (minutes)
               </label>
               <Field
-                name="prepTime"
+                name="PrepTime"
                 type="number"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               />
-              {touched.prepTime && errors.prepTime ? (
-                <div className="text-red-500 text-sm">{errors.prepTime}</div>
+              {touched.PrepTime && errors.PrepTime ? (
+                <div className="text-red-500 text-sm">{errors.PrepTime}</div>
               ) : null}
             </div>
 
             <div>
-              <label htmlFor="cookTime" className="block ">
+              <label htmlFor="CookTime" className="block ">
                 Cook Time (minutes)
               </label>
               <Field
-                name="cookTime"
+                name="CookTime"
                 type="number"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               />
-              {touched.cookTime && errors.cookTime ? (
-                <div className="text-red-500 text-sm">{errors.cookTime}</div>
+              {touched.CookTime && errors.CookTime ? (
+                <div className="text-red-500 text-sm">{errors.CookTime}</div>
               ) : null}
             </div>
 
@@ -233,7 +242,7 @@ const RecipeForm = () => {
 
             <div>
               <label htmlFor="image" className="block ">
-                Add Your Photos
+                Add Recipe Images
               </label>
               <input
                 type="file"
@@ -248,7 +257,14 @@ const RecipeForm = () => {
                   onClick={handleUploadClick}
                   type="button"
                 >
-                  Upload Recipe Photos
+                  {loading ? (
+                    <span className="flex flex-row gap-2 items-center">
+                      {" "}
+                      Uploading images <Spinner />
+                    </span>
+                  ) : (
+                    <span>Upload images</span>
+                  )}
                 </button>
                 {selectedImages.length > 0 && (
                   <p className="mt-4">
@@ -281,15 +297,15 @@ const RecipeForm = () => {
               </div>
             </div>
 
-            <FieldArray name="ingredients">
+            <FieldArray name="RecipeIngredientParts">
               {({ insert, remove, push }) => (
                 <div>
                   <label className="block ">Ingredients</label>
-                  {values.ingredients.length > 0 &&
-                    values.ingredients.map((ingredient, index) => (
+                  {values.RecipeIngredientParts.length > 0 &&
+                    values.RecipeIngredientParts.map((ingredient, index) => (
                       <div key={index} className="flex items-center mt-2">
                         <Field
-                          name={`ingredients.${index}`}
+                          name={`RecipeIngredientParts.${index}`}
                           className="w-full p-2 border border-gray-300 rounded-md text-black"
                         />
 
@@ -309,12 +325,12 @@ const RecipeForm = () => {
                         >
                           +
                         </button>
-                        {touched.ingredients &&
-                        touched.ingredients[index] &&
-                        errors.ingredients &&
-                        errors.ingredients[index] ? (
+                        {touched.RecipeIngredientParts &&
+                        touched.RecipeIngredientParts[index] &&
+                        errors.RecipeIngredientParts &&
+                        errors.RecipeIngredientParts[index] ? (
                           <div className="text-red-500 text-sm">
-                            {errors.ingredients[index]}
+                            {errors.RecipeIngredientParts[index]}
                           </div>
                         ) : null}
                       </div>
@@ -323,15 +339,15 @@ const RecipeForm = () => {
               )}
             </FieldArray>
 
-            <FieldArray name="directions">
+            <FieldArray name="RecipeInstructions">
               {({ insert, remove, push }) => (
                 <div>
                   <label className="block ">Directions</label>
-                  {values.directions.length > 0 &&
-                    values.directions.map((direction, index) => (
+                  {values.RecipeInstructions.length > 0 &&
+                    values.RecipeInstructions.map((direction, index) => (
                       <div key={index} className="flex items-center mt-2">
                         <Field
-                          name={`directions.${index}`}
+                          name={`RecipeInstructions.${index}`}
                           className="w-full p-2 border border-gray-300 rounded-md text-black"
                         />
 
@@ -351,12 +367,12 @@ const RecipeForm = () => {
                         >
                           +
                         </button>
-                        {touched.directions &&
-                        touched.directions[index] &&
-                        errors.directions &&
-                        errors.directions[index] ? (
+                        {touched.RecipeInstructions &&
+                        touched.RecipeInstructions[index] &&
+                        errors.RecipeInstructions &&
+                        errors.RecipeInstructions[index] ? (
                           <div className="text-red-500 text-sm">
-                            {errors.directions[index]}
+                            {errors.RecipeInstructions[index]}
                           </div>
                         ) : null}
                       </div>
