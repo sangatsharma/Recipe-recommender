@@ -44,8 +44,23 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const cldRes = await handleUpload(dataURI);
       data.Images = [cldRes.secure_url];
     }
-    await db.insert(recipeSchema).values(data);
-    return res.json({ "success": "true" });
+    const cleanedData = {
+      ...data,
+      RecipeInstructions: JSON.parse(data.RecipeInstructions),
+      Keywords: JSON.parse(data.Keywords),
+      RecipeIngredientParts: JSON.parse(data.RecipeIngredientParts),
+      RecipeIngredientQuantities: JSON.parse(data.RecipeIngredientQuantities),
+    };
+    const savedRecipe = await db.insert(recipeSchema).values(cleanedData).returning();
+
+    await db.update(userSchema).set({
+      posts: sql`array_append(${userSchema.posts}, ${savedRecipe[0].RecipeId} )`,
+    }).where(eq(userSchema.id, savedRecipe[0].AuthorId));
+
+    return res.json({
+      success: true,
+      body: savedRecipe,
+    });
   }
   catch (err) {
     next(err);

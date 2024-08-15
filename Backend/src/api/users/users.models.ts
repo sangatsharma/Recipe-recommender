@@ -21,7 +21,7 @@ export const userSchema = pgTable("users", {
   // following: integer("following").default(0).notNull(),
   followers: integer("followers").array().notNull().default(sql`'{}'::integer[]`),
   following: integer("following").array().notNull().default(sql`'{}'::integer[]`),
-  posts: integer("posts").default(0).notNull(),
+  posts: integer("posts").array().notNull().default(sql`'{}'::integer[]`),
   visitHistory: text("visitHistory").array().notNull().default(sql`'{}'::integer[]`),
   favourite: integer("favourite").array().notNull().default(sql`'{}'::integer[]`),
 });
