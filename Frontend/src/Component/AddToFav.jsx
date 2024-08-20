@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
 
 const AddToFav = ({ id, position = "", isFavorite, toggleTick }) => {
   const [isScaling, setIsScaling] = useState(false);
+  const { isAuthenticated } = useContext(AuthContext);
 
   return (
     <button
@@ -13,6 +16,10 @@ const AddToFav = ({ id, position = "", isFavorite, toggleTick }) => {
                           }
                            group-hover:opacity-100 hover:shadow-lg hover:scale-110 focus:outline-none`}
       onClick={() => {
+        if (!isAuthenticated) {
+          toast.error("Please login to add to favorites");
+          return;
+        }
         setIsScaling(true);
         setTimeout(() => {
           setIsScaling(false);

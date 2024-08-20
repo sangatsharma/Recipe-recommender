@@ -394,9 +394,6 @@ const RecipeDetails = () => {
       <div className="px-8 mt-3  flex flex-col below-sm:pl-8 ">
         <p className="text-xl mb-1">Recipe by:</p>
         <PeopleCard
-          bio={
-            "FYI Update: 06/03/14)... My About Me page is correct. I joined as a member on March 19, 2012 (2+ years ago). But if you click on my public"
-          }
           userDetails={author}
         />
       </div>

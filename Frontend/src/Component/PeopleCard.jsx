@@ -8,7 +8,8 @@ import { useNavigate } from "react-router-dom";
 const PeopleCard = ({ userDetails }) => {
   const { isDarkMode } = useThemeContext();
   const [isFollowing, setIsFollowing] = useState(false);
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo ,isAuthenticated} = useContext(AuthContext);
+ 
 
   const navigate = useNavigate();
 
@@ -19,13 +20,17 @@ const PeopleCard = ({ userDetails }) => {
 
   useEffect(() => {
     // Check if the user is following this user
-    if (userInfo.following) {
+    if (isAuthenticated && userInfo.following) {
       setIsFollowing(userInfo.following.includes(userDetails.id));
     }
-  }, [userInfo.following, userDetails]);
+  }, [userInfo, userDetails]);
 
   const handleFollow = async () => {
     try {
+      if(!isAuthenticated){
+       toast.error("Please login to follow this user");
+        return;
+      }
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/user/follow`,
         {

@@ -6,12 +6,14 @@ import { toast } from "react-toastify";
 import { loadModel, loadImage } from "../utils/filterNsfw";
 import { createFileFromBlobUrl } from "../utils/CropImage";
 import Spinner from "./Loader/Spinner";
+import axios from "axios";
 
 const RecipeForm = () => {
   const { isDarkMode } = useThemeContext();
 
   const [selectedImages, setSelectedImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const imageInputRef = useRef(null);
 
   const validImageTypes = [
@@ -24,7 +26,6 @@ const RecipeForm = () => {
 
   // Handle image selection
   const handleImageChange = async (event) => {
-   
     const files = Array.from(event.target.files);
 
     // Filter out files that have already been selected
@@ -57,7 +58,7 @@ const RecipeForm = () => {
         } catch (error) {
           console.error("Error loading image or model:", error);
           toast.error("Failed to load image or model.");
-        }finally{
+        } finally {
           setLoading(false);
         }
       } else {
@@ -123,6 +124,7 @@ const RecipeForm = () => {
           RecipeInstructions: Yup.array().of(Yup.string().required("Required")),
         })}
         onSubmit={async (values) => {
+          setSubmitting(true);
           // Handle form submission
           let Images = [];
           if (selectedImages.length > 0) {
@@ -137,7 +139,43 @@ const RecipeForm = () => {
             }
           }
 
-          console.log({ ...values, Images: Images });
+          const formData = new FormData();
+
+          // Loop through all form values and append to FormData
+          for (const key in values) {
+            if (Array.isArray(values[key])) {
+              // If the field is an array, stringify it before appending
+              formData.append(key, JSON.stringify(values[key]));
+            } else {
+              formData.append(key, values[key]);
+            }
+          }
+
+          // Append images to FormData
+          Images.forEach((image, index) => {
+            formData.append("file", image);
+          });
+          formData.forEach((value, key) => {
+            console.log(`${key}: ${value}`);
+          });
+          try {
+            const response = await axios.post(
+              `${import.meta.env.VITE_SERVER_URL}/recipe`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true,
+              }
+            );
+            console.log(response.data);
+          } catch (error) {
+            console.error("Error uploading recipe:", error);
+            toast.error("Failed to upload recipe.");
+          } finally {
+            setSubmitting(false);
+          }
         }}
       >
         {({ values, errors, touched }) => (
@@ -385,7 +423,14 @@ const RecipeForm = () => {
               type="submit"
               className="mt-4 w-full p-2 bg-blue-500 rounded-md hover:bg-blue-600 transition duration-300"
             >
-              Upload Recipe
+              {submitting ? (
+                <span className="flex flex-row gap-3 justify-center items-center">
+                  <span>Uploading recipe</span>
+                  <Spinner />
+                </span>
+              ) : (
+                "Upload Recipe"
+              )}
             </button>
           </Form>
         )}
