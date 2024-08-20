@@ -52,7 +52,11 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
     // };
     data.CookTime = Number(data.CookTime);
     data.PrepTime = Number(data.PrepTime);
+    data.serves = Number(data.serves);
+    data.yields = Number(data.yields);
+
     data.RecipeInstructions = (JSON.parse(data.RecipeInstructions));
+    data.RecipeIngredientParts = (JSON.parse(data.RecipeIngredientParts));
 
     const savedRecipe = await db.insert(recipeSchema).values(data).returning();
 
