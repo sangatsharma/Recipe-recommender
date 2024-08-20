@@ -9,7 +9,7 @@ export const recipeSchema = pgTable("recipes", {
   AuthorId: integer("AuthorId").notNull(),
   CookTime: integer("CookTime").notNull(),
   PrepTime: integer("PrepTime").notNull(),
-  TotalTime: integer("TotalTime").notNull(),
+  TotalTime: integer("TotalTime"),
   DatePublished: timestamp("DatePublished", {
     withTimezone: true,
   }).defaultNow(),
@@ -18,9 +18,9 @@ export const recipeSchema = pgTable("recipes", {
   Images: text("Images").array().notNull().default(sql`'{}'::text[]`),
   RecipeCategory: text("RecipeCategory"),
   // Keywords: text("Keywords"),
-  Keywords: text("Keywords").array().notNull().default(sql`'{}'::text[]`),
+  Keywords: text("Keywords").array().default(sql`'{}'::text[]`),
   RecipeIngredientQualities: text("RecipeIngredientQualities"),
-  RecipeIngredientParts: text("RecipeIngredientParts").array().notNull().default(sql`'{}'::text[]`),
+  RecipeIngredientParts: text("RecipeIngredientParts").array().default(sql`'{}'::text[]`),
   AggregatedRating: numeric("AggregatedRating"),
   ReviewCount: numeric("ReviewCount"),
   Calories: numeric("Calories"),
@@ -33,6 +33,9 @@ export const recipeSchema = pgTable("recipes", {
   SugarContent: numeric("SugarContent"),
   ProteinContent: numeric("ProteinContent"),
   RecipeInstructions: text("RecipeInstructions").array().notNull().default(sql`'{}'::text[]`),
+
+  serves: integer("server").default(1),
+  yield: integer("yield").default(1),
 });
 
 export type RecipeSchemaType = InferSelectModel<typeof recipeSchema>;
