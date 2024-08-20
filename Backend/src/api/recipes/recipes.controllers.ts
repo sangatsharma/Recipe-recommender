@@ -6,7 +6,6 @@ import { userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 import { handleUpload } from "@/utils/cloudinary";
 
-
 /*
   FETCH ALL RECIPIES
 */
@@ -44,14 +43,18 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const cldRes = await handleUpload(dataURI);
       data.Images = [cldRes.secure_url];
     }
-    const cleanedData = {
-      ...data,
-      RecipeInstructions: JSON.parse(data.RecipeInstructions),
-      Keywords: JSON.parse(data.Keywords),
-      RecipeIngredientParts: JSON.parse(data.RecipeIngredientParts),
-      RecipeIngredientQuantities: JSON.parse(data.RecipeIngredientQuantities),
-    };
-    const savedRecipe = await db.insert(recipeSchema).values(cleanedData).returning();
+    // const cleanedData = {
+    //   ...data,
+    //   RecipeInstructions: JSON.parse(data.RecipeInstructions),
+    //   Keywords: JSON.parse(data.Keywords),
+    //   RecipeIngredientParts: JSON.parse(data.RecipeIngredientParts),
+    //   RecipeIngredientQuantities: JSON.parse(data.RecipeIngredientQuantities),
+    // };
+    data.CookTime = Number(data.CookTime);
+    data.PrepTime = Number(data.PrepTime);
+    data.RecipeInstructions = (JSON.parse(data.RecipeInstructions));
+
+    const savedRecipe = await db.insert(recipeSchema).values(data).returning();
 
     await db.update(userSchema).set({
       posts: sql`array_append(${userSchema.posts}, ${savedRecipe[0].RecipeId} )`,
