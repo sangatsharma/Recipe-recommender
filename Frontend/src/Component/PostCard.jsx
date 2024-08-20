@@ -37,7 +37,7 @@ const PostCard = ({
         <div>
           <div className="font-bold text-lg">{user.name}</div>
           <div className="text-sm text-gray-500">
-            @{user.name.split(" ")[0] + user.id}
+            @{user.name?.split(" ")[0] + user.id}
           </div>
         </div>
       </div>
