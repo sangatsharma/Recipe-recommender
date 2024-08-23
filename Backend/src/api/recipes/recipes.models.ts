@@ -34,7 +34,7 @@ export const recipeSchema = pgTable("recipes", {
   ProteinContent: numeric("ProteinContent"),
   RecipeInstructions: text("RecipeInstructions").array().notNull().default(sql`'{}'::text[]`),
 
-  serves: integer("server").default(1),
+  serves: integer("serves").default(1),
   yield: integer("yield").default(1),
 });
 
