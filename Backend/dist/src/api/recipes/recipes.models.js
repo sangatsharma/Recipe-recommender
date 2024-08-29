@@ -11,7 +11,7 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     AuthorId: (0, pg_core_1.integer)("AuthorId").notNull(),
     CookTime: (0, pg_core_1.integer)("CookTime").notNull(),
     PrepTime: (0, pg_core_1.integer)("PrepTime").notNull(),
-    TotalTime: (0, pg_core_1.integer)("TotalTime").notNull(),
+    TotalTime: (0, pg_core_1.integer)("TotalTime"),
     DatePublished: (0, pg_core_1.timestamp)("DatePublished", {
         withTimezone: true,
     }).defaultNow(),
@@ -20,9 +20,9 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     Images: (0, pg_core_1.text)("Images").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     RecipeCategory: (0, pg_core_1.text)("RecipeCategory"),
     // Keywords: text("Keywords"),
-    Keywords: (0, pg_core_1.text)("Keywords").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
+    Keywords: (0, pg_core_1.text)("Keywords").array().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     RecipeIngredientQualities: (0, pg_core_1.text)("RecipeIngredientQualities"),
-    RecipeIngredientParts: (0, pg_core_1.text)("RecipeIngredientParts").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
+    RecipeIngredientParts: (0, pg_core_1.text)("RecipeIngredientParts").array().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
     AggregatedRating: (0, pg_core_1.numeric)("AggregatedRating"),
     ReviewCount: (0, pg_core_1.numeric)("ReviewCount"),
     Calories: (0, pg_core_1.numeric)("Calories"),
@@ -35,6 +35,8 @@ exports.recipeSchema = (0, pg_core_1.pgTable)("recipes", {
     SugarContent: (0, pg_core_1.numeric)("SugarContent"),
     ProteinContent: (0, pg_core_1.numeric)("ProteinContent"),
     RecipeInstructions: (0, pg_core_1.text)("RecipeInstructions").array().notNull().default((0, drizzle_orm_1.sql) `'{}'::text[]`),
+    serves: (0, pg_core_1.integer)("serves").default(1),
+    yield: (0, pg_core_1.integer)("yield").default(1),
 });
 // One recipies can have multiple likes
 exports.recipeReview = (0, pg_core_1.pgTable)("recipeReview", {
