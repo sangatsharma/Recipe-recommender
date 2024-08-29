@@ -39,14 +39,21 @@ const addNewRecipe = async (req, res, next) => {
             const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
             data.Images = [cldRes.secure_url];
         }
-        const cleanedData = {
-            ...data,
-            RecipeInstructions: JSON.parse(data.RecipeInstructions),
-            Keywords: JSON.parse(data.Keywords),
-            RecipeIngredientParts: JSON.parse(data.RecipeIngredientParts),
-            RecipeIngredientQuantities: JSON.parse(data.RecipeIngredientQuantities),
-        };
-        const savedRecipe = await db_1.db.insert(recipes_models_1.recipeSchema).values(cleanedData).returning();
+        // const cleanedData = {
+        //   ...data,
+        //   RecipeInstructions: JSON.parse(data.RecipeInstructions),
+        //   Keywords: JSON.parse(data.Keywords),
+        //   RecipeIngredientParts: JSON.parse(data.RecipeIngredientParts),
+        //   RecipeIngredientQuantities: JSON.parse(data.RecipeIngredientQuantities),
+        // };
+        console.log(data);
+        data.CookTime = Number(data.CookTime);
+        data.PrepTime = Number(data.PrepTime);
+        data.serves = Number(data.serves);
+        data.yield = Number(data.yield);
+        data.RecipeInstructions = (JSON.parse(data.RecipeInstructions));
+        data.RecipeIngredientParts = (JSON.parse(data.RecipeIngredientParts));
+        const savedRecipe = await db_1.db.insert(recipes_models_1.recipeSchema).values(data).returning();
         await db_1.db.update(users_models_1.userSchema).set({
             posts: (0, drizzle_orm_1.sql) `array_append(${users_models_1.userSchema.posts}, ${savedRecipe[0].RecipeId} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, savedRecipe[0].AuthorId));
