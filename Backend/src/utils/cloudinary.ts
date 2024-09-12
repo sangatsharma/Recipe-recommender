@@ -24,3 +24,15 @@ export const handleUpload = async (file: string) => {
 
   return result;
 };
+
+export const handleUploads = async (files: string[]) => {
+  const urls: string[] = [];
+  for (const file of files) {
+    const result = await cloudinary.uploader.upload(file, {
+      resource_type: "auto",
+      transformation: { crop: "thumb", width: 600, height: 600 }
+    });
+
+    urls.push(result.secure_url);
+  }
+};
