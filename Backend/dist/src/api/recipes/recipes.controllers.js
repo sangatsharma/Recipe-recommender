@@ -30,14 +30,19 @@ const addNewRecipe = async (req, res, next) => {
     const data = req.body;
     // TODO: get author id from token
     data["AuthorId"] = res.locals.user.id;
+    data.Images = [];
     // data["AuthorId"] = 1;
     // TODO: Validate data
     try {
-        if (req.file) {
-            const b64 = Buffer.from(req.file?.buffer).toString("base64");
-            const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-            const cldRes = await (0, cloudinary_1.handleUpload)(dataURI);
-            data.Images = [cldRes.secure_url];
+        if (req.files) {
+            const imageFiles = req.files;
+            imageFiles.images.map((image) => {
+                const b64 = Buffer.from(image.buffer).toString("base64");
+                const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+                (0, cloudinary_1.handleUpload)(dataURI).then((cldRes) => {
+                    data.Images.push(cldRes.secure_url);
+                }).catch((err) => { next(err); });
+            });
         }
         // const cleanedData = {
         //   ...data,
@@ -49,6 +54,7 @@ const addNewRecipe = async (req, res, next) => {
         console.log(data);
         data.CookTime = Number(data.CookTime);
         data.PrepTime = Number(data.PrepTime);
+        data.TotalTime = data.CookTime + data.PrepTime;
         data.serves = Number(data.serves);
         data.yield = Number(data.yield);
         data.RecipeInstructions = (JSON.parse(data.RecipeInstructions));

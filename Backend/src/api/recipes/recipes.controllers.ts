@@ -33,15 +33,20 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
 
   // TODO: get author id from token
   data["AuthorId"] = res.locals.user.id as number;
+  data.Images = [];
   // data["AuthorId"] = 1;
   // TODO: Validate data
   try {
-    if (req.file) {
-      const b64 = Buffer.from(req.file?.buffer).toString("base64");
-      const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+    if (req.files) {
+      const imageFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
+      imageFiles.images.map((image) => {
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-      const cldRes = await handleUpload(dataURI);
-      data.Images = [cldRes.secure_url];
+        handleUpload(dataURI).then((cldRes) => {
+          data.Images.push(cldRes.secure_url);
+        }).catch((err) => { next(err); });
+      });
     }
     // const cleanedData = {
     //   ...data,
@@ -53,6 +58,7 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
     console.log(data);
     data.CookTime = Number(data.CookTime);
     data.PrepTime = Number(data.PrepTime);
+    data.TotalTime = data.CookTime + data.PrepTime as number;
     data.serves = Number(data.serves);
     data.yield = Number(data.yield);
 
