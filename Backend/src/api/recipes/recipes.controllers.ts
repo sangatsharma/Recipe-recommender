@@ -38,8 +38,8 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
   // TODO: Validate data
   try {
     if (req.files) {
-      const imageFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
-      imageFiles.images.map((image) => {
+      const imageFiles = req.files as Express.Multer.File[];
+      imageFiles.map((image) => {
         const b64 = Buffer.from(image.buffer).toString("base64");
         const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
