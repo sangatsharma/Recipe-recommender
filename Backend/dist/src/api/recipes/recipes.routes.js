@@ -19,7 +19,7 @@ const storage = multer_1.default.memoryStorage();
 const upload = (0, multer_1.default)({ storage: storage });
 // ROUTES
 recipeRouter.get("/", middleware_1.authenticateJWT, recipes_controllers_1.returnAllRecipies);
-recipeRouter.post("/", upload.array("file"), middleware_1.authenticateJWT, recipes_controllers_1.addNewRecipe);
+recipeRouter.post("/", upload.array("images"), middleware_1.authenticateJWT, recipes_controllers_1.addNewRecipe);
 recipeRouter.post("/filter", recipes_controllers_1.filterRecipe);
 recipeRouter.get("/:id", middleware_1.authenticateJWT, recipes_controllers_1.recipeDetails);
 recipeRouter.post("/review/add", middleware_1.authenticateJWT, recipes_controllers_1.recipeReviewAddHandler);
