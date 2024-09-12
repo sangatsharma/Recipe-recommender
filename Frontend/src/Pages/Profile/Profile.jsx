@@ -4,35 +4,53 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Skeleton from "../../Component/Loader/Skeleton";
 import PostCard from "../../Component/PostCard";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { fetchUserById } from "../../utils/auth";
+import PeopleCard from "../../Component/PeopleCard";
 
 const Profile = () => {
   const { isDarkMode } = useThemeContext();
   const { userInfo, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("posts");
   const [currentUser, setCurrentUser] = useState();
+  const location = useLocation();
+  const author = location.state;
+  const path = userInfo.name.split(" ")[0] + "_" + userInfo.id;
 
   const navigate = useNavigate();
   const { user } = useParams();
 
-  console.log(user);
-
   useEffect(() => {
-    if (!loading) {
+    if (author) {
+      setCurrentUser(author);
+    } else if (!loading) {
       if (user == undefined) {
-        const path = userInfo.name.split(" ")[0] + "_" + userInfo.id;
         navigate(`/profile/${path}`);
       } else {
         if (user == userInfo.name.split(" ")[0] + "_" + userInfo.id)
           setCurrentUser(userInfo);
         else {
-          //todo: fetch user data using user id
-          // Replace with actual user data
-          // setCurrentUser({});
+          // fetch user data using user id
+          fetchUserdata();
         }
       }
     }
   }, [user, loading]);
+
+  const fetchUserdata = async () => {
+    const userId = user.split("_")[1];
+    const data = await fetchUserById(userId);
+    if (data.success) {
+      const userName = data.body.name.split(" ")[0] + "_" + data.body.id;
+      if (userName != user) {
+        setCurrentUser(undefined);
+      } else {
+        setCurrentUser(data.body);
+      }
+    } else {
+      setCurrentUser(undefined);
+    }
+  };
 
   if (loading) {
     return <Skeleton />;
@@ -46,51 +64,28 @@ const Profile = () => {
     );
   if (currentUser != undefined)
     return (
-      <div className="w-[80%] mx-auto p-8 flex-col ">
+      <div className="w-[80%] below-sm:w-full below-sm:p-2 mx-auto p-4   flex-col ">
         <Helmet>
           <title>Profile - CIY </title>
         </Helmet>
         {/* Profile Header */}
-        <div className="flex items-center space-x-6 mb-8">
-          <img
-            src={
-              currentUser.profile_pic ||
-              "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png"
-            }
-            alt="Profile"
-            className="w-24 h-24 rounded-full object-cover"
-          />
-          <div>
-            <h1 className="text-xl font-bold">{currentUser.name}</h1>
-            <p className="text-gray-500">{`@${currentUser.name.split(" ")[0]}${
-              currentUser.id
-            }`}</p>
-          </div>
-          <div className="ml-auto">
-            <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">
-              Follow
-            </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-lg">
-              Message
-            </button>
-          </div>
-        </div>
+        <PeopleCard userDetails={currentUser} />
 
         {/* Stats */}
         <div className="flex space-x-8 mb-8">
           <div className="text-center">
-            <span className="block text-xl font-bold">123</span>
+            <span className="block text-xl font-bold">{currentUser.posts}</span>
             <span className="text-gray-500">Posts</span>
           </div>
           <div className="text-center">
             <span className="block text-xl font-bold">
-              {currentUser.followers}
+              {currentUser.followers?.length}
             </span>
             <span className="text-gray-500">Followers</span>
           </div>
           <div className="text-center">
             <span className="block text-xl font-bold">
-              {currentUser.following}
+              {currentUser.following?.length}
             </span>
             <span className="text-gray-500">Following</span>
           </div>
@@ -98,7 +93,7 @@ const Profile = () => {
 
         {/* Tabs */}
         <div className="border-b mb-8">
-          <section className="flex space-x-8 text-xl p-2">
+          <section className="flex space-x-8 text-xl below-sm:text-sm p-2 overflow-x-scroll hide-scrollbar scroll-smooth">
             {["Posts", "Followers", "Following", "Activity", "About"].map(
               (tab) => (
                 <button
@@ -119,7 +114,7 @@ const Profile = () => {
 
         {/* Content */}
         {activeTab === "posts" && (
-          <div className=" flex flex-row flex-wrap gap-2 justify-center w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
             {Array.from({ length: 4 }).map((_, index) => (
               <PostCard key={index} darkMode={isDarkMode} user={currentUser} />
             ))}

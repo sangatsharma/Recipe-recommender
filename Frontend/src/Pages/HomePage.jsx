@@ -6,20 +6,18 @@ import banner3 from "../assets/Images/banner3.jpg";
 import { Helmet } from "react-helmet-async";
 
 const Homepage = () => {
-  <Helmet>
-    <title>Home - CIY </title>
-  </Helmet>;
   const images = [
-    {
-      title: "Welcome to Cook It Yourself",
-      src: "https://img.freepik.com/premium-photo/collage-food-dishes-meat-fish-vegetables_187166-47028.jpg?w=1380",
-    },
-    { title: "Seasonal Foods", src: banner1 },
-    { title: "Trending Recipes", src: banner2 },
-    { title: "Popular Recipes", src: banner3 },
+    "https://img.freepik.com/premium-photo/collage-food-dishes-meat-fish-vegetables_187166-47028.jpg?w=1380",
+    banner1,
+    banner2,
+    banner3,
   ];
+
   return (
     <>
+      <Helmet>
+        <title>Home - CIY </title>
+      </Helmet>
       {/* <Banner /> */}
       <Slider images={images} />
       <TrendingFoods />

@@ -23,7 +23,7 @@ const PostCard = ({
     <div
       className={`p-4 rounded-lg shadow-md ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-      } w-[48%] below-sm:w-[100%]`}
+      }  below-sm:w-[100%]`}
     >
       <div className="flex items-center mb-4">
         <img
@@ -37,7 +37,7 @@ const PostCard = ({
         <div>
           <div className="font-bold text-lg">{user.name}</div>
           <div className="text-sm text-gray-500">
-            @{user.name.split(" ")[0] + user.id}
+            @{user.name?.split(" ")[0] + user.id}
           </div>
         </div>
       </div>
@@ -50,9 +50,9 @@ const PostCard = ({
         src={recipeDetails.image}
         alt="Cookies"
       />
-      <div className="flex justify-between text-sm text-gray-500">
+      {/* <div className="flex justify-between text-sm text-gray-500">
         <StarRating />
-      </div>
+      </div> */}
     </div>
   );
 };

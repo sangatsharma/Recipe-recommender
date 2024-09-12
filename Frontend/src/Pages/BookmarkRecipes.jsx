@@ -20,16 +20,9 @@ const BookmarkRecipes = () => {
         My Favorite Recipes
       </h1>
 
-      <div className="flex gap-2 flex-wrap  p-1 justify-center  ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-center items-center">
         {tickedItems.size > 0 &&
           Save.map((item) => {
-            const regex = /"([^"]+)"/g;
-            let matches;
-            let urls = [];
-            // Loop through all matches
-            while ((matches = regex.exec(item.Images)) !== null) {
-              urls.push(matches[1]);
-            }
             return (
               <div
                 key={item.RecipeId}
@@ -38,12 +31,12 @@ const BookmarkRecipes = () => {
                   transform: untickItems.includes(item.RecipeId)
                     ? "scale(0)"
                     : "",
-                  transition: "opacity 0.5s ease, transform 0.5s ease",
+                  transition: "opacity 0.4s ease, transform 0.4s ease",
                 }}
               >
                 <ItemsCard
                   id={item.RecipeId}
-                  src={urls[0]}
+                  src={item.Images[0]}
                   name={item.Name}
                   RecipeCategory={item.RecipeCategory}
                   rating={item.AggregatedRating}
@@ -54,16 +47,16 @@ const BookmarkRecipes = () => {
               </div>
             );
           })}
-        <p
-          className={`${
-            tickedItems.size > 0
-              ? "opacity-0 scale-0 "
-              : "opacity-1 scale-125 transition-transform duration-6000  "
-          }`}
-        >
-          Not saved yet.
-        </p>
       </div>
+      <p
+        className={`${
+          tickedItems.size > 0
+            ? "opacity-0 scale-0 "
+            : "opacity-1 scale-125 transition-transform duration-6000 "
+        }`}
+      >
+        Not saved yet.
+      </p>
     </div>
   );
 };
