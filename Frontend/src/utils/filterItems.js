@@ -10,6 +10,7 @@ const synonyms = {
 };
 // Function to normalize and handle synonyms
 function normalizeKeyword(Keywords) {
+  if (!Keywords) return ""; 
   const lowerKeyword = Keywords.toLowerCase();
   return synonyms[lowerKeyword] || lowerKeyword;
 }

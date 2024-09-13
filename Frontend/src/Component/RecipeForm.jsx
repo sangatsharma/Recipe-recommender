@@ -153,7 +153,7 @@ const RecipeForm = () => {
 
           // Append images to FormData
           Images.forEach((image, index) => {
-            formData.append("file", image);
+            formData.append("files", image);
           });
           formData.forEach((value, key) => {
             console.log(`${key}: ${value}`);
