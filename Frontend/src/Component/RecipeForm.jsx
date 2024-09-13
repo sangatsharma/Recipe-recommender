@@ -285,6 +285,7 @@ const RecipeForm = () => {
               <input
                 type="file"
                 ref={imageInputRef}
+		name="images"
                 multiple
                 onChange={handleImageChange}
                 className="hidden"
