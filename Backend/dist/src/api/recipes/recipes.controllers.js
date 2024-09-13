@@ -36,17 +36,25 @@ const addNewRecipe = async (req, res, next) => {
     try {
         if (req.files) {
             const imageFiles = req.files;
-            const imagesToUpload = [];
-            imageFiles.map((image) => {
+            imageFiles.images.map((image) => {
                 const b64 = Buffer.from(image.buffer).toString("base64");
                 const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-                // handleUpload(dataURI).then((cldRes) => {
-                //   data.Images.push(cldRes.secure_url);
-                // }).catch((err) => { next(err); });
-                imagesToUpload.push(dataURI);
+                (0, cloudinary_1.handleUpload)(dataURI).then((cldRes) => {
+                    data.Images.push(cldRes.secure_url);
+                }).catch((err) => { next(err); });
             });
-            const imageUrls = await (0, cloudinary_1.handleUploads)(imagesToUpload);
-            data.Images = imageUrls;
+            // const imageFiles = req.files as Express.Multer.File[];
+            // const imagesToUpload: string[] = [];
+            // imageFiles.map((image) => {
+            //   const b64 = Buffer.from(image.buffer).toString("base64");
+            //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            // handleUpload(dataURI).then((cldRes) => {
+            //   data.Images.push(cldRes.secure_url);
+            // }).catch((err) => { next(err); });
+            // imagesToUpload.push(dataURI);
+            // });
+            // const imageUrls = await handleUploads(imagesToUpload);
+            // data.Images = imageUrls;
         }
         // const cleanedData = {
         //   ...data,
