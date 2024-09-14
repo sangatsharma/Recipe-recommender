@@ -38,33 +38,34 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
   // TODO: Validate data
   try {
     if (req.files) {
-      console.log(req.files);
-      const imageFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
-      console.log(imageFiles);
+      // const imageFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
 
-      imageFiles.images.map((image) => {
+      // imageFiles.images.map((image) => {
+      //   const b64 = Buffer.from(image.buffer).toString("base64");
+      //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+      //   handleUpload(dataURI).then((cldRes) => {
+      //     data.Images.push(cldRes.secure_url);
+      //   }).catch((err) => { next(err); });
+      // });
+
+
+      const imageFiles = req.files as Express.Multer.File[];
+      const imagesToUpload: string[] = [];
+      imageFiles.map((image) => {
         const b64 = Buffer.from(image.buffer).toString("base64");
         const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-        handleUpload(dataURI).then((cldRes) => {
-          data.Images.push(cldRes.secure_url);
-        }).catch((err) => { next(err); });
+        imagesToUpload.push(dataURI);
       });
-
-
-      // const imageFiles = req.files as Express.Multer.File[];
-      // const imagesToUpload: string[] = [];
-      // imageFiles.map((image) => {
-      //   const b64 = Buffer.from(image.buffer).toString("base64");
-      //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
       // handleUpload(dataURI).then((cldRes) => {
       //   data.Images.push(cldRes.secure_url);
       // }).catch((err) => { next(err); });
       // imagesToUpload.push(dataURI);
       // });
-      // const imageUrls = await handleUploads(imagesToUpload);
-      // data.Images = imageUrls;
+      const imageUrls = await handleUploads(imagesToUpload);
+      data.Images = imageUrls;
     }
     // const cleanedData = {
     //   ...data,

@@ -35,4 +35,6 @@ export const handleUploads = async (files: string[]) => {
 
     urls.push(result.secure_url);
   }
+
+  return urls;
 };

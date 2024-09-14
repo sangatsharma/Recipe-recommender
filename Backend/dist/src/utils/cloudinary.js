@@ -36,5 +36,6 @@ const handleUploads = async (files) => {
         });
         urls.push(result.secure_url);
     }
+    return urls;
 };
 exports.handleUploads = handleUploads;
