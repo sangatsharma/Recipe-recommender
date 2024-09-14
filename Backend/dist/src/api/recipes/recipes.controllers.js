@@ -35,28 +35,28 @@ const addNewRecipe = async (req, res, next) => {
     // TODO: Validate data
     try {
         if (req.files) {
-            console.log(req.files);
-            const imageFiles = req.files;
-            console.log(imageFiles);
-            imageFiles.images.map((image) => {
-                const b64 = Buffer.from(image.buffer).toString("base64");
-                const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-                (0, cloudinary_1.handleUpload)(dataURI).then((cldRes) => {
-                    data.Images.push(cldRes.secure_url);
-                }).catch((err) => { next(err); });
-            });
-            // const imageFiles = req.files as Express.Multer.File[];
-            // const imagesToUpload: string[] = [];
-            // imageFiles.map((image) => {
+            // const imageFiles = req.files as { [fieldname: string]: Express.Multer.File[] };
+            // imageFiles.images.map((image) => {
             //   const b64 = Buffer.from(image.buffer).toString("base64");
             //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            //   handleUpload(dataURI).then((cldRes) => {
+            //     data.Images.push(cldRes.secure_url);
+            //   }).catch((err) => { next(err); });
+            // });
+            const imageFiles = req.files;
+            const imagesToUpload = [];
+            imageFiles.map((image) => {
+                const b64 = Buffer.from(image.buffer).toString("base64");
+                const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+                imagesToUpload.push(dataURI);
+            });
             // handleUpload(dataURI).then((cldRes) => {
             //   data.Images.push(cldRes.secure_url);
             // }).catch((err) => { next(err); });
             // imagesToUpload.push(dataURI);
             // });
-            // const imageUrls = await handleUploads(imagesToUpload);
-            // data.Images = imageUrls;
+            const imageUrls = await (0, cloudinary_1.handleUploads)(imagesToUpload);
+            data.Images = imageUrls;
         }
         // const cleanedData = {
         //   ...data,
