@@ -24,19 +24,11 @@ import axios from "axios";
 
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo,isAuthenticated } = useContext(AuthContext);
   const saveAsPdfRef = useRef();
   const { tickedItems, toggleTick } = useFavContext();
 
-  const [comments, setComments] = useState([
-    {
-      username: "Sangat Sharma",
-      comment: "This is a great recipe!",
-      rating: 5,
-    },
-    { username: "Admin", comment: "This is a great recipe!", rating: 5 },
-    { username: "Admin", comment: "This is a great recipe!", rating: 5 },
-  ]); // Dummy comment
+  const [comments, setComments] = useState([]); // Dummy comment
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
 
@@ -121,6 +113,9 @@ const RecipeDetails = () => {
   const submitComment = async () => {
     if (newComment.trim() === "" || newRating === 0) {
       toast.error("Please enter a comment and rating.");
+      return;
+    }
+    if(!isAuthenticated){ toast.error("Login to add review.");
       return;
     }
     console.log("Submitting comment:", newComment, newRating);
