@@ -30,11 +30,14 @@ exports.handleUpload = handleUpload;
 const handleUploads = async (files) => {
     const urls = [];
     for (const file of files) {
-        const result = await cloudinary_1.v2.uploader.upload(file, {
-            resource_type: "auto",
-            transformation: { crop: "thumb", width: 600, height: 600 }
+        await new Promise((resolve, reject) => {
+            cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(urls.push(res?.secure_url));
+            }).end(file);
         });
-        urls.push(result.secure_url);
     }
     return urls;
 };
