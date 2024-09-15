@@ -94,7 +94,7 @@ const Profile = () => {
           <title>Profile - CIY </title>
         </Helmet>
         {/* Profile Header */}
-        <PeopleCard userDetails={currentUser} />
+        <PeopleCard userDetails={currentUser} profilePage={true} />
 
         {/* Stats */}
         <div className="flex space-x-8 mb-8">
