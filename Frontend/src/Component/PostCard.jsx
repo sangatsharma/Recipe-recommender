@@ -58,7 +58,7 @@ const PostCard = ({
       <img
         className="rounded-lg mb-4 w-full h-[500px] m-auto"
         src={recipeDetails.Images[0]}
-        alt="Cookies"
+        alt="Recipe images"
       />
       {/* <div className="flex justify-between text-sm text-gray-500">
         <StarRating />

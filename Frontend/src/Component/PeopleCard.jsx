@@ -87,22 +87,29 @@ const PeopleCard = ({ userDetails, profilePage = false }) => {
           </div>
         </div>
         <div className="ml-auto">
-          <button
-            className={`px-3 py-2 ${
-              isFollowing
-                ? "bg-slate-500 hover:bg-slate-400"
-                : "bg-blue-700 hover:bg-blue-500"
-            }  text-white text-sm rounded-lg mt-2`}
-            onClick={handleFollow}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </button>
+          {isAuthenticated && userInfo.id !== userDetails.id ? (
+            <button
+              className={`px-3 py-2 ${
+                isFollowing
+                  ? "bg-slate-500 hover:bg-slate-400"
+                  : "bg-blue-700 hover:bg-blue-500"
+              }  text-white text-sm rounded-lg mt-2`}
+              onClick={handleFollow}
+            >
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
+          ) : null}
+
           {/* <button className="px-4 py-2 border border-gray-300 rounded-lg">
           Message
         </button> */}
         </div>
       </div>
-      <p className={`${profilePage ? "" : "text-ellipsis line-clamp-3 "} px-2 pb-1`}>
+      <p
+        className={`${
+          profilePage ? "" : "text-ellipsis line-clamp-3 "
+        } px-2 pb-1`}
+      >
         {userDetails.bio}
       </p>
     </div>

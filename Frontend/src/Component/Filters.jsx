@@ -46,7 +46,22 @@ const Filters = ({ activeFilter, setActiveFilter, setPrevSearch }) => {
   const filterOptions = {
     Dishes: ["Breakfast", "Lunch", "Dinner"],
     // ingredients: ["Chicken", "Beef", "Vegetarian"],
-    Nutritional: ["Low Calorie", "High Protein", "Low Carb"],
+    Category: [
+      "Dessert",
+      "Breakfast",
+      "Appetizer",
+      "Main Course",
+      "Snacks",
+      "Beverage",
+      "Vegetarian",
+      "Vegan",
+      "Lunch",
+      "Dinner",
+      "Salad",
+      "Soup",
+      "Gluten-Free",
+      "Keto",
+    ],
     CookingTime: ["< 30 mins", "30-60 mins", "> 60 mins"],
   };
 
