@@ -348,6 +348,7 @@ const recommendRecipies = async (req, res, next) => {
 exports.recommendRecipies = recommendRecipies;
 const searchRecipe = async (req, res, next) => {
     const searchFilter = req.body;
+    console.log(searchFilter);
     // let searchRes: RecipeSchemaType[];
     try {
         if (searchFilter.type === "recipes") {

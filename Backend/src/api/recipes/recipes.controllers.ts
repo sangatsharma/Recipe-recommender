@@ -408,6 +408,7 @@ export const recommendRecipies = async (req: Request, res: Response, next: NextF
 
 export const searchRecipe = async (req: Request, res: Response, next: NextFunction) => {
   const searchFilter = req.body as { query: string, type: string, values: string[] };
+  console.log(searchFilter);
 
   // let searchRes: RecipeSchemaType[];
   try {

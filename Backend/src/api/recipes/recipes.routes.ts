@@ -26,7 +26,7 @@ recipeRouter.post("/review/remove", authenticateJWT, recipeReviewRemoveHandler a
 recipeRouter.get("/review/:id", authenticateJWT, recipeReviewGet as RequestHandler);
 
 recipeRouter.post("/recommend", authenticateJWT, recommendRecipies as RequestHandler);
-recipeRouter.post("/search", authenticateJWT, searchRecipe as RequestHandler);
+recipeRouter.post("/search", searchRecipe as RequestHandler);
 recipeRouter.post("/demo", filterDemo);
 
 export default recipeRouter;

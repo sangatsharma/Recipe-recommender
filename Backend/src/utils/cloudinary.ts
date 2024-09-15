@@ -29,7 +29,7 @@ export const handleUploads = async (files: string[]) => {
   const urls: string[] = [];
   for (const file of files) {
     await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+      cloudinary.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
         if (err) reject(err);
         else resolve(urls.push(res?.secure_url as string));
       }).end(file);
