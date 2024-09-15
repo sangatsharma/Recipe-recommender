@@ -18,7 +18,7 @@ const upload = multer({ storage: storage });
 
 // ROUTES
 recipeRouter.get("/", authenticateJWT, returnAllRecipies);
-recipeRouter.post("/", upload.array("images"), authenticateJWT, addNewRecipe as RequestHandler);
+recipeRouter.post("/", upload.array("files"), authenticateJWT, addNewRecipe as RequestHandler);
 recipeRouter.post("/filter", filterRecipe);
 recipeRouter.get("/:id", authenticateJWT, recipeDetails as RequestHandler);
 recipeRouter.post("/review/add", authenticateJWT, recipeReviewAddHandler as RequestHandler);
