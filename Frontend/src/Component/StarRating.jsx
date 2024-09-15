@@ -1,14 +1,24 @@
 import React, { useState } from "react";
 
-const StarRating = ({ totalStars = 5, onRating = () => {} }) => {
+const StarRating = ({
+  totalStars = 5,
+  onRating = () => {},
+  value = 0,
+  isDisabled = false,
+}) => {
   const [hoverRating, setHoverRating] = useState(0);
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(value);
 
   const handleMouseEnter = (index) => {
+    if (isDisabled) return;
     setHoverRating(index);
   };
-  const handleMouseLeave = () => setHoverRating(0);
+  const handleMouseLeave = () => {
+    if (isDisabled) return;
+    setHoverRating(0);
+  };
   const handleClick = (index) => {
+    if (isDisabled) return;
     if (rating === index) {
       setRating(0);
       onRating(0);
@@ -18,14 +28,7 @@ const StarRating = ({ totalStars = 5, onRating = () => {} }) => {
     onRating(index);
   };
   return (
-    <div className="border-2 below-sm:p-1 p-2 rounded-md">
-      <h2 className="text-xl font-semibold mb-2 below-sm:text-md">We Value Your Feedback!</h2>
-      <p className="mb-1 text-sm">
-        Thank you for trying our recipe. We'd love to hear your thoughts on it.
-        Your feedback helps us improve and provide better recipes for you.
-      </p>
-      <div className="flex gap-2 flex-wrap">
-      <p className="">Please rate this recipe:</p>
+    <div className="flex gap-2 flex-wrap">
       <div className="flex space-x-1 h-auto">
         {[...Array(totalStars)].map((_, index) => {
           const starIndex = index + 1;
@@ -49,10 +52,6 @@ const StarRating = ({ totalStars = 5, onRating = () => {} }) => {
           );
         })}
       </div>
-      </div>
-      
-
-   
     </div>
   );
 };

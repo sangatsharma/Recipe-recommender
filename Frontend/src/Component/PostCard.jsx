@@ -1,5 +1,6 @@
 // PostCard.js
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import StarRating from "./StarRating";
 
 const PostCard = ({
@@ -11,19 +12,28 @@ const PostCard = ({
       "https://www.clipartkey.com/mpngs/m/208-2089363_user-profile-image-png.png",
   },
   recipeDetails = {
+    RecipeId: 1,
     Name: "Vegan and gluten free chocolate chip cookies",
     Description:
       "I spent the last 3 years perfecting the vegan and gluten free chocolate chip cookie recipe. I am so excited to share it with you all!",
-    image:
+    Images: [
       "https://handletheheat.com/wp-content/uploads/2020/10/BAKERY-STYLE-CHOCOLATE-CHIP-COOKIES-9-637x637-1.jpg",
+    ],
     AggregatedRating: 4,
   },
 }) => {
+  
+  const navigate = useNavigate();
+  const itemName =
+    recipeDetails.Name.replace(/\s/g, "_") + `_${recipeDetails.RecipeId}`;
   return (
     <div
       className={`p-4 rounded-lg shadow-md ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-      }  below-sm:w-[100%]`}
+      }  below-sm:w-[100%] cursor-pointer`}
+      onClick={() => {
+        navigate(`/recipes/${itemName}`);
+      }}
     >
       <div className="flex items-center mb-4">
         <img
@@ -47,7 +57,7 @@ const PostCard = ({
       </div>
       <img
         className="rounded-lg mb-4 w-full h-[500px] m-auto"
-        src={recipeDetails.image}
+        src={recipeDetails.Images[0]}
         alt="Cookies"
       />
       {/* <div className="flex justify-between text-sm text-gray-500">

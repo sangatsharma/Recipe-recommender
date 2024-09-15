@@ -1,5 +1,5 @@
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { fetchItemById } from "../utils/auth";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -15,14 +15,30 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import Skeleton from "../Component/Loader/Skeleton";
 import AddToFav from "../Component/AddToFav";
 import { useFavContext } from "../context/FavContext";
+import { AuthContext } from "../context/AuthContext";
 import PeopleCard from "../Component/PeopleCard";
 import Spinner from "../Component/Loader/Spinner";
 import { fetchUserById } from "../utils/auth";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
+  const { userInfo } = useContext(AuthContext);
   const saveAsPdfRef = useRef();
   const { tickedItems, toggleTick } = useFavContext();
+
+  const [comments, setComments] = useState([
+    {
+      username: "Sangat Sharma",
+      comment: "This is a great recipe!",
+      rating: 5,
+    },
+    { username: "Admin", comment: "This is a great recipe!", rating: 5 },
+    { username: "Admin", comment: "This is a great recipe!", rating: 5 },
+  ]); // Dummy comment
+  const [newComment, setNewComment] = useState("");
+  const [newRating, setNewRating] = useState(0);
 
   //using location state to extract ingredients if page was redirected from search by ingredients
   const location = useLocation();
@@ -87,6 +103,12 @@ const RecipeDetails = () => {
         setItem(fetchedItem);
         const authorDetails = await fetchUserById(fetchedItem.AuthorId);
         if (authorDetails.success) setAuthor(authorDetails.body);
+
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/recipe/review/${id}`,
+          { withCredentials: true }
+        );
+        setComments(response.data.body);
       } catch (err) {
         console.error(err);
       }
@@ -94,6 +116,39 @@ const RecipeDetails = () => {
 
     fetchData();
   }, [recipeName]);
+
+  // Handle comment submission
+  const submitComment = async () => {
+    if (newComment.trim() === "" || newRating === 0) {
+      toast.error("Please enter a comment and rating.");
+      return;
+    }
+    console.log("Submitting comment:", newComment, newRating);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/recipe/review/add`,
+        { recipeId: id, review: newComment, rating: newRating },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      const data = response.data;
+      if (data.success) {
+        setComments((prev) => [
+          ...prev,
+          { ...data.body[0], userName: userInfo.name },
+        ]);
+        setNewComment("");
+        setNewRating(0);
+      }
+    } catch (error) {
+      console.error("Error adding new comment:", error);
+      toast.error("Failed to add review.");
+    }
+  };
 
   if (recipeName.includes("_") === false || isNaN(id) || !id || !itemName)
     return <InvalidPage />;
@@ -327,9 +382,6 @@ const RecipeDetails = () => {
 
       {/* Share Buttons and Ratings */}
       <div className="px-8 flex-col gap-2 justify-between below-sm:pl-8 ">
-        <div className="items-center space-x-2 mb-2">
-          <StarRating />
-        </div>
         <div className="flex flex-wrap gap-8 justify-between">
           <div className="mt-2  flex flex-row gap-3">
             {/* Native Share */}
@@ -393,9 +445,72 @@ const RecipeDetails = () => {
       </div>
       <div className="px-8 mt-3  flex flex-col below-sm:pl-8 ">
         <p className="text-xl mb-1">Recipe by:</p>
-        <PeopleCard
-          userDetails={author}
-        />
+        <PeopleCard userDetails={author} />
+      </div>
+
+      <div className="p-6 below-sm:p-2">
+        {/* Comment Form */}
+        <div className="mb-6 border-2 rounded-md p-2">
+          <div className="items-center space-x-2 mb-2">
+            <h2 className="text-xl font-semibold mb-2 below-sm:text-md">
+              We Value Your Feedback!
+            </h2>
+            <p className="mb-1 text-sm">
+              Thank you for trying our recipe. We'd love to hear your thoughts
+              on it. Your feedback helps us improve and provide better recipes
+              for you.
+            </p>
+           <div className="flex flex-row gap-2 ">
+           <p >Please rate this recipe:</p>
+            <StarRating
+              onRating={(x) => {
+                console.log("rating: ", x);
+                setNewRating(x);
+              }}
+            />
+           </div>
+          </div>
+          <textarea
+            className="w-full p-3 border text-black border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Write your review here"
+          />
+          {/* Rating input (can use stars or select dropdown) */}
+
+          <button
+            onClick={submitComment}
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition"
+          >
+            Submit
+          </button>
+        </div>
+
+        {/* Display Existing Comments */}
+        <div className=" pt-4">
+          <h3 className="text-xl font-semibold mb-2">Reviews:({comments.length})</h3>
+          {comments.length > 0 ? (
+            comments.map((comment, index) => (
+              <div key={index} className="p-4 border-b border-gray-200">
+                <div className="flex flex-row flex-wrap gap-2">
+                  <p className="font-medium ">
+                    <strong className="text-xl below-sm:text-sm">{comment.userName}:</strong>
+                  </p>
+                  <StarRating value={comment.rating} isDisabled />
+                </div>
+
+                <p className=" text-sm pl-3 pt-2">"{comment.review}"</p>
+                {/* <p className="text-xs text-gray-400">
+                  {new Date(comment.timestamp).toLocaleString()}
+                </p> */}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">
+              No comments yet. Be the first to leave a review!
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

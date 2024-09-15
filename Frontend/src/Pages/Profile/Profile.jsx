@@ -7,11 +7,14 @@ import PostCard from "../../Component/PostCard";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { fetchUserById } from "../../utils/auth";
 import PeopleCard from "../../Component/PeopleCard";
+import axios from "axios";
 
 const Profile = () => {
   const { isDarkMode } = useThemeContext();
   const { userInfo, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("posts");
+  const [PostItem, setPostItem] = useState([]);
+
   const [currentUser, setCurrentUser] = useState();
   const location = useLocation();
   const author = location.state;
@@ -22,20 +25,41 @@ const Profile = () => {
 
   useEffect(() => {
     if (author) {
+      fetchItems(author.posts);
       setCurrentUser(author);
     } else if (!loading) {
       if (user == undefined) {
         navigate(`/profile/${path}`);
       } else {
-        if (user == userInfo.name.split(" ")[0] + "_" + userInfo.id)
+        if (user == userInfo.name.split(" ")[0] + "_" + userInfo.id) {
+          fetchItems(userInfo.posts);
           setCurrentUser(userInfo);
-        else {
+        } else {
           // fetch user data using user id
           fetchUserdata();
         }
       }
     }
   }, [user, loading]);
+
+  const fetchItems = async (arrayOfId) => {
+    // if(arrayOfId == undefined || arrayOfId.length==0) return;
+    console.log("ids:", arrayOfId);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/recipe`,
+        {
+          withCredentials: true,
+        }
+      );
+      const data = response.data;
+      const items = data.filter((item) => arrayOfId.includes(item.RecipeId));
+      setPostItem(items);
+    } catch (error) {
+      console.error("Error fetching item:", error);
+      throw error;
+    }
+  };
 
   const fetchUserdata = async () => {
     const userId = user.split("_")[1];
@@ -45,6 +69,7 @@ const Profile = () => {
       if (userName != user) {
         setCurrentUser(undefined);
       } else {
+        fetchItems(data.body.posts);
         setCurrentUser(data.body);
       }
     } else {
@@ -69,12 +94,14 @@ const Profile = () => {
           <title>Profile - CIY </title>
         </Helmet>
         {/* Profile Header */}
-        <PeopleCard userDetails={currentUser} />
+        <PeopleCard userDetails={currentUser} profilePage={true} />
 
         {/* Stats */}
         <div className="flex space-x-8 mb-8">
           <div className="text-center">
-            <span className="block text-xl font-bold">{currentUser.posts}</span>
+            <span className="block text-xl font-bold">
+              {currentUser.posts.length}
+            </span>
             <span className="text-gray-500">Posts</span>
           </div>
           <div className="text-center">
@@ -115,8 +142,8 @@ const Profile = () => {
         {/* Content */}
         {activeTab === "posts" && (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <PostCard key={index} darkMode={isDarkMode} user={currentUser} />
+            {PostItem.map((_, index) => (
+              <PostCard key={index} darkMode={isDarkMode} user={currentUser} recipeDetails={PostItem[index]} />
             ))}
           </div>
         )}
