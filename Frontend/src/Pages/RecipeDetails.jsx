@@ -21,6 +21,7 @@ import Spinner from "../Component/Loader/Spinner";
 import { fetchUserById } from "../utils/auth";
 import { toast } from "react-toastify";
 import axios from "axios";
+import RecipeOptions from "../Component/RecipeOptions";
 
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
@@ -37,6 +38,7 @@ const RecipeDetails = () => {
   const navigate = useNavigate();
   const matchedIngredients = location.state?.matchedIngredients || [];
   const [downloading, setDownloading] = useState(false);
+
   const DownloadPdf = () => {
     const input = saveAsPdfRef.current;
     html2canvas(input, {
@@ -266,9 +268,9 @@ const RecipeDetails = () => {
                 toggleTick={toggleTick}
                 isFavorite={tickedItems.has(item.RecipeId)}
               />
-              <button className="text-4xl hover:text-blue-500 rotate-180 pb-11 ">
-                ...
-              </button>
+              <RecipeOptions
+                isMyRecipe={userInfo.posts.includes(item.RecipeId)}
+              />
             </div>
           </div>
           <p className="text-xl below-sm:text-sm pl-3">"{item.Description}"</p>
@@ -526,7 +528,9 @@ const RecipeDetails = () => {
                   </section>
                   {comment.userName === userInfo.name && (
                     <i
-                      onClick={()=>{handleCommentDelete(comment.reviewId)}}
+                      onClick={() => {
+                        handleCommentDelete(comment.reviewId);
+                      }}
                       title={"Delete comment."}
                       className="fa-solid fa-trash text-red-500 cursor-pointer hover:scale-125 transition-all"
                     ></i>
