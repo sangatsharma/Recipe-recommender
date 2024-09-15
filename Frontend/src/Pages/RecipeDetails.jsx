@@ -24,7 +24,7 @@ import axios from "axios";
 
 const RecipeDetails = () => {
   const { isDarkMode } = useThemeContext();
-  const { userInfo,isAuthenticated } = useContext(AuthContext);
+  const { userInfo, isAuthenticated } = useContext(AuthContext);
   const saveAsPdfRef = useRef();
   const { tickedItems, toggleTick } = useFavContext();
 
@@ -115,7 +115,8 @@ const RecipeDetails = () => {
       toast.error("Please enter a comment and rating.");
       return;
     }
-    if(!isAuthenticated){ toast.error("Login to add review.");
+    if (!isAuthenticated) {
+      toast.error("Login to add review.");
       return;
     }
     console.log("Submitting comment:", newComment, newRating);
@@ -132,6 +133,7 @@ const RecipeDetails = () => {
       );
       const data = response.data;
       if (data.success) {
+        toast.success("Review added successfully.");
         setComments((prev) => [
           ...prev,
           { ...data.body[0], userName: userInfo.name },
@@ -142,6 +144,30 @@ const RecipeDetails = () => {
     } catch (error) {
       console.error("Error adding new comment:", error);
       toast.error("Failed to add review.");
+    }
+  };
+
+  //Handle comment deletion
+  const handleCommentDelete = async (commentId) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/recipe/review/remove`,
+        { id: commentId },
+        {
+          withCredentials: true,
+        }
+      );
+      const data = response.data;
+      console.log(data);
+      if (data.success) {
+        toast.success("Review deleted successfully.");
+        setComments((prev) =>
+          prev.filter((comment) => comment.reviewId !== commentId)
+        );
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      toast.error("Failed to delete review.");
     }
   };
 
@@ -455,15 +481,15 @@ const RecipeDetails = () => {
               on it. Your feedback helps us improve and provide better recipes
               for you.
             </p>
-           <div className="flex flex-row gap-2 ">
-           <p >Please rate this recipe:</p>
-            <StarRating
-              onRating={(x) => {
-                console.log("rating: ", x);
-                setNewRating(x);
-              }}
-            />
-           </div>
+            <div className="flex flex-row gap-2 ">
+              <p>Please rate this recipe:</p>
+              <StarRating
+                onRating={(x) => {
+                  console.log("rating: ", x);
+                  setNewRating(x);
+                }}
+              />
+            </div>
           </div>
           <textarea
             className="w-full p-3 border text-black border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
@@ -483,17 +509,29 @@ const RecipeDetails = () => {
 
         {/* Display Existing Comments */}
         <div className=" pt-4">
-          <h3 className="text-xl font-semibold mb-2">Reviews:({comments.length})</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            Reviews:({comments.length})
+          </h3>
           {comments.length > 0 ? (
             comments.map((comment, index) => (
               <div key={index} className="p-4 border-b border-gray-200">
-                <div className="flex flex-row flex-wrap gap-2">
-                  <p className="font-medium ">
-                    <strong className="text-xl below-sm:text-sm">{comment.userName}:</strong>
-                  </p>
-                  <StarRating value={comment.rating} isDisabled />
+                <div className="flex flex-row justify-between">
+                  <section className="flex flex-row flex-wrap gap-2">
+                    <p className="font-medium ">
+                      <strong className="text-xl below-sm:text-sm">
+                        {comment.userName}:
+                      </strong>
+                    </p>
+                    <StarRating value={comment.rating} isDisabled />
+                  </section>
+                  {comment.userName === userInfo.name && (
+                    <i
+                      onClick={()=>{handleCommentDelete(comment.reviewId)}}
+                      title={"Delete comment."}
+                      className="fa-solid fa-trash text-red-500 cursor-pointer hover:scale-125 transition-all"
+                    ></i>
+                  )}
                 </div>
-
                 <p className=" text-sm pl-3 pt-2">"{comment.review}"</p>
                 {/* <p className="text-xs text-gray-400">
                   {new Date(comment.timestamp).toLocaleString()}
