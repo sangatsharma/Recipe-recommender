@@ -91,7 +91,7 @@ const RecipeForm = () => {
         initialValues={{
           Name: "",
           Description: "",
-          RecipeCategory: "Dessert",
+          RecipeCategory: "Breakfast",
           PrepTime: "",
           CookTime: "",
           serves: "",
@@ -169,7 +169,9 @@ const RecipeForm = () => {
                 withCredentials: true,
               }
             );
-            console.log(response.data);
+            if (response.data.success) {
+              toast.success("Recipe uploaded successfully.");
+            }
           } catch (error) {
             console.error("Error uploading recipe:", error);
             toast.error("Failed to upload recipe.");
@@ -218,6 +220,31 @@ const RecipeForm = () => {
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md text-black"
               >
                 <option value="Dessert">Dessert</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Appetizer">Appetizer</option>
+                <option value="Main Course">Main Course</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Snacks">Snacks</option>
+                <option value="Salad">Salad</option>
+                <option value="Soup">Soup</option>
+                <option value="Beverage">Beverage</option>
+                <option value="Side Dish">Side Dish</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Gluten-Free">Gluten-Free</option>
+                <option value="Low-Carb">Low-Carb</option>
+                <option value="Keto">Keto</option>
+                <option value="Seafood">Seafood</option>
+                <option value="Grill/BBQ">Grill/BBQ</option>
+                <option value="Pasta">Pasta</option>
+                <option value="Pizza">Pizza</option>
+                <option value="Casserole">Casserole</option>
+                <option value="Sandwich">Sandwich</option>
+                <option value="Smoothie">Smoothie</option>
+                <option value="Baking">Baking</option>
+                <option value="Quick & Easy">Quick & Easy</option>
+                <option value="Healthy">Healthy</option>
                 {/* Add more options as needed */}
               </Field>
             </div>
@@ -285,7 +312,7 @@ const RecipeForm = () => {
               <input
                 type="file"
                 ref={imageInputRef}
-		name="images"
+                name="images"
                 multiple
                 onChange={handleImageChange}
                 className="hidden"

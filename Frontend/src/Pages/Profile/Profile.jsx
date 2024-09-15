@@ -44,7 +44,6 @@ const Profile = () => {
 
   const fetchItems = async (arrayOfId) => {
     // if(arrayOfId == undefined || arrayOfId.length==0) return;
-    console.log("ids:", arrayOfId);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/recipe`,

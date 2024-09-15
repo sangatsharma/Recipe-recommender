@@ -14,12 +14,11 @@ const Weather = () => {
     // Define an async function inside useEffect
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://ipapi.co/json");
-        setData(response.data);
-
-        // Fetch weather data only if we have the location data
-        const { latitude, longitude } = response.data;
-        await fetchWeather(latitude, longitude);
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          await fetchWeather(latitude, longitude);
+        });
       } catch (err) {
         setError(err);
       }
@@ -43,12 +42,11 @@ const Weather = () => {
   }, []); // Empty dependency array means this effect runs once when the component mounts
 
   if (loading) return <Loader />;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return <p>Turn on your location.</p>;
   return (
     <div className="flex flex-col ">
       <hr />
       <div className="flex-grow">
-        <h1>City: {data.city}</h1>
         <br />
         <ul className="text-sm">
           {weatherData && (
