@@ -6,7 +6,7 @@
     -> "/filter" with POST  = search specific
 */
 import express, { RequestHandler } from "express";
-import { addNewRecipe, filterDemo, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, returnAllRecipies, searchRecipe, recipeRecommend } from "./recipes.controllers";
+import { addNewRecipe, filterDemo, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, returnAllRecipies, searchRecipe, recipeRecommend, exploreRoute } from "./recipes.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 import multer from "multer";
@@ -28,6 +28,7 @@ recipeRouter.post("/search", searchRecipe as RequestHandler);
 
 recipeRouter.get("/recommend", authenticateJWT, recipeRecommend as RequestHandler);
 recipeRouter.post("/demo", filterDemo);
+recipeRouter.get("/explore", exploreRoute as RequestHandler);
 recipeRouter.get("/:id", recipeDetails as RequestHandler);
 
 export default recipeRouter;

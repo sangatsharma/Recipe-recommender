@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipeRecommend = exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.exploreRoute = exports.recipeRecommend = exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -395,3 +395,19 @@ const recipeRecommend = async (req, res, next) => {
     }
 };
 exports.recipeRecommend = recipeRecommend;
+const exploreRoute = async (req, res, next) => {
+    try {
+        const recipesOrder = await db_1.db.select().from(recipes_models_1.recipeSchema).orderBy((0, drizzle_orm_1.desc)(recipes_models_1.recipeSchema.DatePublished));
+        res.json({
+            success: true,
+            body: {
+                data: recipesOrder,
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+exports.exploreRoute = exploreRoute;
