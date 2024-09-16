@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
-import { SQL, eq, lte, and, ilike, sql, arrayContains } from "drizzle-orm";
+import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
 import { favouriteRecipes, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 import { handleUploads } from "@/utils/cloudinary";
@@ -455,6 +455,22 @@ export const recipeRecommend = async (req: Request, res: Response, next: NextFun
     });
   }
   catch (err) {
+    next(err);
+  }
+};
+
+export const exploreRoute = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const recipesOrder = await db.select().from(recipeSchema).orderBy(desc(recipeSchema.DatePublished));
+    res.json({
+      success: true,
+      body: {
+        data: recipesOrder,
+      }
+    });
+  }
+  catch (err) {
+    console.log(err);
     next(err);
   }
 };

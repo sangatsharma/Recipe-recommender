@@ -27,5 +27,6 @@ recipeRouter.get("/review/:id", middleware_1.authenticateJWT, recipes_controller
 recipeRouter.post("/search", recipes_controllers_1.searchRecipe);
 recipeRouter.get("/recommend", middleware_1.authenticateJWT, recipes_controllers_1.recipeRecommend);
 recipeRouter.post("/demo", recipes_controllers_1.filterDemo);
+recipeRouter.get("/explore", recipes_controllers_1.exploreRoute);
 recipeRouter.get("/:id", recipes_controllers_1.recipeDetails);
 exports.default = recipeRouter;
