@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.recipeRecommend = exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -175,7 +175,7 @@ exports.filterDemo = filterDemo;
 const recipeDetails = async (req, res, next) => {
     // Get recipe id from parameter
     const recipeId = Number(req.params.id);
-    const userInfo = res.locals;
+    console.log(typeof recipeId);
     try {
         // Get the recipe
         const recipeDB = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, recipeId));
@@ -366,3 +366,32 @@ const searchRecipe = async (req, res, next) => {
     return res.json(exports.searchRecipe);
 };
 exports.searchRecipe = searchRecipe;
+const recipeRecommend = async (req, res, next) => {
+    const userId = res.locals.user.id;
+    if (userId === undefined) {
+        return res.json({
+            success: false,
+            body: {
+                message: "Unauthorized User",
+            }
+        });
+    }
+    try {
+        // const resData: postgres.RowList<Record<string, unknown>[]> = [];
+        const data1 = await db_1.db.execute((0, drizzle_orm_1.sql) `(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
+    (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+        const data2 = await db_1.db.execute((0, drizzle_orm_1.sql) `SELECT * FROM recipes where "RecipeId" = 
+      ANY(ARRAY(SELECT "favourite" from users WHERE id=${userId})) LIMIT 5`);
+        return res.json({
+            success: true,
+            body: {
+                data1: data1,
+                data2: data2,
+            }
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
+exports.recipeRecommend = recipeRecommend;

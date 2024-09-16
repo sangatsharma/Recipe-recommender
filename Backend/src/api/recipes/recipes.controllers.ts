@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
-import { SQL, eq, lte, and, ilike, sql, arrayContains, arrayOverlaps } from "drizzle-orm";
-import { userSchema } from "../users/users.models";
+import { SQL, eq, lte, and, ilike, sql, arrayContains } from "drizzle-orm";
+import { favouriteRecipes, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
-import { handleUpload, handleUploads } from "@/utils/cloudinary";
+import { handleUploads } from "@/utils/cloudinary";
+import postgres from "postgres";
 
 /*
   FETCH ALL RECIPIES
@@ -207,8 +208,7 @@ export const recipeDetails = async (req: Request, res: Response, next: NextFunct
 
   // Get recipe id from parameter
   const recipeId: number = Number(req.params.id);
-
-  const userInfo = res.locals as { email: string };
+  console.log(typeof recipeId);
 
   try {
     // Get the recipe
@@ -426,4 +426,35 @@ export const searchRecipe = async (req: Request, res: Response, next: NextFuncti
   }
 
   return res.json(searchRecipe);
+};
+
+export const recipeRecommend = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = res.locals.user.id as number;
+
+  if (userId === undefined) {
+    return res.json({
+      success: false,
+      body: {
+        message: "Unauthorized User",
+      }
+    });
+  }
+  try {
+    // const resData: postgres.RowList<Record<string, unknown>[]> = [];
+    const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
+    (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+    const data2 = await db.execute(sql`SELECT * FROM recipes where "RecipeId" = 
+      ANY(ARRAY(SELECT "favourite" from users WHERE id=${userId})) LIMIT 5`);
+
+    return res.json({
+      success: true,
+      body: {
+        data1: data1,
+        data2: data2,
+      }
+    });
+  }
+  catch (err) {
+    next(err);
+  }
 };
