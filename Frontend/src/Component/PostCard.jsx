@@ -1,7 +1,7 @@
 // PostCard.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import StarRating from "./StarRating";
+import { dateFormater } from "../utils/dateFormat";
 
 const PostCard = ({
   darkMode,
@@ -20,12 +20,16 @@ const PostCard = ({
       "https://handletheheat.com/wp-content/uploads/2020/10/BAKERY-STYLE-CHOCOLATE-CHIP-COOKIES-9-637x637-1.jpg",
     ],
     AggregatedRating: 4,
+    DatePublished: "2024-09-09T18:15:00.000Z",
   },
 }) => {
-  
   const navigate = useNavigate();
   const itemName =
     recipeDetails.Name.replace(/\s/g, "_") + `_${recipeDetails.RecipeId}`;
+  const date = new Date(recipeDetails.DatePublished);
+  const formatedDate = dateFormater(date.toISOString());
+  console.log(formatedDate);
+
   return (
     <div
       className={`p-4 rounded-lg shadow-md ${
@@ -47,8 +51,9 @@ const PostCard = ({
         <div>
           <div className="font-bold text-lg">{user.name}</div>
           <div className="text-sm text-gray-500">
-            @{user.name?.split(" ")[0] + user.id}
+            @{user.name?.split(" ")[0] + user.id} • {formatedDate}
           </div>
+     
         </div>
       </div>
       <div className="w-[100%]">

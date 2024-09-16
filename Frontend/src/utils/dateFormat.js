@@ -65,7 +65,8 @@ export const dateFormater = (dateString) => {
     return format(date, "d MMMM yyyy");
   }
 };
-const date = new Date("2024-07-27T18:15:00.000Z");
+// const date = new Date("2024-09-09T18:15:00.000Z");
+// console.log(dateFormater(date.toISOString()));
 // console.log(formatDate(date.toISOString()));
 
 export default formatDate;

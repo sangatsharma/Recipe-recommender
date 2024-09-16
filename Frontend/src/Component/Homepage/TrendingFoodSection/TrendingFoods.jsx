@@ -17,7 +17,7 @@ const TrendingFoods = () => {
 
         // select the no of items by trending or popular
         //just an example for now
-        setPopularItems(items.slice(0, 16));
+        setPopularItems(items);
       } catch (err) {
         console.error(err);
       }
@@ -53,7 +53,36 @@ const TrendingFoods = () => {
           </legend>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {popularItems.map((item) => {
+            {popularItems.slice(0, 8).map((item) => {
+              console.log(item);
+              return (
+                <ItemsCard
+                  key={item.RecipeId}
+                  id={item.RecipeId}
+                  src={item.Images[0]}
+                  name={item.Name}
+                  rating={item.AggregatedRating}
+                  RecipeCategory={item.RecipeCategory}
+                  cooktime={item.CookTime}
+                  toggleTick={toggleTick}
+                  isFavorite={tickedItems.has(item.RecipeId)}
+                ></ItemsCard>
+              );
+            })}
+          </div>
+        </fieldset>
+        <fieldset
+          className={`text-xl border-2 ${
+            isDarkMode ? "border-gray-700" : "border-slate-300"
+          } rounded-lg p-2`}
+        >
+          <legend className="px-2 text-3xl text-center font-semibold  decoration-2">
+            Festivals Specials
+          </legend>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {popularItems.slice(9, 17).map((item) => {
+              console.log(item);
               return (
                 <ItemsCard
                   key={item.RecipeId}
