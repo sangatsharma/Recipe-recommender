@@ -63,7 +63,7 @@ const NotificationButton = () => {
                 following you.
               </button>
               <hr />
-              <button className="px-4 py-2 hover:bg-gray-200 w-full text-sm">
+              <button className="px-4 py-2 hover:bg-gray-200 w-full text-sm text-left">
                 <span className="font-bold">Saurav Dhakal </span>liked your
                 recipe.
               </button>
