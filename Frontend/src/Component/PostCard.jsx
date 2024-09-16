@@ -28,8 +28,7 @@ const PostCard = ({
     recipeDetails.Name.replace(/\s/g, "_") + `_${recipeDetails.RecipeId}`;
   const date = new Date(recipeDetails.DatePublished);
   const formatedDate = dateFormater(date.toISOString());
-  console.log(formatedDate);
-
+  
   return (
     <div
       className={`p-4 rounded-lg shadow-md ${
@@ -53,7 +52,6 @@ const PostCard = ({
           <div className="text-sm text-gray-500">
             @{user.name?.split(" ")[0] + user.id} • {formatedDate}
           </div>
-     
         </div>
       </div>
       <div className="w-[100%]">

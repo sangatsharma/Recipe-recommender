@@ -1,44 +1,25 @@
 import ItemsCard from "./ItemsCard.jsx";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useFavContext } from "../../../context/FavContext.jsx";
 import { useThemeContext } from "../../../context/ThemeContext.jsx";
+import { useRecipesContext } from "../../../context/RecipeContext.jsx";
 
 const TrendingFoods = () => {
   const { tickedItems, toggleTick } = useFavContext();
   const { isDarkMode } = useThemeContext();
+  const { recipes, loading } = useRecipesContext();
 
   const [popularItems, setPopularItems] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const items = await fetchItems();
-
-        // select the no of items by trending or popular
-        //just an example for now
-        setPopularItems(items);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const fetchItems = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/recipe`,
-        {
-          withCredentials: true,
-        }
-      );
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching item:", error);
-      throw error;
+      if (!loading) {
+        setPopularItems(recipes);
+      }
+    } catch (err) {
+      console.error(err);
     }
-  };
+  }, [loading]);
 
   return (
     popularItems.length > 0 && (
@@ -54,7 +35,6 @@ const TrendingFoods = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {popularItems.slice(0, 8).map((item) => {
-              console.log(item);
               return (
                 <ItemsCard
                   key={item.RecipeId}
@@ -82,7 +62,6 @@ const TrendingFoods = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {popularItems.slice(9, 17).map((item) => {
-              console.log(item);
               return (
                 <ItemsCard
                   key={item.RecipeId}
