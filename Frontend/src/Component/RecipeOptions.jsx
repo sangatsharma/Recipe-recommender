@@ -32,16 +32,16 @@ const RecipeOptions = ({ isMyRecipe }) => {
       </button>
 
       {isOpen && (
-        <ul className="absolute z-10 bg-gray-800 text-white border border-gray-300 rounded  w-48 right-0 top-10 shadow-lg cursor-pointer">
+        <section className="absolute z-10  bg-gray-800 text-white border border-gray-300 rounded  w-48 right-0 top-10 shadow-lg cursor-pointer">
           {isMyRecipe && (
             <>
-              <li className="px-4 py-2 hover:bg-black">Edit</li>
-              <li className="px-4 py-2 hover:bg-black">Delete</li>
+              <button className="px-4 py-2 flex  hover:bg-black w-full">Edit</button>
+              <button className="px-4 py-2 flex hover:bg-black w-full">Delete</button>
             </>
           )}
-          <li className="px-4 py-2 hover:bg-black">Not interested</li>
-          <li className="px-4 py-2 hover:bg-black">Report as unsafe</li>
-        </ul>
+          <button className="px-4 py-2 flex hover:bg-black w-full">Not interested</button>
+          <button className="px-4 py-2 flex hover:bg-black w-full">Report as unsafe</button>
+        </section>
       )}
     </div>
   );

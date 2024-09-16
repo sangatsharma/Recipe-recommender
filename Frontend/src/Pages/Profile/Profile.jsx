@@ -65,7 +65,7 @@ const Profile = () => {
     const data = await fetchUserById(userId);
     if (data.success) {
       const userName = data.body.name.split(" ")[0] + "_" + data.body.id;
-      if (userName != user) {
+      if (userName.toLowerCase() != user.toLowerCase()) {
         setCurrentUser(undefined);
       } else {
         fetchItems(data.body.posts);
@@ -142,7 +142,12 @@ const Profile = () => {
         {activeTab === "posts" && (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
             {PostItem.map((_, index) => (
-              <PostCard key={index} darkMode={isDarkMode} user={currentUser} recipeDetails={PostItem[index]} />
+              <PostCard
+                key={index}
+                darkMode={isDarkMode}
+                user={currentUser}
+                recipeDetails={PostItem[index]}
+              />
             ))}
           </div>
         )}
