@@ -31,7 +31,7 @@ export const handleUploads = async (files: string[]) => {
     await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
         if (err) reject(err);
-        else urls.push(res?.secure_url as string);
+        else resolve(urls.push(res?.secure_url as string));
       }).end(file);
     });
   }

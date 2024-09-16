@@ -35,7 +35,7 @@ const handleUploads = async (files) => {
                 if (err)
                     reject(err);
                 else
-                    urls.push(res?.secure_url);
+                    resolve(urls.push(res?.secure_url));
             }).end(file);
         });
     }
