@@ -31,11 +31,11 @@ const handleUploads = async (files) => {
     const urls = [];
     for (const file of files) {
         await new Promise((resolve, reject) => {
-            cloudinary_1.v2.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
+            cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
                 if (err)
                     reject(err);
                 else
-                    resolve(urls.push(res?.secure_url));
+                    urls.push(res?.secure_url);
             }).end(file);
         });
     }

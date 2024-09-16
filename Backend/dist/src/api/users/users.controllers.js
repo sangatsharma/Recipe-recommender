@@ -226,13 +226,23 @@ const recipeFavouriteGetHandler = async (req, res, next) => {
     try {
         // Fetch all for the user
         const userInfo = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, userCookie.id));
-        const favRec = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.inArray)(recipes_models_1.recipeSchema.RecipeId, userInfo[0].favourite));
-        // Return response
-        return res.json({
-            success: true,
-            length: favRec.length,
-            body: favRec
-        });
+        if (userInfo[0].favourite.length === 0) {
+            // Return response
+            return res.json({
+                success: true,
+                length: 0,
+                body: []
+            });
+        }
+        else {
+            const favRec = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.inArray)(recipes_models_1.recipeSchema.RecipeId, userInfo[0].favourite));
+            // Return response
+            return res.json({
+                success: true,
+                length: favRec.length,
+                body: favRec
+            });
+        }
     }
     catch (err) {
         next(err);
