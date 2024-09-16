@@ -2,6 +2,7 @@ import { useThemeContext } from "../../context/ThemeContext";
 import { Helmet } from "react-helmet-async";
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useRecipesContext } from "../../context/RecipeContext";
 import Skeleton from "../../Component/Loader/Skeleton";
 import PostCard from "../../Component/PostCard";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -11,6 +12,7 @@ import axios from "axios";
 
 const Profile = () => {
   const { isDarkMode } = useThemeContext();
+  const { recipes, loading: recipeLoading } = useRecipesContext();
   const { userInfo, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("posts");
   const [PostItem, setPostItem] = useState([]);
@@ -24,35 +26,35 @@ const Profile = () => {
   const { user } = useParams();
 
   useEffect(() => {
-    if (author) {
-      fetchItems(author.posts);
-      setCurrentUser(author);
-    } else if (!loading) {
-      if (user == undefined) {
-        navigate(`/profile/${path}`);
-      } else {
-        if (user == userInfo.name.split(" ")[0] + "_" + userInfo.id) {
-          fetchItems(userInfo.posts);
+    const initializeProfile = async () => {
+      if (author) {
+        // If there's an author from location.state (navigated here)
+        setCurrentUser(author);
+        fetchItems(author.posts, recipes);
+      } else if (!loading && userInfo) {
+        // If there's no author but userInfo is available (after a refresh)
+        if (
+          user === undefined ||
+          user === `${userInfo.name.split(" ")[0]}_${userInfo.id}`
+        ) {
+          // If user param matches logged in user or is undefined (your own profile)
           setCurrentUser(userInfo);
+          fetchItems(userInfo.posts, recipes);
         } else {
-          // fetch user data using user id
-          fetchUserdata();
+          // If we're visiting someone else's profile
+          await fetchUserdata();
         }
       }
-    }
-  }, [user, loading]);
+    };
 
-  const fetchItems = async (arrayOfId) => {
-    // if(arrayOfId == undefined || arrayOfId.length==0) return;
+    if (!loading) {
+      initializeProfile();
+    }
+  }, [author, user, loading, userInfo, recipes, navigate]);
+
+  const fetchItems = async (arrayOfId, recipes) => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/recipe`,
-        {
-          withCredentials: true,
-        }
-      );
-      const data = response.data;
-      const items = data.filter((item) => arrayOfId.includes(item.RecipeId));
+      const items = recipes.filter((item) => arrayOfId.includes(item.RecipeId));
       setPostItem(items);
     } catch (error) {
       console.error("Error fetching item:", error);
@@ -64,12 +66,13 @@ const Profile = () => {
     const userId = user.split("_")[1];
     const data = await fetchUserById(userId);
     if (data.success) {
+      console.log("data", data.body);
       const userName = data.body.name.split(" ")[0] + "_" + data.body.id;
-      if (userName != user) {
+      if (userName.toLowerCase() != user.toLowerCase()) {
         setCurrentUser(undefined);
       } else {
-        fetchItems(data.body.posts);
         setCurrentUser(data.body);
+        fetchItems(data.body.posts, recipes);
       }
     } else {
       setCurrentUser(undefined);
@@ -142,7 +145,12 @@ const Profile = () => {
         {activeTab === "posts" && (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
             {PostItem.map((_, index) => (
-              <PostCard key={index} darkMode={isDarkMode} user={currentUser} recipeDetails={PostItem[index]} />
+              <PostCard
+                key={index}
+                darkMode={isDarkMode}
+                user={currentUser}
+                recipeDetails={PostItem[index]}
+              />
             ))}
           </div>
         )}

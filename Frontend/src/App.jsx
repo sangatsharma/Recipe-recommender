@@ -20,6 +20,7 @@ import BookmarkRecipes from "./Pages/BookmarkRecipes.jsx";
 import { FavItemsProvider } from "./context/FavContext.jsx";
 import { useThemeContext } from "./context/ThemeContext.jsx";
 import { useEffect } from "react";
+import { RecipeProvider } from "./context/RecipeContext.jsx";
 
 function App() {
   const { isDarkMode } = useThemeContext();
@@ -60,22 +61,24 @@ function App() {
   ]);
   return (
     <AuthProvider>
-      <FavItemsProvider>
-        <RouterProvider router={router} />
-        <ToastContainer
-          position="top-right"
-          autoClose={1000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          bodyStyle={{ fontSize: ".8rem" }}
-        />
-      </FavItemsProvider>
+      <RecipeProvider>
+        <FavItemsProvider>
+          <RouterProvider router={router} />
+          <ToastContainer
+            position="top-right"
+            autoClose={1000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            bodyStyle={{ fontSize: ".8rem" }}
+          />
+        </FavItemsProvider>
+      </RecipeProvider>
     </AuthProvider>
   );
 }
