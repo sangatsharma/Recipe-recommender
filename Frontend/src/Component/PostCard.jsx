@@ -28,12 +28,12 @@ const PostCard = ({
     recipeDetails.Name.replace(/\s/g, "_") + `_${recipeDetails.RecipeId}`;
   const date = new Date(recipeDetails.DatePublished);
   const formatedDate = dateFormater(date.toISOString());
-  
+
   return (
     <div
       className={`p-4 rounded-lg shadow-md ${
         darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
-      }  below-sm:w-[100%] cursor-pointer`}
+      }   w-full cursor-pointer`}
       onClick={() => {
         navigate(`/recipes/${itemName}`);
       }}
@@ -58,14 +58,12 @@ const PostCard = ({
         <h2 className="text-2xl font-bold mb-2">{recipeDetails.Name}</h2>
         <p className="mb-4">{recipeDetails.Description}</p>
       </div>
+
       <img
-        className="rounded-lg mb-4 w-full h-[500px] m-auto"
+        className="rounded-lg mb-2 w-full h-[full]"
         src={recipeDetails.Images[0]}
         alt="Recipe images"
       />
-      {/* <div className="flex justify-between text-sm text-gray-500">
-        <StarRating />
-      </div> */}
     </div>
   );
 };

@@ -4,13 +4,17 @@ const synonyms = {
   fast: "< 30 mins",
   quick: "< 30 mins",
   slow: "> 60 mins",
+  mutton: "goat",
   lamb: "goat",
+  rice:"bhat",
   potatoes: "potato",
   tomatoes: "tomato",
+  pickel: "chutney",
+  achar: "chutney",
 };
 // Function to normalize and handle synonyms
 function normalizeKeyword(Keywords) {
-  if (!Keywords) return ""; 
+  if (!Keywords) return "";
   const lowerKeyword = Keywords.toLowerCase();
   return synonyms[lowerKeyword] || lowerKeyword;
 }
@@ -87,4 +91,3 @@ export function rankFoodItems(foodItems, searchText, activeFilter) {
   }
   return [];
 }
-
