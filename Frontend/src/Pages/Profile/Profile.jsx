@@ -48,7 +48,11 @@ const Profile = () => {
     };
 
     if (!loading) {
-      initializeProfile();
+      if (!user) {
+        navigate(`/profile/${path}`);
+      } else {
+        initializeProfile();
+      }
     }
   }, [author, user, loading, userInfo, recipes, navigate]);
 
@@ -66,7 +70,6 @@ const Profile = () => {
     const userId = user.split("_")[1];
     const data = await fetchUserById(userId);
     if (data.success) {
-      console.log("data", data.body);
       const userName = data.body.name.split(" ")[0] + "_" + data.body.id;
       if (userName.toLowerCase() != user.toLowerCase()) {
         setCurrentUser(undefined);

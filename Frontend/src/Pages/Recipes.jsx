@@ -45,7 +45,7 @@ const Recipes = (props) => {
       <Helmet>
         <title>Recipes - CIY </title>
       </Helmet>
-      {recommendedRecipes.length > 0 && (
+      {recommendedRecipes?.length > 0 && (
         <fieldset
           className={`text-xl border-2 ${
             isDarkMode ? "border-gray-700" : "border-slate-300"

@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { dateFormater } from "../../utils/dateFormat";
 
 const NotificationButton = () => {
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Load notifications from local storage on mount
   useEffect(() => {
@@ -33,12 +36,9 @@ const NotificationButton = () => {
           withCredentials: true,
         }
       );
-      if (response.status === 200) {
-        // const data = response.data.message.body;
-        const data = [
-          { type: "review", by: "Saurav Dhakal", userid: 3, post: 12, id: 7 },
-          { type: "follow", by: "Saurav Dhakal", userid: 3, id: 8 },
-        ];
+      if (response.data.success) {
+        console.log(response.data);
+        const data = response.data.message.body;
         // Check for new notifications and merge with stored notifications
         const savedNotifications =
           JSON.parse(localStorage.getItem("notifications")) || [];
@@ -106,27 +106,43 @@ const NotificationButton = () => {
               </p>
             </div>
             <section className="overflow-y-auto max-h-96 pb-2">
-              {notifications.map((notification, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleNotificationClick(index)}
-                  className={`px-4 py-2 hover:bg-gray-200 w-full text-sm text-left ${
-                    notification.read ? "text-gray-400" : ""
-                  }`}
-                >
-                  {notification.type === "review" ? (
-                    <>
-                      <span className="font-bold">{notification.by} </span>
-                      reviewed your recipe.
-                    </>
-                  ) : (
-                    <>
-                      <span className="font-bold">{notification.by} </span>
-                      is now following you.
-                    </>
-                  )}
-                </button>
-              ))}
+              {notifications.length > 0 &&
+                notifications.map((notification, index) => {
+                  const date = new Date(notification.time);
+                  const formatedDate = dateFormater(date.toISOString());
+                  return (
+                    <button
+                      key={index}
+                      className={`px-4 py-2 hover:bg-gray-200 w-full text-sm text-left ${
+                        notification.read ? "text-gray-400" : ""
+                      }`}
+                    >
+                      {notification.type === "review" ? (
+                        <>
+                          <span className="font-bold">{notification.by} </span>
+                          reviewed your recipe.
+                        </>
+                      ) : (
+                        <span
+                          onClick={() => {
+                            navigate(
+                              `/profile/${notification.name?.split(" ")[0]}_${
+                                notification.by
+                              }`
+                            );
+                            handleNotificationClick(index);
+                          }}
+                        >
+                          <span className="font-bold">
+                            {notification.name}{" "}
+                          </span>
+                          is now following you.
+                          <span className="text-[0.8rem] "> • {formatedDate}</span>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
             </section>
           </div>
         </>
