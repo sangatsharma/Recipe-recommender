@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
 import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
-import { userSchema } from "../users/users.models";
+import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
@@ -282,6 +282,16 @@ export const recipeReviewAddHandler = async (req: Request, res: Response, next: 
       rating: body.rating,
       review: (body?.review) ? body.review : null,
     }).returning();
+
+    const u = await db.select().from(userSchema).where(eq(userSchema.id, recipeDB[0].AuthorId));
+
+    await db.insert(notificationSchema).values({
+      type: "comment",
+      by: recipeDB[0].AuthorId,
+      to: userCookie.id,
+      name: u[0].name,
+      extra: `${recipeDB[0].RecipeId}, ${recipeDB[0].Name}`
+    });
 
     return res.json({
       success: true,

@@ -61,7 +61,8 @@ exports.notificationSchema = (0, pg_core_1.pgTable)("notificationSchema", {
     name: (0, pg_core_1.text)("name").notNull(),
     time: (0, pg_core_1.timestamp)("time", {
         withTimezone: true,
-    }).defaultNow().notNull()
+    }).defaultNow().notNull(),
+    extra: (0, pg_core_1.text)("extra")
 });
 // One to Many Relation: A user can post multiple recipies
 exports.userRelations = (0, drizzle_orm_1.relations)(exports.userSchema, ({ many }) => ({

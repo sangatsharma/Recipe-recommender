@@ -66,7 +66,8 @@ export const notificationSchema = pgTable("notificationSchema", {
   name: text("name").notNull(),
   time: timestamp("time", {
     withTimezone: true,
-  }).defaultNow().notNull()
+  }).defaultNow().notNull(),
+  extra: text("extra")
 });
 
 // One to Many Relation: A user can post multiple recipies
