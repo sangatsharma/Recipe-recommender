@@ -101,7 +101,7 @@ const followUser = async (req, res, _) => {
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
     }
     await db_1.db.insert(users_models_1.notificationSchema).values({
-        type: "follow",
+        type: data.action,
         by: currentUser.body.id,
         to: followedUser.id,
         name: currentUser.body.name,
