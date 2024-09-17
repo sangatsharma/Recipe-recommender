@@ -9,9 +9,9 @@ cloudinary.config({
 
 export const uploadToCloudinary = async (file: Buffer) => {
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
-      if (err) reject(err);
-      else resolve(res?.secure_url);
+    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (e, r) => {
+      if (e) reject(e);
+      else resolve(r?.secure_url);
     }).end(file);
   });
 };
@@ -37,7 +37,6 @@ export const multipleUpload = async (images: Express.Multer.File[]) => {
     });
     cloudinary.uploader.upload_stream({ resource_type: "auto" });
 
-    // const result = await cloudinary.uploader.upload(dataURI);
     urls.push(result);
   }
 
