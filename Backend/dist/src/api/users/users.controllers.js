@@ -306,6 +306,7 @@ const updateUserInfo = async (req, res, next) => {
     }
 };
 exports.updateUserInfo = updateUserInfo;
+//DEMO
 const updateUserPreferences = async (req, res, next) => {
     // Get user info from cookie
     const cookieInfo = res.locals.user;

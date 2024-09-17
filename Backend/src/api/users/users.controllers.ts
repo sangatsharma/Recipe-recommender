@@ -371,6 +371,7 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
   }
 };
 
+//DEMO
 
 export const updateUserPreferences = async (req: Request, res: Response, next: NextFunction) => {
 
