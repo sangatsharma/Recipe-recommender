@@ -4,7 +4,7 @@ import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
 import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
 import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
-import { uploadToCloudinary } from "@/utils/cloudinary";
+import { handleUpload, uploadToCloudinary } from "@/utils/cloudinary";
 
 /*
   FETCH ALL RECIPIES
@@ -54,13 +54,14 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const imagesToUpload: string[] = [];
 
       for (const image of imageFiles) {
-        // const b64 = Buffer.from(image.buffer).toString("base64");
-        // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        const dataURI = "data:" + image.mimetype + ";base64," + b64;
 
-        const u = await uploadToCloudinary(image.buffer);
-        imagesToUpload.push(u as string);
+        const u = await handleUpload(dataURI);
+        imagesToUpload.push(u.secure_url);
       }
 
+      data.Images = imagesToUpload;
       // imageFiles.map((image) => {
       //   const b64 = Buffer.from(image.buffer).toString("base64");
       //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
@@ -74,7 +75,6 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       // imagesToUpload.push(dataURI);
       // });
       // const imageUrls = await handleUploads(imagesToUpload);
-      // data.Images = imageUrls;
     }
     // const cleanedData = {
     //   ...data,
