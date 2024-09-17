@@ -16,13 +16,13 @@ export const uploadToCloudinary = async (file: Buffer) => {
   });
 };
 
-export const uploadFilesToCloudinary = async (file: string) => {
-  const result = await cloudinary.uploader.upload(file, {
-    resource_type: "auto",
-    format: "jpg",
+export const uploadFilesToCloudinary = async (file: Buffer) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream({ resource_type: "auto", transformation: { width: 600, height: 600 } }, (e, r) => {
+      if (e) reject(e);
+      else resolve(r?.secure_url);
+    }).end(file);
   });
-
-  return result;
 };
 
 export const handleUpload = async (file: string) => {
