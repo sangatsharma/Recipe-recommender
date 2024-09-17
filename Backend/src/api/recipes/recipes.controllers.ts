@@ -280,7 +280,7 @@ export const recipeReviewAddHandler = async (req: Request, res: Response, next: 
       review: (body?.review) ? body.review : null,
     }).returning();
 
-    const u = await db.select().from(userSchema).where(eq(userSchema.id, recipeDB[0].AuthorId));
+    const u = await db.select().from(userSchema).where(eq(userSchema.id, userCookie.id));
 
     // Demo
     await db.insert(notificationSchema).values({

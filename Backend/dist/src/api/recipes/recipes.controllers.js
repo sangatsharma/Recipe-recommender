@@ -235,7 +235,7 @@ const recipeReviewAddHandler = async (req, res, next) => {
             rating: body.rating,
             review: (body?.review) ? body.review : null,
         }).returning();
-        const u = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, recipeDB[0].AuthorId));
+        const u = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, userCookie.id));
         // Demo
         await db_1.db.insert(users_models_1.notificationSchema).values({
             type: "comment",
