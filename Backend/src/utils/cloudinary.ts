@@ -25,6 +25,26 @@ export const handleUpload = async (file: string) => {
   return result;
 };
 
+export const multipleUpload = async (images: Express.Multer.File[]) => {
+  const urls: string[] = [];
+  for (const image of images) {
+
+    const result: string = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
+        if (err) reject(err);
+        else resolve(res?.secure_url as string);
+      }).end(image.buffer);
+    });
+    cloudinary.uploader.upload_stream({ resource_type: "auto" });
+
+    // const result = await cloudinary.uploader.upload(dataURI);
+    urls.push(result);
+  }
+
+  return urls;
+};
+
+
 export const handleUploads = async (files: string[]) => {
   const urls: string[] = [];
 
