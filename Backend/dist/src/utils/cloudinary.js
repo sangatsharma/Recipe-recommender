@@ -20,11 +20,14 @@ const uploadToCloudinary = async (file) => {
 };
 exports.uploadToCloudinary = uploadToCloudinary;
 const uploadFilesToCloudinary = async (file) => {
-    const result = await cloudinary_1.v2.uploader.upload(file, {
-        resource_type: "auto",
-        format: "jpg",
+    return new Promise((resolve, reject) => {
+        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto", transformation: { width: 600, height: 600 } }, (e, r) => {
+            if (e)
+                reject(e);
+            else
+                resolve(r?.secure_url);
+        }).end(file);
     });
-    return result;
 };
 exports.uploadFilesToCloudinary = uploadFilesToCloudinary;
 const handleUpload = async (file) => {

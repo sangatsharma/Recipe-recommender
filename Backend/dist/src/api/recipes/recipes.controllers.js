@@ -46,10 +46,8 @@ const addNewRecipe = async (req, res, next) => {
             const imageFiles = req.files;
             const imagesToUpload = [];
             for (const image of imageFiles) {
-                const b64 = Buffer.from(image.buffer).toString("base64");
-                const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-                const u = await (0, cloudinary_1.uploadFilesToCloudinary)(dataURI);
-                imagesToUpload.push(u.secure_url);
+                const u = await (0, cloudinary_1.uploadFilesToCloudinary)(image.buffer);
+                imagesToUpload.push(u);
             }
             data.Images = imagesToUpload;
             // imageFiles.map((image) => {
