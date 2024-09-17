@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
-import { SQL, eq, lte, and, ilike, sql, arrayContains, desc, getTableColumns } from "drizzle-orm";
+import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
 import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
-import { handleUploads } from "@/utils/cloudinary";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 
 /*
   FETCH ALL RECIPIES
@@ -52,20 +52,29 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
 
       const imageFiles = req.files as Express.Multer.File[];
       const imagesToUpload: string[] = [];
-      imageFiles.map((image) => {
-        const b64 = Buffer.from(image.buffer).toString("base64");
-        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
 
-        imagesToUpload.push(dataURI);
-      });
+      for (const image of imageFiles) {
+        // const b64 = Buffer.from(image.buffer).toString("base64");
+        // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+        const u = await uploadToCloudinary(image.buffer);
+        imagesToUpload.push(u as string);
+      }
+
+      // imageFiles.map((image) => {
+      //   const b64 = Buffer.from(image.buffer).toString("base64");
+      //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+      //   imagesToUpload.push(dataURI);
+      // });
 
       // handleUpload(dataURI).then((cldRes) => {
       //   data.Images.push(cldRes.secure_url);
       // }).catch((err) => { next(err); });
       // imagesToUpload.push(dataURI);
       // });
-      const imageUrls = await handleUploads(imagesToUpload);
-      data.Images = imageUrls;
+      // const imageUrls = await handleUploads(imagesToUpload);
+      // data.Images = imageUrls;
     }
     // const cleanedData = {
     //   ...data,
@@ -273,6 +282,16 @@ export const recipeReviewAddHandler = async (req: Request, res: Response, next: 
       rating: body.rating,
       review: (body?.review) ? body.review : null,
     }).returning();
+
+    const u = await db.select().from(userSchema).where(eq(userSchema.id, recipeDB[0].AuthorId));
+
+    await db.insert(notificationSchema).values({
+      type: "comment",
+      by: recipeDB[0].AuthorId,
+      to: userCookie.id,
+      name: u[0].name,
+      extra: `${recipeDB[0].RecipeId}, ${recipeDB[0].Name}`
+    });
 
     return res.json({
       success: true,

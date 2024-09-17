@@ -130,7 +130,7 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
   }
 
   await db.insert(notificationSchema).values({
-    type: "follow",
+    type: data.action,
     by: currentUser.body.id,
     to: followedUser.id,
     name: currentUser.body.name,
