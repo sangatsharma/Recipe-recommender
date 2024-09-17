@@ -51,15 +51,12 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
 
 
       const imageFiles = req.files as Express.Multer.File[];
-      const imagesToUpload: string[] = await multipleUpload(imageFiles);
+      const imagesToUpload: string[] = [];
 
-      // for (const image of imageFiles) {
-      //   const b64 = Buffer.from(image.buffer).toString("base64");
-      //   const dataURI = "data:" + image.mimetype + ";base64," + b64;
-
-      //   const u = await handleUpload(dataURI);
-      //   imagesToUpload.push(u.secure_url);
-      // }
+      for (const image of imageFiles) {
+        const u = await uploadToCloudinary(image.buffer) as string;
+        imagesToUpload.push(u);
+      }
 
       data.Images = imagesToUpload;
       // imageFiles.map((image) => {

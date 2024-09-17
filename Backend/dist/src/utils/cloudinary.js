@@ -10,11 +10,11 @@ cloudinary_1.v2.config({
 });
 const uploadToCloudinary = async (file) => {
     return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
-            if (err)
-                reject(err);
+        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (e, r) => {
+            if (e)
+                reject(e);
             else
-                resolve(res?.secure_url);
+                resolve(r?.secure_url);
         }).end(file);
     });
 };
@@ -39,7 +39,6 @@ const multipleUpload = async (images) => {
             }).end(image.buffer);
         });
         cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" });
-        // const result = await cloudinary.uploader.upload(dataURI);
         urls.push(result);
     }
     return urls;
