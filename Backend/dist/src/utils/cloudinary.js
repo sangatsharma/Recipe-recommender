@@ -30,10 +30,17 @@ exports.handleUpload = handleUpload;
 const multipleUpload = async (images) => {
     const urls = [];
     for (const image of images) {
-        const b64 = Buffer.from(image.buffer).toString("base64");
-        const dataURI = "data:" + image.mimetype + ";base64," + b64;
-        const result = await cloudinary_1.v2.uploader.upload(dataURI);
-        urls.push(result.secure_url);
+        const result = await new Promise((resolve, reject) => {
+            cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(res?.secure_url);
+            }).end(image.buffer);
+        });
+        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" });
+        // const result = await cloudinary.uploader.upload(dataURI);
+        urls.push(result);
     }
     return urls;
 };
