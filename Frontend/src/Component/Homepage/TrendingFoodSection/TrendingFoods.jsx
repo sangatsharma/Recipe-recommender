@@ -61,20 +61,24 @@ const TrendingFoods = () => {
           </legend>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {popularItems.slice(9, 17).map((item) => {
-              return (
-                <ItemsCard
-                  key={item.RecipeId}
-                  id={item.RecipeId}
-                  src={item.Images[0]}
-                  name={item.Name}
-                  rating={item.AggregatedRating}
-                  RecipeCategory={item.RecipeCategory}
-                  cooktime={item.CookTime}
-                  toggleTick={toggleTick}
-                  isFavorite={tickedItems.has(item.RecipeId)}
-                ></ItemsCard>
-              );
+            {popularItems.map((item) => {
+              if (
+                item.Keywords.includes("Festival") ||
+                item.RecipeCategory === "Festivals"
+              )
+                return (
+                  <ItemsCard
+                    key={item.RecipeId}
+                    id={item.RecipeId}
+                    src={item.Images[0]}
+                    name={item.Name}
+                    rating={item.AggregatedRating}
+                    RecipeCategory={item.RecipeCategory}
+                    cooktime={item.CookTime}
+                    toggleTick={toggleTick}
+                    isFavorite={tickedItems.has(item.RecipeId)}
+                  ></ItemsCard>
+                );
             })}
           </div>
         </fieldset>
