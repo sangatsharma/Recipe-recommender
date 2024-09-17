@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUploads = exports.handleUpload = exports.uploadToCloudinary = void 0;
+exports.handleUploads = exports.multipleUpload = exports.handleUpload = exports.uploadToCloudinary = void 0;
 const cloudinary_1 = require("cloudinary");
 const config_1 = require("./config");
 cloudinary_1.v2.config({
@@ -21,12 +21,23 @@ const uploadToCloudinary = async (file) => {
 exports.uploadToCloudinary = uploadToCloudinary;
 const handleUpload = async (file) => {
     const result = await cloudinary_1.v2.uploader.upload(file, {
-        // resource_type: "",
+        resource_type: "auto",
         transformation: { crop: "thumb", width: 600, height: 600 }
     });
     return result;
 };
 exports.handleUpload = handleUpload;
+const multipleUpload = async (images) => {
+    const urls = [];
+    for (const image of images) {
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        const dataURI = "data:" + image.mimetype + ";base64," + b64;
+        const result = await cloudinary_1.v2.uploader.upload(dataURI);
+        urls.push(result.secure_url);
+    }
+    return urls;
+};
+exports.multipleUpload = multipleUpload;
 const handleUploads = async (files) => {
     const urls = [];
     const helper = async (file) => {
