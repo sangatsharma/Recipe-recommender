@@ -240,8 +240,8 @@ const recipeReviewAddHandler = async (req, res, next) => {
         const u = await db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, recipeDB[0].AuthorId));
         await db_1.db.insert(users_models_1.notificationSchema).values({
             type: "comment",
-            by: recipeDB[0].AuthorId,
-            to: userCookie.id,
+            by: userCookie.id,
+            to: recipeDB[0].AuthorId,
             name: u[0].name,
             extra: `${recipeDB[0].RecipeId}, ${recipeDB[0].Name}`
         });
