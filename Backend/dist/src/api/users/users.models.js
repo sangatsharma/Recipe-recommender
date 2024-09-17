@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRelations = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userPref = exports.userSchema = void 0;
+exports.userRelations = exports.notificationSchema = exports.favouriteRecipes = exports.passwordResetSchema = exports.followerSchema = exports.userPref = exports.userSchema = void 0;
 const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const recipes_models_1 = require("../recipes/recipes.models");
@@ -50,6 +50,16 @@ exports.favouriteRecipes = (0, pg_core_1.pgTable)("favouriteRecipes", {
     userId: (0, pg_core_1.integer)("userId").notNull().references(() => exports.userSchema.id, { onDelete: "cascade" }),
     recipeId: (0, pg_core_1.integer)("recipeId").notNull().references(() => recipes_models_1.recipeSchema.RecipeId, { onDelete: "cascade" }),
     favouritedOn: (0, pg_core_1.timestamp)("favouritedOn", {
+        withTimezone: true,
+    }).defaultNow().notNull()
+});
+exports.notificationSchema = (0, pg_core_1.pgTable)("notificationSchema", {
+    id: (0, pg_core_1.serial)("id").primaryKey().notNull(),
+    type: (0, pg_core_1.text)("type").notNull(),
+    by: (0, pg_core_1.integer)("by").references(() => exports.userSchema.id, { onDelete: "cascade" }),
+    to: (0, pg_core_1.integer)("to").references(() => exports.userSchema.id, { onDelete: "cascade" }),
+    name: (0, pg_core_1.text)("name").notNull(),
+    time: (0, pg_core_1.timestamp)("time", {
         withTimezone: true,
     }).defaultNow().notNull()
 });

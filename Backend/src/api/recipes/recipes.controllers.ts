@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { db } from "@/utils/db";
 import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
-import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
-import { favouriteRecipes, userSchema } from "../users/users.models";
+import { SQL, eq, lte, and, ilike, sql, arrayContains, desc, getTableColumns } from "drizzle-orm";
+import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 import { handleUploads } from "@/utils/cloudinary";
-import postgres from "postgres";
 
 /*
   FETCH ALL RECIPIES
@@ -461,7 +460,11 @@ export const recipeRecommend = async (req: Request, res: Response, next: NextFun
 
 export const exploreRoute = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // const demo = await db.select().from(recipeSchema).orderBy(desc(recipeSchema.DatePublished)).leftJoin(userSchema, eq(recipeSchema.AuthorId, userSchema.id));
+    // console.log(demo);
+
     const recipesOrder = await db.select().from(recipeSchema).orderBy(desc(recipeSchema.DatePublished));
+
     res.json({
       success: true,
       body: {

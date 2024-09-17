@@ -58,6 +58,17 @@ export const favouriteRecipes = pgTable("favouriteRecipes", {
   }).defaultNow().notNull()
 });
 
+export const notificationSchema = pgTable("notificationSchema", {
+  id: serial("id").primaryKey().notNull(),
+  type: text("type").notNull(),
+  by: integer("by").references(() => userSchema.id, { onDelete: "cascade" }),
+  to: integer("to").references(() => userSchema.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  time: timestamp("time", {
+    withTimezone: true,
+  }).defaultNow().notNull()
+});
+
 // One to Many Relation: A user can post multiple recipies
 export const userRelations = relations(userSchema, ({ many }) => ({
   recipies: many(recipeSchema),
