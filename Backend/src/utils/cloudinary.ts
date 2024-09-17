@@ -28,11 +28,17 @@ export const handleUpload = async (file: string) => {
 export const multipleUpload = async (images: Express.Multer.File[]) => {
   const urls: string[] = [];
   for (const image of images) {
-    const b64 = Buffer.from(image.buffer).toString("base64");
-    const dataURI = "data:" + image.mimetype + ";base64," + b64;
 
-    const result = await cloudinary.uploader.upload(dataURI);
-    urls.push(result.secure_url);
+    const result: string = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+        if (err) reject(err);
+        else resolve(res?.secure_url as string);
+      }).end(image.buffer);
+    });
+    cloudinary.uploader.upload_stream({ resource_type: "auto" });
+
+    // const result = await cloudinary.uploader.upload(dataURI);
+    urls.push(result);
   }
 
   return urls;
