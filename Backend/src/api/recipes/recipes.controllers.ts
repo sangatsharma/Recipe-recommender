@@ -4,7 +4,7 @@ import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
 import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
 import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
-import { handleUpload, multipleUpload, uploadToCloudinary } from "@/utils/cloudinary";
+import { handleUpload, multipleUpload, uploadFilesToCloudinary, uploadToCloudinary } from "@/utils/cloudinary";
 
 /*
   FETCH ALL RECIPIES
@@ -54,8 +54,11 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const imagesToUpload: string[] = [];
 
       for (const image of imageFiles) {
-        const u = await uploadToCloudinary(image.buffer) as string;
-        imagesToUpload.push(u);
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+
+        const u = await uploadFilesToCloudinary(dataURI);
+        imagesToUpload.push(u.secure_url);
       }
 
       data.Images = imagesToUpload;
