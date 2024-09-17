@@ -171,6 +171,7 @@ const RecipeForm = () => {
             );
             if (response.data.success) {
               toast.success("Recipe uploaded successfully.");
+              resetForm();
             }
           } catch (error) {
             console.error("Error uploading recipe:", error);
