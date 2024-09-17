@@ -18,7 +18,7 @@ export const uploadToCloudinary = async (file: Buffer) => {
 
 export const handleUpload = async (file: string) => {
   const result = await cloudinary.uploader.upload(file, {
-    resource_type: "auto",
+    resource_type: "image",
     transformation: { crop: "thumb", width: 600, height: 600 }
   });
 
