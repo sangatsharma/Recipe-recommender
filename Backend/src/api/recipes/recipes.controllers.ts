@@ -287,8 +287,8 @@ export const recipeReviewAddHandler = async (req: Request, res: Response, next: 
 
     await db.insert(notificationSchema).values({
       type: "comment",
-      by: recipeDB[0].AuthorId,
-      to: userCookie.id,
+      by: userCookie.id,
+      to: recipeDB[0].AuthorId,
       name: u[0].name,
       extra: `${recipeDB[0].RecipeId}, ${recipeDB[0].Name}`
     });
