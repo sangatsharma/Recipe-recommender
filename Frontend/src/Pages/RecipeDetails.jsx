@@ -107,13 +107,15 @@ const RecipeDetails = () => {
           `${import.meta.env.VITE_SERVER_URL}/recipe/review/${id}`,
           { withCredentials: true }
         );
-        if (userId && commentRefs.current[userId]) {
-          commentRefs.current[userId].scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
-        }
         setComments(response.data.body);
+        if (userId && commentRefs.current[userId]) {
+          setTimeout(() => {
+            commentRefs.current[userId].scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }, 100); // Adjust the delay as needed
+        }
       } catch (err) {
         console.error(err);
       }
