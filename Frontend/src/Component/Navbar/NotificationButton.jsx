@@ -71,7 +71,9 @@ const NotificationButton = () => {
   };
 
   // Filter unread notifications for count
-  const unreadCount = notifications.filter((notif) => !notif.read).length;
+  const unreadCount = notifications.filter(
+    (notif) => !notif.read && notif.type !== "unfollow"
+  ).length;
 
   return (
     <div className="relative inline-block" ref={dropdownRef}>
@@ -117,7 +119,7 @@ const NotificationButton = () => {
                       key={index}
                       className={`px-4 py-2 hover:bg-gray-200 w-full text-sm text-left ${
                         notification.read ? "text-gray-400" : ""
-                      }`}
+                      } ${notification.type === "unfollow" ? "hidden" : ""}`}
                     >
                       {notification.type === "comment" ? (
                         <span

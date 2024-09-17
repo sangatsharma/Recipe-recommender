@@ -40,7 +40,6 @@ const RecipeDetails = () => {
 
   //for scrolling to comment if redirected from notifications
   const userId = location.state?.commentId || null;
-  console.log("userId", userId);
   const commentRefs = useRef({});
 
   const [downloading, setDownloading] = useState(false);
@@ -108,14 +107,13 @@ const RecipeDetails = () => {
           `${import.meta.env.VITE_SERVER_URL}/recipe/review/${id}`,
           { withCredentials: true }
         );
-        setComments(response.data.body);
         if (userId && commentRefs.current[userId]) {
-          console.log("Scrolling to comment:", userId);
           commentRefs.current[userId].scrollIntoView({
             behavior: "smooth",
             block: "center",
           });
         }
+        setComments(response.data.body);
       } catch (err) {
         console.error(err);
       }
