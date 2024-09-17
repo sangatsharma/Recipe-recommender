@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handleUploads = exports.multipleUpload = exports.handleUpload = exports.uploadToCloudinary = void 0;
+exports.handleUploads = exports.multipleUpload = exports.handleUpload = exports.uploadFilesToCloudinary = exports.uploadToCloudinary = void 0;
 const cloudinary_1 = require("cloudinary");
 const config_1 = require("./config");
 cloudinary_1.v2.config({
@@ -10,7 +10,7 @@ cloudinary_1.v2.config({
 });
 const uploadToCloudinary = async (file) => {
     return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto", format: "jpg" }, (e, r) => {
+        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (e, r) => {
             if (e)
                 reject(e);
             else
@@ -19,6 +19,14 @@ const uploadToCloudinary = async (file) => {
     });
 };
 exports.uploadToCloudinary = uploadToCloudinary;
+const uploadFilesToCloudinary = async (file) => {
+    const result = await cloudinary_1.v2.uploader.upload(file, {
+        resource_type: "auto",
+        format: "jpg",
+    });
+    return result;
+};
+exports.uploadFilesToCloudinary = uploadFilesToCloudinary;
 const handleUpload = async (file) => {
     const result = await cloudinary_1.v2.uploader.upload(file, {
         resource_type: "auto",
