@@ -30,7 +30,7 @@ export const multipleUpload = async (images: Express.Multer.File[]) => {
   for (const image of images) {
 
     const result: string = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+      cloudinary.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
         if (err) reject(err);
         else resolve(res?.secure_url as string);
       }).end(image.buffer);
