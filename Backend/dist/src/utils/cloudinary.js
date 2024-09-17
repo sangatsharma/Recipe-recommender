@@ -10,7 +10,7 @@ cloudinary_1.v2.config({
 });
 const uploadToCloudinary = async (file) => {
     return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (e, r) => {
+        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto", format: "jpg" }, (e, r) => {
             if (e)
                 reject(e);
             else
