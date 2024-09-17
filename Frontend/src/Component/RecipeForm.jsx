@@ -245,6 +245,10 @@ const RecipeForm = () => {
                 <option value="Baking">Baking</option>
                 <option value="Quick & Easy">Quick & Easy</option>
                 <option value="Healthy">Healthy</option>
+                <option value="Healthy">Festivals</option>
+                <option value="Healthy">Nepali Recipes</option>
+                <option value="Healthy">Traditional Recipes</option>
+
                 {/* Add more options as needed */}
               </Field>
             </div>
