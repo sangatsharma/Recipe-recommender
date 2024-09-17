@@ -33,7 +33,6 @@ const Recipes = (props) => {
         }
       );
       if (response.status === 200) {
-        console.log(response.data.body.data1);
         setRecommendedRecipes(response.data.body.data1);
       }
     } catch (error) {
@@ -46,7 +45,7 @@ const Recipes = (props) => {
       <Helmet>
         <title>Recipes - CIY </title>
       </Helmet>
-      {recommendedRecipes.length > 0 && (
+      {recommendedRecipes?.length > 0 && (
         <fieldset
           className={`text-xl border-2 ${
             isDarkMode ? "border-gray-700" : "border-slate-300"
@@ -58,19 +57,19 @@ const Recipes = (props) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {recommendedRecipes.map((item) => {
-                return (
-                  <ItemsCard
-                    key={item.RecipeId}
-                    id={item.RecipeId}
-                    src={item.Images[0]}
-                    name={item.Name}
-                    rating={item.AggregatedRating}
-                    RecipeCategory={item.RecipeCategory}
-                    cooktime={item.CookTime}
-                    toggleTick={toggleTick}
-                    isFavorite={tickedItems.has(item.RecipeId)}
-                  ></ItemsCard>
-                );
+              return (
+                <ItemsCard
+                  key={item.RecipeId}
+                  id={item.RecipeId}
+                  src={item.Images[0]}
+                  name={item.Name}
+                  rating={item.AggregatedRating}
+                  RecipeCategory={item.RecipeCategory}
+                  cooktime={item.CookTime}
+                  toggleTick={toggleTick}
+                  isFavorite={tickedItems.has(item.RecipeId)}
+                ></ItemsCard>
+              );
             })}
           </div>
         </fieldset>
