@@ -45,18 +45,24 @@ const addNewRecipe = async (req, res, next) => {
             // });
             const imageFiles = req.files;
             const imagesToUpload = [];
-            imageFiles.map((image) => {
-                const b64 = Buffer.from(image.buffer).toString("base64");
-                const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
-                imagesToUpload.push(dataURI);
-            });
+            for (const image of imageFiles) {
+                // const b64 = Buffer.from(image.buffer).toString("base64");
+                // const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+                const u = await (0, cloudinary_1.uploadToCloudinary)(image.buffer);
+                imagesToUpload.push(u);
+            }
+            // imageFiles.map((image) => {
+            //   const b64 = Buffer.from(image.buffer).toString("base64");
+            //   const dataURI = "data:" + req.file?.mimetype + ";base64," + b64;
+            //   imagesToUpload.push(dataURI);
+            // });
             // handleUpload(dataURI).then((cldRes) => {
             //   data.Images.push(cldRes.secure_url);
             // }).catch((err) => { next(err); });
             // imagesToUpload.push(dataURI);
             // });
-            const imageUrls = await (0, cloudinary_1.handleUploads)(imagesToUpload);
-            data.Images = imageUrls;
+            // const imageUrls = await handleUploads(imagesToUpload);
+            // data.Images = imageUrls;
         }
         // const cleanedData = {
         //   ...data,
