@@ -37,6 +37,12 @@ const RecipeDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const matchedIngredients = location.state?.matchedIngredients || [];
+
+  //for scrolling to comment if redirected from notifications
+  const userId = location.state?.commentId || null;
+  console.log("userId", userId);
+  const commentRefs = useRef({});
+
   const [downloading, setDownloading] = useState(false);
 
   const DownloadPdf = () => {
@@ -103,13 +109,20 @@ const RecipeDetails = () => {
           { withCredentials: true }
         );
         setComments(response.data.body);
+        if (userId && commentRefs.current[userId]) {
+          console.log("Scrolling to comment:", userId);
+          commentRefs.current[userId].scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+        }
       } catch (err) {
         console.error(err);
       }
     };
 
     fetchData();
-  }, [recipeName]);
+  }, [recipeName, userId]);
 
   // Handle comment submission
   const submitComment = async () => {
@@ -516,7 +529,11 @@ const RecipeDetails = () => {
           </h3>
           {comments.length > 0 ? (
             comments.map((comment, index) => (
-              <div key={index} className="p-4 border-b border-gray-200">
+              <div
+                key={index}
+                className="p-4 border-b border-gray-200"
+                ref={(el) => (commentRefs.current[comment.userId] = el)}
+              >
                 <div className="flex flex-row justify-between">
                   <section className="flex flex-row flex-wrap gap-2">
                     <p className="font-medium ">

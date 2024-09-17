@@ -62,6 +62,7 @@ const NotificationButton = () => {
     );
     setNotifications(updatedNotifications);
     localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    toggleNotification();
   };
 
   // Toggle dropdown when clicking the button
@@ -110,6 +111,7 @@ const NotificationButton = () => {
                 notifications.map((notification, index) => {
                   const date = new Date(notification.time);
                   const formatedDate = dateFormater(date.toISOString());
+
                   return (
                     <button
                       key={index}
@@ -117,12 +119,33 @@ const NotificationButton = () => {
                         notification.read ? "text-gray-400" : ""
                       }`}
                     >
-                      {notification.type === "review" ? (
-                        <>
-                          <span className="font-bold">{notification.by} </span>
-                          reviewed your recipe.
-                        </>
-                      ) : (
+                      {notification.type === "comment" ? (
+                        <span
+                          onClick={() => {
+                            const recipeId = notification.extra.split(",")[0];
+                            const recipeName =
+                              notification.extra.split(", ")[1];
+                            const path = `/recipes/${recipeName.replace(
+                              /\s/g,
+                              "_"
+                            )}_${recipeId}`;
+
+                            navigate(path, {
+                              state: { commentId: notification.by },
+                            });
+                            handleNotificationClick(index);
+                          }}
+                        >
+                          <span className="font-bold">
+                            {notification.name}{" "}
+                          </span>
+                          commented on your recipe.
+                          <span className="text-[0.8rem] ">
+                            {" "}
+                            • {formatedDate}
+                          </span>
+                        </span>
+                      ) : notification.type === "follow" ? (
                         <span
                           onClick={() => {
                             navigate(
@@ -137,9 +160,12 @@ const NotificationButton = () => {
                             {notification.name}{" "}
                           </span>
                           is now following you.
-                          <span className="text-[0.8rem] "> • {formatedDate}</span>
+                          <span className="text-[0.8rem] ">
+                            {" "}
+                            • {formatedDate}
+                          </span>
                         </span>
-                      )}
+                      ) : null}
                     </button>
                   );
                 })}
