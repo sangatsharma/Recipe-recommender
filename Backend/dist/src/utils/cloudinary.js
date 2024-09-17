@@ -31,7 +31,7 @@ const multipleUpload = async (images) => {
     const urls = [];
     for (const image of images) {
         const result = await new Promise((resolve, reject) => {
-            cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
+            cloudinary_1.v2.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
                 if (err)
                     reject(err);
                 else
