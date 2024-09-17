@@ -27,13 +27,19 @@ export const handleUpload = async (file: string) => {
 
 export const handleUploads = async (files: string[]) => {
   const urls: string[] = [];
-  for (const file of files) {
-    await new Promise((resolve, reject) => {
+
+  const helper = async (file: string) => {
+    return new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
         if (err) reject(err);
-        else urls.push(res?.secure_url as string);
+        else resolve(res?.secure_url);
       }).end(file);
     });
+  };
+
+  for (const file of files) {
+    const u: string = await helper(file) as string;
+    urls.push(u);
   }
 
   return urls;

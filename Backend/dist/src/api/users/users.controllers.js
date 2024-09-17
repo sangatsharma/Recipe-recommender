@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
+exports.notificationCont = exports.userProfile = exports.getUserPreferences = exports.updateUserPreferences = exports.updateUserInfo = exports.recipeFavouriteGetHandler = exports.favouriteRecipeHandler = exports.tmpDemo = exports.validateToken = exports.followUser = exports.userInfoHandler = void 0;
 // JWT
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../../utils/config");
@@ -100,6 +100,12 @@ const followUser = async (req, res, _) => {
             followers: (0, drizzle_orm_1.sql) `array_remove(${users_models_1.userSchema.followers}, ${currentUser.body.id} )`,
         }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.id, followedUser.id));
     }
+    await db_1.db.insert(users_models_1.notificationSchema).values({
+        type: "follow",
+        by: currentUser.body.id,
+        to: followedUser.id,
+        name: currentUser.body.name,
+    });
     // Update user's followers
     // await db.update(userSchema).set({
     //   "followers": followedUser.followers + 1,
@@ -366,3 +372,19 @@ const userProfile = async (req, res, next) => {
     }
 };
 exports.userProfile = userProfile;
+const notificationCont = async (req, res, next) => {
+    try {
+        const notifications = await db_1.db.select().from(users_models_1.notificationSchema).where((0, drizzle_orm_1.eq)(users_models_1.notificationSchema.to, Number(res.locals.user.id)));
+        return res.json({
+            success: true,
+            message: {
+                body: notifications,
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+exports.notificationCont = notificationCont;
