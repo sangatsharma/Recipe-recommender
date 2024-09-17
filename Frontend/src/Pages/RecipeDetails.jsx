@@ -537,7 +537,16 @@ const RecipeDetails = () => {
                 <div className="flex flex-row justify-between">
                   <section className="flex flex-row flex-wrap gap-2">
                     <p className="font-medium ">
-                      <strong className="text-xl below-sm:text-sm">
+                      <strong
+                        className="text-xl below-sm:text-sm cursor-pointer hover:underline"
+                        onClick={() => {
+                          navigate(
+                            `/profile/${comment.userName?.split(" ")[0]}_${
+                              comment.userId
+                            }`
+                          );
+                        }}
+                      >
                         {comment.userName}:
                       </strong>
                     </p>
