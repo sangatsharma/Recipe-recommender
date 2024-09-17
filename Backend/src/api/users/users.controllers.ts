@@ -12,11 +12,11 @@ import {
 } from "@/utils/config";
 
 // DB
-import { arrayOverlaps, eq, inArray, sql } from "drizzle-orm";
+import { arrayOverlaps, eq, getTableColumns, inArray, sql } from "drizzle-orm";
 
 import { db } from "@/utils/db";
 import { recipeSchema } from "@/api/recipes/recipes.models";
-import { userPref, userSchema, UserSchemaType } from "@/api/users/users.models";
+import { notificationSchema, userPref, userSchema, UserSchemaType } from "@/api/users/users.models";
 import { userExists } from "./auth/auth.helpers";
 import { uploadToCloudinary } from "@/utils/cloudinary";
 
@@ -128,6 +128,13 @@ export const followUser = async (req: Request, res: Response, _: NextFunction) =
       followers: sql`array_remove(${userSchema.followers}, ${currentUser.body.id} )`,
     }).where(eq(userSchema.id, followedUser.id));
   }
+
+  await db.insert(notificationSchema).values({
+    type: "follow",
+    by: currentUser.body.id,
+    to: followedUser.id,
+    name: currentUser.body.name,
+  });
 
   // Update user's followers
   // await db.update(userSchema).set({
@@ -454,6 +461,24 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
     // return res.json(userTmp);
   }
   catch (err) {
+    next(err);
+  }
+};
+
+
+export const notificationCont = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const notifications = await db.select().from(notificationSchema).where(eq(notificationSchema.to, Number(res.locals.user.id)));
+
+    return res.json({
+      success: true,
+      message: {
+        body: notifications,
+      }
+    });
+  }
+  catch (err) {
+    console.log(err);
     next(err);
   }
 };

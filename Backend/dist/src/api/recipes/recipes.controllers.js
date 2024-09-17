@@ -397,6 +397,8 @@ const recipeRecommend = async (req, res, next) => {
 exports.recipeRecommend = recipeRecommend;
 const exploreRoute = async (req, res, next) => {
     try {
+        // const demo = await db.select().from(recipeSchema).orderBy(desc(recipeSchema.DatePublished)).leftJoin(userSchema, eq(recipeSchema.AuthorId, userSchema.id));
+        // console.log(demo);
         const recipesOrder = await db_1.db.select().from(recipes_models_1.recipeSchema).orderBy((0, drizzle_orm_1.desc)(recipes_models_1.recipeSchema.DatePublished));
         res.json({
             success: true,
