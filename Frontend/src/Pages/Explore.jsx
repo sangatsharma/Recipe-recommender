@@ -5,7 +5,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Spinner from "../Component/Loader/Spinner";
 import { fetchUserById } from "../utils/auth";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 const Explore = (props) => {
   const { isDarkMode } = useThemeContext();
   const [exploreItems, setExploreItems] = useState([]);
@@ -13,6 +14,10 @@ const Explore = (props) => {
   const [userDetails, setUserDetails] = useState({});
 
   useEffect(() => {
+    AOS.init({
+      duration: 500, // Animation duration in milliseconds
+      once: false, // Whether animation should happen only once or every time you scroll
+    });
     getFeed();
   }, []);
 
@@ -54,12 +59,13 @@ const Explore = (props) => {
       </Helmet>
       {renderRecipes.length > 0 &&
         renderRecipes.map((item, index) => (
-          <PostCard
-            darkMode={isDarkMode}
-            recipeDetails={item}
-            key={index}
-            user={userDetails[item.AuthorId]}
-          />
+          <div key={index} data-aos="fade-up">
+            <PostCard
+              darkMode={isDarkMode}
+              recipeDetails={item}
+              user={userDetails[item.AuthorId]}
+            />
+          </div>
         ))}
       <button
         className=" bg-blue-700 hover:bg-blue-600 py-2 px-4 mt-4 mb-2 rounded-md text-white"
