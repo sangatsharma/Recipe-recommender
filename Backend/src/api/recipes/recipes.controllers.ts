@@ -5,6 +5,7 @@ import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm"
 import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
 import { uploadFilesToCloudinary, uploadToCloudinary } from "@/utils/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 
 /*
   FETCH ALL RECIPIES
@@ -54,8 +55,11 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
       const imagesToUpload: string[] = [];
 
       for (const image of imageFiles) {
-        const u = await uploadFilesToCloudinary(image.buffer);
-        imagesToUpload.push(u as string);
+        const b64 = Buffer.from(image.buffer).toString("base64");
+        const dataURI = (("data:" + image.mimetype)) + ";base64," + b64;
+        const cldRes: UploadApiResponse = await uploadFilesToCloudinary(dataURI);
+
+        imagesToUpload.push(cldRes.secure_url);
       }
 
       data.Images = imagesToUpload;
@@ -104,6 +108,51 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
   catch (err) {
     next(err);
   }
+};
+
+export const removeRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  const body = req.body as { recipeId: number };
+  const userId = res.locals.user as { id: number };
+
+  try {
+
+    const recipe = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+    if (recipe.length === 0) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Recipe with provided id dosen't exist",
+        }
+      });
+    }
+
+    else if (recipe[0].AuthorId !== userId.id) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Cannot delete recipe",
+        }
+      });
+    }
+
+    // const deletedRecipe = await db.delete().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+    await db.delete(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+
+    return res.send({
+      success: true,
+      body: {
+        message: "Reicpe successfully removed"
+      }
+    });
+  }
+
+
+  catch (err) {
+    console.log(err);
+    next(err);
+  }
+
+
 };
 
 

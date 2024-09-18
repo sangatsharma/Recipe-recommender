@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exploreRoute = exports.recipeRecommend = exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
+exports.exploreRoute = exports.recipeRecommend = exports.searchRecipe = exports.recommendRecipies = exports.recipeReviewGet = exports.recipeReviewRemoveHandler = exports.recipeReviewAddHandler = exports.recipeDetails = exports.filterDemo = exports.filterRecipe = exports.removeRecipe = exports.addNewRecipe = exports.returnAllRecipies = void 0;
 const db_1 = require("../../utils/db");
 const recipes_models_1 = require("./recipes.models");
 const drizzle_orm_1 = require("drizzle-orm");
@@ -46,8 +46,10 @@ const addNewRecipe = async (req, res, next) => {
             const imageFiles = req.files;
             const imagesToUpload = [];
             for (const image of imageFiles) {
-                const u = await (0, cloudinary_1.uploadFilesToCloudinary)(image.buffer);
-                imagesToUpload.push(u);
+                const b64 = Buffer.from(image.buffer).toString("base64");
+                const dataURI = (("data:" + image.mimetype)) + ";base64," + b64;
+                const cldRes = await (0, cloudinary_1.uploadFilesToCloudinary)(dataURI);
+                imagesToUpload.push(cldRes.secure_url);
             }
             data.Images = imagesToUpload;
             // imageFiles.map((image) => {
@@ -90,6 +92,42 @@ const addNewRecipe = async (req, res, next) => {
     }
 };
 exports.addNewRecipe = addNewRecipe;
+const removeRecipe = async (req, res, next) => {
+    const body = req.body;
+    const userId = res.locals.user;
+    try {
+        const recipe = await db_1.db.select().from(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, body.recipeId));
+        if (recipe.length === 0) {
+            return res.json({
+                success: false,
+                body: {
+                    message: "Recipe with provided id dosen't exist",
+                }
+            });
+        }
+        else if (recipe[0].AuthorId !== userId.id) {
+            return res.json({
+                success: false,
+                body: {
+                    message: "Cannot delete recipe",
+                }
+            });
+        }
+        // const deletedRecipe = await db.delete().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+        await db_1.db.delete(recipes_models_1.recipeSchema).where((0, drizzle_orm_1.eq)(recipes_models_1.recipeSchema.RecipeId, body.recipeId));
+        return res.send({
+            success: true,
+            body: {
+                message: "Reicpe successfully removed"
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        next(err);
+    }
+};
+exports.removeRecipe = removeRecipe;
 /*
   FILTER RECIPIES
   USAGE: Pass an object with options to filter through.

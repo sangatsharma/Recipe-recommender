@@ -6,7 +6,7 @@
     -> "/filter" with POST  = search specific
 */
 import express, { RequestHandler } from "express";
-import { addNewRecipe, filterDemo, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, returnAllRecipies, searchRecipe, recipeRecommend, exploreRoute } from "./recipes.controllers";
+import { addNewRecipe, filterDemo, filterRecipe, recipeDetails, recipeReviewAddHandler, recipeReviewGet, recipeReviewRemoveHandler, returnAllRecipies, searchRecipe, recipeRecommend, exploreRoute, removeRecipe } from "./recipes.controllers";
 import { authenticateJWT } from "@/utils/middleware";
 
 import multer from "multer";
@@ -19,6 +19,7 @@ const upload = multer({ storage: storage });
 // ROUTES
 recipeRouter.get("/", authenticateJWT, returnAllRecipies);
 recipeRouter.post("/", upload.array("files"), authenticateJWT, addNewRecipe as RequestHandler);
+recipeRouter.post("/remove", authenticateJWT, removeRecipe as RequestHandler);
 recipeRouter.post("/filter", filterRecipe);
 recipeRouter.post("/review/add", authenticateJWT, recipeReviewAddHandler as RequestHandler);
 recipeRouter.post("/review/remove", authenticateJWT, recipeReviewRemoveHandler as RequestHandler);
