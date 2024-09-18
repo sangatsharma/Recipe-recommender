@@ -108,7 +108,7 @@ const RecipeDetails = () => {
           { withCredentials: true }
         );
         setComments(response.data.body);
-        if (userId && commentRefs.current[userId]) {
+        if (userId) {
           window.scrollTo({
             top: document.body.scrollHeight,
             behavior: "smooth",
