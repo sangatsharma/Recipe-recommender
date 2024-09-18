@@ -130,12 +130,12 @@ const RecipeForm = () => {
           if (selectedImages.length > 0) {
             let i = 1;
             for (const image of selectedImages) {
-              const imageFile = await createFileFromBlobUrl(
-                image,
-                `${values.Name.split(" ").join("") + i++}.jpg`,
-                "image/jpeg"
-              );
-              Images.push(imageFile);
+              // const imageFile = await createFileFromBlobUrl(
+              //   image,
+              //   `${values.Name.split(" ").join("") + i++}.jpg`,
+              //   "image/jpeg"
+              // );
+              Images.push(image);
             }
           }
 
