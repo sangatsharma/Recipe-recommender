@@ -109,12 +109,10 @@ const RecipeDetails = () => {
         );
         setComments(response.data.body);
         if (userId && commentRefs.current[userId]) {
-          setTimeout(() => {
-            commentRefs.current[userId].scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }, 100); // Adjust the delay as needed
+          window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: "smooth",
+          }); // Adjust the delay as needed
         }
       } catch (err) {
         console.error(err);
