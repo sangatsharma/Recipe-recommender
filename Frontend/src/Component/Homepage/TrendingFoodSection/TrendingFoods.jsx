@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useFavContext } from "../../../context/FavContext.jsx";
 import { useThemeContext } from "../../../context/ThemeContext.jsx";
 import { useRecipesContext } from "../../../context/RecipeContext.jsx";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const TrendingFoods = () => {
   const { tickedItems, toggleTick } = useFavContext();
@@ -12,6 +14,10 @@ const TrendingFoods = () => {
   const [popularItems, setPopularItems] = useState([]);
 
   useEffect(() => {
+    AOS.init({
+      duration: 500, // Animation duration in milliseconds
+      once: false, // Whether animation should happen only once or every time you scroll
+    });
     try {
       if (!loading) {
         setPopularItems(recipes);
@@ -34,19 +40,20 @@ const TrendingFoods = () => {
           </legend>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {popularItems.slice(0, 8).map((item) => {
+            {popularItems.slice(0, 12).map((item) => {
               return (
-                <ItemsCard
-                  key={item.RecipeId}
-                  id={item.RecipeId}
-                  src={item.Images[0]}
-                  name={item.Name}
-                  rating={item.AggregatedRating}
-                  RecipeCategory={item.RecipeCategory}
-                  cooktime={item.CookTime}
-                  toggleTick={toggleTick}
-                  isFavorite={tickedItems.has(item.RecipeId)}
-                ></ItemsCard>
+                <div key={item.RecipeId} data-aos="fade-up">
+                  <ItemsCard
+                    id={item.RecipeId}
+                    src={item.Images[0]}
+                    name={item.Name}
+                    rating={item.AggregatedRating}
+                    RecipeCategory={item.RecipeCategory}
+                    cooktime={item.CookTime}
+                    toggleTick={toggleTick}
+                    isFavorite={tickedItems.has(item.RecipeId)}
+                  ></ItemsCard>
+                </div>
               );
             })}
           </div>
@@ -67,17 +74,18 @@ const TrendingFoods = () => {
                 item.RecipeCategory === "Festivals"
               )
                 return (
-                  <ItemsCard
-                    key={item.RecipeId}
-                    id={item.RecipeId}
-                    src={item.Images[0]}
-                    name={item.Name}
-                    rating={item.AggregatedRating}
-                    RecipeCategory={item.RecipeCategory}
-                    cooktime={item.CookTime}
-                    toggleTick={toggleTick}
-                    isFavorite={tickedItems.has(item.RecipeId)}
-                  ></ItemsCard>
+                  <div key={item.RecipeId} data-aos="fade-up">
+                    <ItemsCard
+                      id={item.RecipeId}
+                      src={item.Images[0]}
+                      name={item.Name}
+                      rating={item.AggregatedRating}
+                      RecipeCategory={item.RecipeCategory}
+                      cooktime={item.CookTime}
+                      toggleTick={toggleTick}
+                      isFavorite={tickedItems.has(item.RecipeId)}
+                    ></ItemsCard>
+                  </div>
                 );
             })}
           </div>

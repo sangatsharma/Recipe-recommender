@@ -5,7 +5,8 @@ import { useThemeContext } from "../context/ThemeContext.jsx";
 import { useRecipesContext } from "../context/RecipeContext.jsx";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard.jsx";
 import axios from "axios";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 const Recipes = (props) => {
   const { tickedItems, toggleTick } = useFavContext();
   const { isDarkMode } = useThemeContext();
@@ -14,6 +15,11 @@ const Recipes = (props) => {
   const [recommendedRecipes, setRecommendedRecipes] = useState([]);
 
   useEffect(() => {
+
+    AOS.init({
+      duration: 500, // Animation duration in milliseconds
+      once: false, // Whether animation should happen only once or every time you scroll
+    });
     try {
       if (!loading) {
         setAllRecipes(recipes);
@@ -58,8 +64,8 @@ const Recipes = (props) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {recommendedRecipes.map((item) => {
               return (
+                <div key={item.RecipeId} data-aos="fade-up">
                 <ItemsCard
-                  key={item.RecipeId}
                   id={item.RecipeId}
                   src={item.Images[0]}
                   name={item.Name}
@@ -69,6 +75,7 @@ const Recipes = (props) => {
                   toggleTick={toggleTick}
                   isFavorite={tickedItems.has(item.RecipeId)}
                 ></ItemsCard>
+              </div>
               );
             })}
           </div>
@@ -91,17 +98,18 @@ const Recipes = (props) => {
               item.Keywords.includes("Nepali")
             )
               return (
-                <ItemsCard
-                  key={item.RecipeId}
-                  id={item.RecipeId}
-                  src={item.Images[0]}
-                  name={item.Name}
-                  rating={item.AggregatedRating}
-                  RecipeCategory={item.RecipeCategory}
-                  cooktime={item.CookTime}
-                  toggleTick={toggleTick}
-                  isFavorite={tickedItems.has(item.RecipeId)}
-                ></ItemsCard>
+                <div key={item.RecipeId} data-aos="fade-up">
+                  <ItemsCard
+                    id={item.RecipeId}
+                    src={item.Images[0]}
+                    name={item.Name}
+                    rating={item.AggregatedRating}
+                    RecipeCategory={item.RecipeCategory}
+                    cooktime={item.CookTime}
+                    toggleTick={toggleTick}
+                    isFavorite={tickedItems.has(item.RecipeId)}
+                  ></ItemsCard>
+                </div>
               );
           })}
         </div>
