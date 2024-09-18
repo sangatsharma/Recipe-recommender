@@ -20,14 +20,21 @@ const uploadToCloudinary = async (file) => {
 };
 exports.uploadToCloudinary = uploadToCloudinary;
 const uploadFilesToCloudinary = async (file) => {
-    return new Promise((resolve, reject) => {
-        cloudinary_1.v2.uploader.upload_stream({ resource_type: "auto", transformation: { width: 600, height: 600 } }, (e, r) => {
-            if (e)
-                reject(e);
-            else
-                resolve(r?.secure_url);
-        }).end(file);
+    const res = await cloudinary_1.v2.uploader.upload(file, {
+        resource_type: "auto"
     });
+    return res;
+    // const res = await cloudinary.v2.uploader.upload(file, {
+    //   resource_type: "auto",
+    //   folder: "itemimages",
+    // });
+    // return res;
+    // return new Promise((resolve, reject) => {
+    //   cloudinary.uploader.upload_stream({ resource_type: "auto", transformation: { width: 600, height: 600 } }, (e, r) => {
+    //     if (e) reject(e);
+    //     else resolve(r?.secure_url);
+    //   }).end(file);
+    // });
 };
 exports.uploadFilesToCloudinary = uploadFilesToCloudinary;
 const handleUpload = async (file) => {
