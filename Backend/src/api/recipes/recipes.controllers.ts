@@ -52,6 +52,8 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
 
 
       const imageFiles = req.files as Express.Multer.File[];
+      console.log(imageFiles);
+
       const imagesToUpload: string[] = [];
 
       for (const image of imageFiles) {
@@ -506,8 +508,13 @@ export const recipeRecommend = async (req: Request, res: Response, next: NextFun
   }
   try {
     // const resData: postgres.RowList<Record<string, unknown>[]> = [];
-    const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
-    (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+    // const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
+    // (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+    const data1 = await db.execute(sql`(select * from recipes where array["Keywords"] <@ 
+        (select "Keywords" from recipes where "RecipeId" in 
+        (select "RecipeId" from "favouriteRecipes" where "userId" = ${userId})
+        LIMIT 5)
+      )`);
     const data2 = await db.execute(sql`SELECT * FROM recipes where "RecipeId" = 
       ANY(ARRAY(SELECT "favourite" from users WHERE id=${userId})) LIMIT 5`);
 
