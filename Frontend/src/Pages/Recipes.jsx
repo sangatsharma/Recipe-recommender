@@ -55,13 +55,13 @@ const Recipes = (props) => {
         <fieldset
           className={`text-xl border-2 ${
             isDarkMode ? "border-gray-700" : "border-slate-300"
-          } rounded-lg p-2`}
+          } rounded-lg p-2 m-auto `}
         >
           <legend className="px-2 text-3xl text-center font-semibold  decoration-2">
             Recommended for you
           </legend>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-auto place-items-center">
             {recommendedRecipes.map((item) => {
               return (
                 <div key={item.RecipeId} data-aos="fade-up">
@@ -85,13 +85,13 @@ const Recipes = (props) => {
       <fieldset
         className={`text-xl border-2 ${
           isDarkMode ? "border-gray-700" : "border-slate-300"
-        } rounded-lg p-2`}
+        } rounded-lg p-2 mt-4`}
       >
         <legend className="px-2 text-3xl text-center font-semibold  decoration-2">
           Nepali Delights
         </legend>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center">
           {allRecipes.map((item) => {
             if (
               item.RecipeCategory == "Nepalese" ||
