@@ -123,7 +123,7 @@ const RecipeForm = () => {
           ),
           RecipeInstructions: Yup.array().of(Yup.string().required("Required")),
         })}
-        onSubmit={async (values) => {
+        onSubmit={async (values, { resetForm }) => {
           setSubmitting(true);
           // Handle form submission
           let Images = [];
@@ -131,7 +131,7 @@ const RecipeForm = () => {
             let i = 1;
             for (const image of selectedImages) {
               const imageFile = await createFileFromBlobUrl(
-                image,
+                image.url,
                 `${values.Name.split(" ").join("") + i++}.jpg`,
                 "image/jpeg"
               );
@@ -172,6 +172,7 @@ const RecipeForm = () => {
             if (response.data.success) {
               toast.success("Recipe uploaded successfully.");
               resetForm();
+              setSelectedImages([]);
             }
           } catch (error) {
             console.error("Error uploading recipe:", error);
