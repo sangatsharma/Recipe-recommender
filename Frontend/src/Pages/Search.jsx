@@ -7,6 +7,8 @@ import SearchBanner from "../Component/SearchBanner/SearchBanner";
 import ItemsCard from "../Component/Homepage/TrendingFoodSection/ItemsCard";
 import { useFavContext } from "../context/FavContext";
 import { rankFoodItems } from "../utils/filterItems";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const Search = () => {
   const location = useLocation();
@@ -21,6 +23,10 @@ const Search = () => {
   const [prevSearch, setPrevSearch] = useState("");
 
   useEffect(() => {
+    AOS.init({
+      duration: 500, // Animation duration in milliseconds
+      once: false, // Whether animation should happen only once or every time you scroll
+    });
     const searchParams = new URLSearchParams(location.search);
 
     // Extract parameters
@@ -123,20 +129,20 @@ const Search = () => {
             (activeFilter.includes("Recipes") ||
               activeFilter.includes("Ingredients")) &&
             fetchItems.map((item) => {
-              
               return (
-                <ItemsCard
-                  key={item.RecipeId}
-                  id={item.RecipeId}
-                  src={item.Images[0]}
-                  name={item.Name}
-                  rating={item.AggregatedRating}
-                  RecipeCategory={item.RecipeCategory}
-                  cooktime={item.CookTime}
-                  isFavorite={tickedItems.has(item.RecipeId)}
-                  toggleTick={toggleTick}
-                  matchedIngredients={item.matchedIngredients}
-                />
+                <div key={item.RecipeId} data-aos="fade-up">
+                  <ItemsCard
+                    id={item.RecipeId}
+                    src={item.Images[0]}
+                    name={item.Name}
+                    rating={item.AggregatedRating}
+                    RecipeCategory={item.RecipeCategory}
+                    cooktime={item.CookTime}
+                    isFavorite={tickedItems.has(item.RecipeId)}
+                    toggleTick={toggleTick}
+                    matchedIngredients={item.matchedIngredients}
+                  />
+                </div>
               );
             })}
         </div>

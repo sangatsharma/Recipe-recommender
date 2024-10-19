@@ -4,7 +4,8 @@ import { recipeReview, recipeSchema, RecipeSchemaType } from "./recipes.models";
 import { SQL, eq, lte, and, ilike, sql, arrayContains, desc } from "drizzle-orm";
 import { notificationSchema, userSchema } from "../users/users.models";
 import { userExists } from "../users/auth/auth.helpers";
-import { handleUpload, uploadToCloudinary } from "@/utils/cloudinary";
+import { uploadFilesToCloudinary, uploadToCloudinary } from "@/utils/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 
 /*
   FETCH ALL RECIPIES
@@ -51,14 +52,16 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
 
 
       const imageFiles = req.files as Express.Multer.File[];
+      console.log(imageFiles);
+
       const imagesToUpload: string[] = [];
 
       for (const image of imageFiles) {
         const b64 = Buffer.from(image.buffer).toString("base64");
-        const dataURI = "data:" + image.mimetype + ";base64," + b64;
+        const dataURI = (("data:" + image.mimetype)) + ";base64," + b64;
+        const cldRes: UploadApiResponse = await uploadFilesToCloudinary(dataURI);
 
-        const u = await handleUpload(dataURI);
-        imagesToUpload.push(u.secure_url);
+        imagesToUpload.push(cldRes.secure_url);
       }
 
       data.Images = imagesToUpload;
@@ -107,6 +110,51 @@ export const addNewRecipe = async (req: Request, res: Response, next: NextFuncti
   catch (err) {
     next(err);
   }
+};
+
+export const removeRecipe = async (req: Request, res: Response, next: NextFunction) => {
+  const body = req.body as { recipeId: number };
+  const userId = res.locals.user as { id: number };
+
+  try {
+
+    const recipe = await db.select().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+    if (recipe.length === 0) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Recipe with provided id dosen't exist",
+        }
+      });
+    }
+
+    else if (recipe[0].AuthorId !== userId.id) {
+      return res.json({
+        success: false,
+        body: {
+          message: "Cannot delete recipe",
+        }
+      });
+    }
+
+    // const deletedRecipe = await db.delete().from(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+    await db.delete(recipeSchema).where(eq(recipeSchema.RecipeId, body.recipeId));
+
+    return res.send({
+      success: true,
+      body: {
+        message: "Reicpe successfully removed"
+      }
+    });
+  }
+
+
+  catch (err) {
+    console.log(err);
+    next(err);
+  }
+
+
 };
 
 
@@ -283,7 +331,7 @@ export const recipeReviewAddHandler = async (req: Request, res: Response, next: 
       review: (body?.review) ? body.review : null,
     }).returning();
 
-    const u = await db.select().from(userSchema).where(eq(userSchema.id, recipeDB[0].AuthorId));
+    const u = await db.select().from(userSchema).where(eq(userSchema.id, userCookie.id));
 
     // Demo
     await db.insert(notificationSchema).values({
@@ -460,8 +508,13 @@ export const recipeRecommend = async (req: Request, res: Response, next: NextFun
   }
   try {
     // const resData: postgres.RowList<Record<string, unknown>[]> = [];
-    const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
-    (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+    // const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
+    // (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+    const data1 = await db.execute(sql`(select * from recipes where array["Keywords"] <@ 
+        (select "Keywords" from recipes where "RecipeId" in 
+        (select "RecipeId" from "favouriteRecipes" where "userId" = ${userId})
+        LIMIT 5)
+      )`);
     const data2 = await db.execute(sql`SELECT * FROM recipes where "RecipeId" = 
       ANY(ARRAY(SELECT "favourite" from users WHERE id=${userId})) LIMIT 5`);
 

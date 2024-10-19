@@ -30,13 +30,13 @@ const ItemsCard = ({
   const fallbackSrc =
     "https://www.thermaxglobal.com/wp-content/uploads/2020/05/image-not-found.jpg";
 
-  function isValidImageUrl(url) {
-    // Define regular expression for image URL
-    const regex = /\.(jpeg|jpg|gif|png|svg)$/i;
-    if (url === null || url === undefined) return false;
-    // Test if the URL matches the regex pattern
-    return regex.test(url);
-  }
+  // function isValidImageUrl(url) {
+  //   // Define regular expression for image URL
+  //   const regex = /\.(jpeg|jpg|gif|png|svg|webp)$/i;
+  //   if (url === null || url === undefined) return false;
+  //   // Test if the URL matches the regex pattern
+  //   return regex.test(url);
+  // }
 
   return (
     <div
@@ -47,7 +47,7 @@ const ItemsCard = ({
       <div className="ImageContainer">
         <img
           loading="lazy"
-          src={isValidImageUrl(src) ? src : fallbackSrc}
+          src={src ?? fallbackSrc}
           alt={name}
           onClick={handleClick}
         />

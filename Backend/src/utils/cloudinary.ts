@@ -9,21 +9,58 @@ cloudinary.config({
 
 export const uploadToCloudinary = async (file: Buffer) => {
   return new Promise((resolve, reject) => {
-    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (err, res) => {
-      if (err) reject(err);
-      else resolve(res?.secure_url);
+    cloudinary.uploader.upload_stream({ resource_type: "auto" }, (e, r) => {
+      if (e) reject(e);
+      else resolve(r?.secure_url);
     }).end(file);
   });
 };
 
+export const uploadFilesToCloudinary = async (file: string) => {
+  const res = await cloudinary.uploader.upload(file, {
+    resource_type: "auto"
+  });
+  return res;
+  // const res = await cloudinary.v2.uploader.upload(file, {
+  //   resource_type: "auto",
+  //   folder: "itemimages",
+  // });
+  // return res;
+  // return new Promise((resolve, reject) => {
+  //   cloudinary.uploader.upload_stream({ resource_type: "auto", transformation: { width: 600, height: 600 } }, (e, r) => {
+  //     if (e) reject(e);
+  //     else resolve(r?.secure_url);
+  //   }).end(file);
+  // });
+};
+
 export const handleUpload = async (file: string) => {
   const result = await cloudinary.uploader.upload(file, {
-    resource_type: "image",
+    resource_type: "auto",
     transformation: { crop: "thumb", width: 600, height: 600 }
   });
 
   return result;
 };
+
+export const multipleUpload = async (images: Express.Multer.File[]) => {
+  const urls: string[] = [];
+  for (const image of images) {
+
+    const result: string = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream({ resource_type: "image" }, (err, res) => {
+        if (err) reject(err);
+        else resolve(res?.secure_url as string);
+      }).end(image.buffer);
+    });
+    cloudinary.uploader.upload_stream({ resource_type: "auto" });
+
+    urls.push(result);
+  }
+
+  return urls;
+};
+
 
 export const handleUploads = async (files: string[]) => {
   const urls: string[] = [];

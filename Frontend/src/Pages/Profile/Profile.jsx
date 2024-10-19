@@ -2,16 +2,21 @@ import { useThemeContext } from "../../context/ThemeContext";
 import { Helmet } from "react-helmet-async";
 import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { useRecipesContext } from "../../context/RecipeContext";
 import Skeleton from "../../Component/Loader/Skeleton";
 import PostCard from "../../Component/PostCard";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { fetchUserById } from "../../utils/auth";
 import PeopleCard from "../../Component/PeopleCard";
+import axios from "axios";
 
 const Profile = () => {
   const { isDarkMode } = useThemeContext();
+  const { recipes, loading: recipeLoading } = useRecipesContext();
   const { userInfo, loading } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("posts");
+  const [PostItem, setPostItem] = useState([]);
+
   const [currentUser, setCurrentUser] = useState();
   const location = useLocation();
   const author = location.state;
@@ -21,31 +26,56 @@ const Profile = () => {
   const { user } = useParams();
 
   useEffect(() => {
-    if (author) {
-      setCurrentUser(author);
-    } else if (!loading) {
-      if (user == undefined) {
-        navigate(`/profile/${path}`);
-      } else {
-        if (user == userInfo.name.split(" ")[0] + "_" + userInfo.id)
+    const initializeProfile = async () => {
+      if (author) {
+        // If there's an author from location.state (navigated here)
+        setCurrentUser(author);
+        fetchItems(author.posts, recipes);
+      } else if (!loading && userInfo) {
+        // If there's no author but userInfo is available (after a refresh)
+        if (
+          user === undefined ||
+          user === `${userInfo.name.split(" ")[0]}_${userInfo.id}`
+        ) {
+          // If user param matches logged in user or is undefined (your own profile)
           setCurrentUser(userInfo);
-        else {
-          // fetch user data using user id
-          fetchUserdata();
+          fetchItems(userInfo.posts, recipes);
+        } else {
+          // If we're visiting someone else's profile
+          await fetchUserdata();
         }
       }
+    };
+
+    if (!loading) {
+      if (!user) {
+        navigate(`/profile/${path}`);
+      } else {
+        initializeProfile();
+      }
     }
-  }, [user, loading]);
+  }, [author, user, loading, userInfo, recipes, navigate]);
+
+  const fetchItems = async (arrayOfId, recipes) => {
+    try {
+      const items = recipes.filter((item) => arrayOfId.includes(item.RecipeId));
+      setPostItem(items);
+    } catch (error) {
+      console.error("Error fetching item:", error);
+      throw error;
+    }
+  };
 
   const fetchUserdata = async () => {
     const userId = user.split("_")[1];
     const data = await fetchUserById(userId);
     if (data.success) {
       const userName = data.body.name.split(" ")[0] + "_" + data.body.id;
-      if (userName != user) {
+      if (userName.toLowerCase() != user.toLowerCase()) {
         setCurrentUser(undefined);
       } else {
         setCurrentUser(data.body);
+        fetchItems(data.body.posts, recipes);
       }
     } else {
       setCurrentUser(undefined);
@@ -69,12 +99,14 @@ const Profile = () => {
           <title>Profile - CIY </title>
         </Helmet>
         {/* Profile Header */}
-        <PeopleCard userDetails={currentUser} />
+        <PeopleCard userDetails={currentUser} profilePage={true} />
 
         {/* Stats */}
         <div className="flex space-x-8 mb-8">
           <div className="text-center">
-            <span className="block text-xl font-bold">{currentUser.posts}</span>
+            <span className="block text-xl font-bold">
+              {currentUser.posts.length}
+            </span>
             <span className="text-gray-500">Posts</span>
           </div>
           <div className="text-center">
@@ -115,8 +147,13 @@ const Profile = () => {
         {/* Content */}
         {activeTab === "posts" && (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-4 w-full">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <PostCard key={index} darkMode={isDarkMode} user={currentUser} />
+            {PostItem.map((_, index) => (
+              <PostCard
+                key={index}
+                darkMode={isDarkMode}
+                user={currentUser}
+                recipeDetails={PostItem[index]}
+              />
             ))}
           </div>
         )}
