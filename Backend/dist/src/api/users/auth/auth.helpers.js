@@ -27,7 +27,7 @@ const handleToken = (userData, res) => {
         sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 7,
         path: "/",
-        // domain: ".vercel.app",
+        domain: ".recipe-recommender-backend.vercel.app",
         partitioned: !jwtToken.oauth,
     };
     // const cookieRes = {
