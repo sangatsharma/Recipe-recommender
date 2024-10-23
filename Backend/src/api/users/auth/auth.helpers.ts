@@ -28,13 +28,13 @@ export const handleToken = (userData: UserDataDB, res: Response) => {
     sameSite: "lax",
     maxAge: (1000 * 60 * 60 * 24 * 7),
     path: "/",
-    // domain: ".recipe-recommender-backend.vercel.app",
+    domain: ".vercel.app",
     partitioned: !(jwtToken.oauth),
   } as CookieOptions;
 
   // Set cookie
   res.cookie("auth_token", token, cookieRes);
-  console.log("cookie set");
+
 
   // Return user details
   return ({
