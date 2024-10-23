@@ -23,25 +23,26 @@ const handleToken = (userData, res) => {
     const token = jsonwebtoken_1.default.sign(jwtToken, config_1.SECRET);
     const cookieRes = {
         secure: true,
-        sameSite: "lax",
-        maxAge: (1000 * 60 * 60 * 24 * 7),
+        httpOnly: true,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 7,
         path: "/",
         domain: ".vercel.app",
-        partitioned: !(jwtToken.oauth),
+        partitioned: !jwtToken.oauth,
     };
     // Set cookie
     res.cookie("auth_token", token, cookieRes);
     // Return user details
-    return ({
-        "success": true,
-        "body": {
-            "name": userData.name,
-            "email": userData.email,
-            "followers": userData.followers,
-            "following": userData.following,
-            "profile_pic": userData.profile_pic,
-        }
-    });
+    return {
+        success: true,
+        body: {
+            name: userData.name,
+            email: userData.email,
+            followers: userData.followers,
+            following: userData.following,
+            profile_pic: userData.profile_pic,
+        },
+    };
 };
 exports.handleToken = handleToken;
 const userRegisterHelper = async (body) => {
@@ -61,7 +62,10 @@ const userRegisterHelper = async (body) => {
 exports.userRegisterHelper = userRegisterHelper;
 const userExists = async (email) => {
     // Check for user with given email
-    const userTmp = await (db_1.db.select().from(users_models_1.userSchema).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email)));
+    const userTmp = await db_1.db
+        .select()
+        .from(users_models_1.userSchema)
+        .where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email));
     // Return resposne
     const res = {
         success: userTmp.length !== 0,
@@ -78,26 +82,29 @@ const emailVerifyer = async (jwtQuery) => {
         let dbData;
         if (data.operation === "resetPassword") {
             // Fetch user info from PasswordReset Table
-            const dbRes = (await db_1.db.delete(users_models_1.passwordResetSchema).where((0, drizzle_orm_1.eq)(users_models_1.passwordResetSchema.resetToken, jwtQuery)).returning())[0];
+            const dbRes = (await db_1.db
+                .delete(users_models_1.passwordResetSchema)
+                .where((0, drizzle_orm_1.eq)(users_models_1.passwordResetSchema.resetToken, jwtQuery))
+                .returning())[0];
             dbData = await (0, exports.changePassowrd)(data.email, dbRes.newPassword);
         }
         else if (data.operation === "verifyAccount") {
             dbData = await (0, exports.verifyAccount)(data.email);
         }
         // Return both contents combined
-        return ({
+        return {
             success: true,
             body: { ...dbData?.body, ...data },
-        });
+        };
     }
-    // Invalid or exipred key
     catch (e) {
-        return ({
+        // Invalid or exipred key
+        return {
             success: false,
             body: {
                 message: "Error. Invalid or expired link",
             },
-        });
+        };
     }
 };
 exports.emailVerifyer = emailVerifyer;
@@ -108,17 +115,19 @@ const verifyMailSender = async (email, operation, newPassword) => {
     if (email !== "") {
         // Create payload with type of operation
         const jwtPayload = {
-            "email": email,
-            "operation": operation,
+            email: email,
+            operation: operation,
         };
         // Create token valid for 10 minutes
         const jwtToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.SECRET, {
-            expiresIn: 600
+            expiresIn: 600,
         });
         let message = "";
         if (operation === "resetPassword") {
             // Insert it into a new database
-            await db_1.db.insert(users_models_1.passwordResetSchema).values({ resetToken: jwtToken, newPassword: newPassword });
+            await db_1.db
+                .insert(users_models_1.passwordResetSchema)
+                .values({ resetToken: jwtToken, newPassword: newPassword });
             message = "Reset your Password";
         }
         else
@@ -129,7 +138,7 @@ const verifyMailSender = async (email, operation, newPassword) => {
             auth: {
                 user: config_1.EMAIL_ACCOUNT,
                 pass: config_1.EMAIL_APP_PASS,
-            }
+            },
         });
         await new Promise((resolve, reject) => {
             // verify connection configuration
@@ -152,7 +161,7 @@ const verifyMailSender = async (email, operation, newPassword) => {
             html: `
 			Click on the link below to <b>${message}</b> <br>
 			https://recipe-recommender-backend.vercel.app/user/auth/verify/${jwtToken}
-			`
+			`,
         };
         await new Promise((resolve, reject) => {
             // send mail
@@ -171,33 +180,39 @@ const verifyMailSender = async (email, operation, newPassword) => {
         // 		.catch((err) => new Error(err.message as string));
     }
     // Return send even if email is invalid
-    return ({
-        "success": true,
-        "body": {
-            "message": `Verification code send to ${email}. Valid for 10 minutes`
-        }
-    });
+    return {
+        success: true,
+        body: {
+            message: `Verification code send to ${email}. Valid for 10 minutes`,
+        },
+    };
 };
 exports.verifyMailSender = verifyMailSender;
 // Reset Password
 const changePassowrd = async (email, newPassword) => {
     const hashPassword = await bcrypt_1.default.hash(newPassword, 10);
-    const userData = (await db_1.db.update(users_models_1.userSchema).set({ password: hashPassword }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email)))[0];
-    return ({
+    const userData = (await db_1.db
+        .update(users_models_1.userSchema)
+        .set({ password: hashPassword })
+        .where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email)))[0];
+    return {
         success: true,
         body: {
-            message: `Password successfully changed for ${email}`
-        }
-    });
+            message: `Password successfully changed for ${email}`,
+        },
+    };
 };
 exports.changePassowrd = changePassowrd;
 const verifyAccount = async (email) => {
-    await db_1.db.update(users_models_1.userSchema).set({ verified: 1 }).where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email));
-    return ({
+    await db_1.db
+        .update(users_models_1.userSchema)
+        .set({ verified: 1 })
+        .where((0, drizzle_orm_1.eq)(users_models_1.userSchema.email, email));
+    return {
         success: true,
         body: {
-            message: `Account verified for ${email}`
-        }
-    });
+            message: `Account verified for ${email}`,
+        },
+    };
 };
 exports.verifyAccount = verifyAccount;
