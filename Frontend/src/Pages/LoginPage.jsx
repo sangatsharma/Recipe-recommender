@@ -61,7 +61,8 @@ const LoginPage = () => {
       }
       // Successfully signed in then
       else {
-        handleLogin();
+        // handleLogin();
+        toast.success("Login successful!");
       }
     },
   });
