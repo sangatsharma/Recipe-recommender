@@ -44,6 +44,7 @@ const addNewRecipe = async (req, res, next) => {
             //   }).catch((err) => { next(err); });
             // });
             const imageFiles = req.files;
+            console.log(imageFiles);
             const imagesToUpload = [];
             for (const image of imageFiles) {
                 const b64 = Buffer.from(image.buffer).toString("base64");
@@ -429,8 +430,13 @@ const recipeRecommend = async (req, res, next) => {
     }
     try {
         // const resData: postgres.RowList<Record<string, unknown>[]> = [];
-        const data1 = await db_1.db.execute((0, drizzle_orm_1.sql) `(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
-    (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+        // const data1 = await db.execute(sql`(SELECT * FROM recipes WHERE ARRAY["AuthorId"] <@
+        // (SELECT "following" from users WHERE id=${userId})) LIMIT 5 `);
+        const data1 = await db_1.db.execute((0, drizzle_orm_1.sql) `(select * from recipes where array["Keywords"] <@ 
+        (select "Keywords" from recipes where "RecipeId" in 
+        (select "RecipeId" from "favouriteRecipes" where "userId" = ${userId})
+        LIMIT 5)
+      )`);
         const data2 = await db_1.db.execute((0, drizzle_orm_1.sql) `SELECT * FROM recipes where "RecipeId" = 
       ANY(ARRAY(SELECT "favourite" from users WHERE id=${userId})) LIMIT 5`);
         return res.json({
