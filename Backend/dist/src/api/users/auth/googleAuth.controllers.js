@@ -68,7 +68,7 @@ const oAuth2Server = async (req, res, next) => {
         const tokenRes = (0, auth_helpers_1.handleToken)(userTmp.body, res);
         // return res.json(tokenRes);
         // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-        return res.redirect(302, "https://www.ciy.sangat.tech/home");
+        return res.redirect(302, "/");
     }
     // Else register user
     // TODO: ask for username
