@@ -7,9 +7,17 @@ export const oAuthHandler = (_: Request, res: Response) => {
 
   // Where to redirect to when user picks a account to login with
   // Has to be same as choosen in google cloud console
+
+  // const REDIRECT_URI = ENV === "PROD"
+  //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+  //   : "http://localhost:4000/user/auth/osuccess";
+
+  
   const REDIRECT_URI = ENV === "PROD"
-    ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+    ? "https://api.ciy.sangat.tech/user/auth/osuccess"
     : "http://localhost:4000/user/auth/osuccess";
+
+
 
   // Specifies resources our application can access in behalf of resource owner from resource server
   const GOOGLE_OAUTH_SCOPES = [
@@ -40,9 +48,14 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
   // TODO: Maybe, validate state
   const { code } = req.query;
 
+  // const REDIRECT_URI = ENV === "PROD"
+  //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+  //   : "http://localhost:4000/user/auth/osuccess";
+
   const REDIRECT_URI = ENV === "PROD"
-    ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+    ? "https://api.ciy.sangat.tech/user/auth/osuccess"
     : "http://localhost:4000/user/auth/osuccess";
+
   // Ask for Access Token
   const data = {
     code,
@@ -79,7 +92,8 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
     const tokenRes: JsonResponse = handleToken(userTmp.body, res);
     // return res.json(tokenRes);
 
-    return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+    // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+    return res.redirect(302, "https://www.ciy.sangat.tech/home");
   }
 
   // Else register user
@@ -107,7 +121,8 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       const userToken: JsonResponse = handleToken(registeredUserData, res);
 
       // return res.json(userToken);
-      return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+      // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+      return res.redirect(302, "https://www.ciy.sangat.tech/home");
     }
     catch (err) {
       next(err);

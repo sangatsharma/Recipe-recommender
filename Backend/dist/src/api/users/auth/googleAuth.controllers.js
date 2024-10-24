@@ -6,8 +6,11 @@ const auth_helpers_1 = require("./auth.helpers");
 const oAuthHandler = (_, res) => {
     // Where to redirect to when user picks a account to login with
     // Has to be same as choosen in google cloud console
+    // const REDIRECT_URI = ENV === "PROD"
+    //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+    //   : "http://localhost:4000/user/auth/osuccess";
     const REDIRECT_URI = config_1.ENV === "PROD"
-        ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+        ? "https://api.ciy.sangat.tech/user/auth/osuccess"
         : "http://localhost:4000/user/auth/osuccess";
     // Specifies resources our application can access in behalf of resource owner from resource server
     const GOOGLE_OAUTH_SCOPES = [
@@ -32,8 +35,11 @@ const oAuth2Server = async (req, res, next) => {
     // Get code out of query (Authorization Code)
     // TODO: Maybe, validate state
     const { code } = req.query;
+    // const REDIRECT_URI = ENV === "PROD"
+    //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+    //   : "http://localhost:4000/user/auth/osuccess";
     const REDIRECT_URI = config_1.ENV === "PROD"
-        ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
+        ? "https://api.ciy.sangat.tech/user/auth/osuccess"
         : "http://localhost:4000/user/auth/osuccess";
     // Ask for Access Token
     const data = {
@@ -61,7 +67,8 @@ const oAuth2Server = async (req, res, next) => {
     if (userTmp.success) {
         const tokenRes = (0, auth_helpers_1.handleToken)(userTmp.body, res);
         // return res.json(tokenRes);
-        return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+        // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+        return res.redirect(302, "https://www.ciy.sangat.tech/home");
     }
     // Else register user
     // TODO: ask for username
@@ -83,7 +90,8 @@ const oAuth2Server = async (req, res, next) => {
             // Generate Token
             const userToken = (0, auth_helpers_1.handleToken)(registeredUserData, res);
             // return res.json(userToken);
-            return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+            // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
+            return res.redirect(302, "https://www.ciy.sangat.tech/home");
         }
         catch (err) {
             next(err);
