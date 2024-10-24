@@ -4,6 +4,8 @@ exports.oAuth2Server = exports.oAuthHandler = void 0;
 const config_1 = require("../../../utils/config");
 const auth_helpers_1 = require("./auth.helpers");
 const oAuthHandler = (_, res) => {
+    const referer = _.get("Referer") || "https://www.ciy.sangat.tech";
+    console.log("referer", referer);
     // Where to redirect to when user picks a account to login with
     // Has to be same as choosen in google cloud console
     // const REDIRECT_URI = ENV === "PROD"
@@ -32,6 +34,8 @@ exports.oAuthHandler = oAuthHandler;
   Google redirects to this route with some info in query.
 */
 const oAuth2Server = async (req, res, next) => {
+    const referer = req.get("Referer") || "https://www.ciy.sangat.tech";
+    console.log("referer", referer);
     // Get code out of query (Authorization Code)
     // TODO: Maybe, validate state
     const { code } = req.query;
@@ -68,7 +72,7 @@ const oAuth2Server = async (req, res, next) => {
         const tokenRes = (0, auth_helpers_1.handleToken)(userTmp.body, res);
         // return res.json(tokenRes);
         // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-        return res.redirect(302, "/");
+        return res.redirect(302, referer);
     }
     // Else register user
     // TODO: ask for username
@@ -91,7 +95,7 @@ const oAuth2Server = async (req, res, next) => {
             const userToken = (0, auth_helpers_1.handleToken)(registeredUserData, res);
             // return res.json(userToken);
             // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-            return res.redirect(302, "https://www.ciy.sangat.tech/home");
+            return res.redirect(302, referer);
         }
         catch (err) {
             next(err);

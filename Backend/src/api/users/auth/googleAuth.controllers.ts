@@ -4,6 +4,8 @@ import { handleToken, userExists, userRegisterHelper } from "./auth.helpers";
 import { AccessTokenData, JsonResponse, RegisterForm, TokenInfoResponse, UserDataDB } from "../users.types";
 
 export const oAuthHandler = (_: Request, res: Response) => {
+  const referer=_.get("Referer") ||  "https://www.ciy.sangat.tech";
+  console.log("referer",referer);
 
   // Where to redirect to when user picks a account to login with
   // Has to be same as choosen in google cloud console
@@ -44,6 +46,12 @@ export const oAuthHandler = (_: Request, res: Response) => {
   Google redirects to this route with some info in query.
 */
 export const oAuth2Server = async (req: Request, res: Response, next: NextFunction) => {
+
+  const referer=req.get("Referer") ||  "https://www.ciy.sangat.tech";
+  console.log("referer",referer);
+
+
+
   // Get code out of query (Authorization Code)
   // TODO: Maybe, validate state
   const { code } = req.query;
@@ -93,7 +101,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
     // return res.json(tokenRes);
 
     // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-    return res.redirect(302, "/");
+    return res.redirect(302, referer as string);
   }
 
   // Else register user
@@ -123,7 +131,7 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       // return res.json(userToken);
 
       // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-      return res.redirect(302, "https://www.ciy.sangat.tech/home");
+      return res.redirect(302,referer as string);
     }
     catch (err) {
       next(err);
