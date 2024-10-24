@@ -11,24 +11,28 @@ import { errorHandler } from "@/utils/errorHandler";
 
 const app = express();
 
-app.use(cors({
-  //Todo: remove localhost later
-  origin: ["https://recipe-recommender-five.vercel.app", "http://localhost:5173"],
-  credentials: true,
-  optionsSuccessStatus: 200,
-  maxAge: 86400,
-  methods: ["GET, POST, PUT, DELETE"]
-}));
+app.use(
+  cors({
+    //Todo: remove localhost later
+    origin: [
+      "https://recipe-recommender-five.vercel.app",
+      "http://localhost:5173",
+      "https://www.ciy.sangat.tech",
+    ],
+    credentials: true,
+    optionsSuccessStatus: 200,
+    maxAge: 86400,
+    methods: ["GET, POST, PUT, DELETE"],
+  })
+);
 
 app.set("view engine", "ejs");
 
 console.log(__dirname);
 app.set("views", path.join(__dirname, "views"));
 
-
 app.use(cookieParser());
 app.use(express.json());
-
 
 /*
 ROUTES

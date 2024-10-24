@@ -24,7 +24,7 @@ const handleToken = (userData, res) => {
     const cookieRes = {
         secure: true,
         httpOnly: true,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 7,
         path: "/",
         domain: ".recipe-recommender-backend.vercel.app",

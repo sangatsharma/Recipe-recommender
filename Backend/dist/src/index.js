@@ -14,11 +14,15 @@ const errorHandler_1 = require("./utils/errorHandler");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     //Todo: remove localhost later
-    origin: ["https://recipe-recommender-five.vercel.app", "http://localhost:5173"],
+    origin: [
+        "https://recipe-recommender-five.vercel.app",
+        "http://localhost:5173",
+        "https://www.ciy.sangat.tech",
+    ],
     credentials: true,
     optionsSuccessStatus: 200,
     maxAge: 86400,
-    methods: ["GET, POST, PUT, DELETE"]
+    methods: ["GET, POST, PUT, DELETE"],
 }));
 app.set("view engine", "ejs");
 console.log(__dirname);
