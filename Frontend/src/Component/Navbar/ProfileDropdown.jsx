@@ -26,6 +26,7 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
     if (isLogout.success) {
       setIsAuthenticated(false);
       handleToggle();
+      localStorage.setItem("notifications", JSON.stringify([]));
       window.location.reload();
       navigate("/");
       toast.success(isLogout.body.message);
@@ -129,7 +130,7 @@ const ProfileDropdown = ({ isMobile, isOpen, setIsOpen }) => {
                       : page === "contact"
                       ? "address-book"
                       : page === "bookmarks"
-                      ? "bookmark"
+                      ? "bookmark mr-0.5 pl-1"
                       : "cog"
                   } text-2xl pr-2 ${
                     location === `/${page}`
