@@ -1,11 +1,34 @@
-import { GOOGLE_ACCESS_TOKEN_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_OAUTH_URL, ENV } from "@/utils/config";
+import {
+  GOOGLE_ACCESS_TOKEN_URL,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  GOOGLE_OAUTH_URL,
+  ENV,
+} from "@/utils/config";
 import { NextFunction, Request, Response } from "express";
 import { handleToken, userExists, userRegisterHelper } from "./auth.helpers";
-import { AccessTokenData, JsonResponse, RegisterForm, TokenInfoResponse, UserDataDB } from "../users.types";
+import {
+  AccessTokenData,
+  JsonResponse,
+  RegisterForm,
+  TokenInfoResponse,
+  UserDataDB,
+} from "../users.types";
+
+import crypto from "crypto";
+
+const generateState = (referer: string) => {
+  const randomString = crypto.randomBytes(8).toString("hex");
+  return `${referer}::${randomString}`;
+};
 
 export const oAuthHandler = (_: Request, res: Response) => {
-  const referer=_.get("Referer") ||  "https://www.ciy.sangat.tech";
-  console.log("referer",referer);
+  const referer = _.get("Referer") || "https://www.ciy.sangat.tech";
+  console.log("referer", referer);
+
+  // Prevent CSRF and more
+  const state = generateState(referer);
+  res.cookie("oauth_state", state, { httpOnly: true, secure: ENV === "PROD" });
 
   // Where to redirect to when user picks a account to login with
   // Has to be same as choosen in google cloud console
@@ -14,21 +37,16 @@ export const oAuthHandler = (_: Request, res: Response) => {
   //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
   //   : "http://localhost:4000/user/auth/osuccess";
 
-  
-  const REDIRECT_URI = ENV === "PROD"
-    ? "https://api.ciy.sangat.tech/user/auth/osuccess"
-    : "http://localhost:4000/user/auth/osuccess";
-
-
+  const REDIRECT_URI =
+    ENV === "PROD"
+      ? "https://api.ciy.sangat.tech/user/auth/osuccess"
+      : "http://localhost:4000/user/auth/osuccess";
 
   // Specifies resources our application can access in behalf of resource owner from resource server
   const GOOGLE_OAUTH_SCOPES = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
   ];
-
-  // Prevent CSRF and more
-  const state = "some_state";
 
   const scopes = GOOGLE_OAUTH_SCOPES.join(" ");
 
@@ -40,29 +58,38 @@ export const oAuthHandler = (_: Request, res: Response) => {
   res.redirect(GOOGLE_OAUTH_CONSENT_SCREEN_URL);
 };
 
-
 /*
   After user picks a google account to login and grants required permissions,
   Google redirects to this route with some info in query.
 */
-export const oAuth2Server = async (req: Request, res: Response, next: NextFunction) => {
-
-  const referer=req.get("Referer") ||  "https://www.ciy.sangat.tech";
-  console.log("referer",referer);
-
-
-
+export const oAuth2Server = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   // Get code out of query (Authorization Code)
   // TODO: Maybe, validate state
-  const { code } = req.query;
+  const { code, state } = req.query;
+
+  const storedState = req.cookies.oauth_state;
+
+  if (state !== storedState) {
+    return res.status(403).json({ error: "Invalid state parameter" });
+  }
+
+  res.clearCookie("oauth_state"); // Remove state cookie
+  // Extract the referer from the state
+  const referer = decodeURIComponent(state as string).split('::')[0] || "https://www.ciy.sangat.tech";
+  console.log("referer", referer);
 
   // const REDIRECT_URI = ENV === "PROD"
   //   ? "https://recipe-recommender-backend.vercel.app/user/auth/osuccess"
   //   : "http://localhost:4000/user/auth/osuccess";
 
-  const REDIRECT_URI = ENV === "PROD"
-    ? "https://api.ciy.sangat.tech/user/auth/osuccess"
-    : "http://localhost:4000/user/auth/osuccess";
+  const REDIRECT_URI =
+    ENV === "PROD"
+      ? "https://api.ciy.sangat.tech/user/auth/osuccess"
+      : "http://localhost:4000/user/auth/osuccess";
 
   // Ask for Access Token
   const data = {
@@ -79,7 +106,8 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
     body: JSON.stringify(data),
   });
 
-  const access_token_data: AccessTokenData = await response.json() as AccessTokenData;
+  const access_token_data: AccessTokenData =
+    (await response.json()) as AccessTokenData;
 
   const { id_token } = access_token_data;
 
@@ -89,7 +117,8 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
   );
 
   // TODO: TYPE
-  const token_info_response_json: TokenInfoResponse = await token_info_response.json() as TokenInfoResponse;
+  const token_info_response_json: TokenInfoResponse =
+    (await token_info_response.json()) as TokenInfoResponse;
   const { name, email, picture } = token_info_response_json;
 
   // Check if user exists or not
@@ -131,9 +160,8 @@ export const oAuth2Server = async (req: Request, res: Response, next: NextFuncti
       // return res.json(userToken);
 
       // return res.redirect(302, "https://recipe-recommender-five.vercel.app/");
-      return res.redirect(302,referer as string);
-    }
-    catch (err) {
+      return res.redirect(302, referer as string);
+    } catch (err) {
       next(err);
     }
   }
