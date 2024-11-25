@@ -66,8 +66,8 @@ To run the project locally, follow these steps:
 
 1. **Clone the repository**:
    ```
-   git clone https://github.com/your-username/recipe-sharing-website.git
-   cd recipe-sharing-website
+   git clone https://github.com/sangatsharma/Recipe-recommender.git
+   cd Recipe-recommender
    ```
 
 2. **Install dependencies**:
